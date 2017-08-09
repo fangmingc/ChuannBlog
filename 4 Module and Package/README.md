@@ -1,23 +1,22 @@
-## python常用模块
-<span id = "0"></span>
-- [模块](#1)  
-- [包](#2)
-- [常用模块一](#3)
-	- [collections](#3.1)
-	- [time](#3.2)
-	- [random](#3.3)
-	- [os](#3.4)
-	- [sys](#3.5)
-	- [序列化](#3.6)
-		- [json](#3.6.1)
-		- [pickle](#3.6.2)
-		- [shevle](#3.6.2)
-	- [re](#3.7)
-		- [re模块方法](#3.7.1)
-		- [正则表达式](#3.7.2)
-- [常用模块二](#4)
-	- [hashlib](#4.1)
-	- [configparse](#4.2)
-	- [logging](#4.3)
+## 模块和包
+* [模块](4.1module.md)  
+* [包](4.2package.md)
+### 常用内置模块
+* [collections](4.3collections.md)
+- [time](4.4time.md)
+- [random](4.5random.md)
+- [os](4.6os.md)
+- [sys](4.7sys.md)
+- [serialization](4.8serialization.md)
+	- json
+	- pickle
+	- shevle
+- [re](4.9re.md)
+	- [re模块方法]
+	- [正则表达式]
+- [hashlib](4.10hashlib.md)
+- [configparse](4.11configparse.md)
+- [logging](4.12logging.md)
+
 
 
