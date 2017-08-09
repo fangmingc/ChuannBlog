@@ -1,5 +1,6 @@
 
-* [Chapter1](chapter1/README.md)
-  * [Section1.1](chapter1/section1.1.md)
-  * [Section1.2](chapter1/section1.2.md)
-* [Chapter2](chapter2/README.md)
+* [1 计算机基础](1 计算机基础/README.md)
+  * [1.1 计算机硬件](1 计算机基础/1.1计算机硬件.md)
+  * [1.2 操作系统](1 计算机基础/1.2 操作系统.md)
+  * [1.3 计算机网络](1 计算机基础/1.3 计算机网络.md)
+* [2 python基础](2 python基础/README.md)
