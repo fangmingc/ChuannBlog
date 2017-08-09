@@ -1,5 +1,3 @@
-$ cat book/README.md 
-# README
 
 ###  文件说明： 	
 - basics_of_computer.md    
