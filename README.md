@@ -1,4 +1,4 @@
-
+* [简介](README.md)
 ###  文件说明： 	
 - basics_of_computer.md    
 主要记录计算机硬件基础学习。  
