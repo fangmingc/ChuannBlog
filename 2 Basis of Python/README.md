@@ -1,4 +1,6 @@
 ## 2 python基础
+[213123213123](#2)
+
 - [2.1 编程语言介绍](2.1 编程语言介绍.md)
 - [2.2 执行python程序](2.2 执行python程序.md)
 - [2.3 变量](2.3 变量.md)
@@ -19,3 +21,80 @@
 	- 布尔bool
 	- 集合set
 	- 可变数据类型与不可变数据类型
+
+
+
+
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+<span id = "5"></span>
