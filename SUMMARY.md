@@ -1,8 +1,5 @@
 * [简介](README.md)
 * [1 计算机基础](1 计算机基础/README.md)
-  * [1.1 计算机硬件](1 计算机基础/1.1 Computer Hardware.md)
-  * [1.2 操作系统](1 计算机基础/1.2 Operating System.md)
-  * [1.3 计算机网络](1 计算机基础/1.3 Computer Network.md)
 * [2 python基础](2 Basis of Python/README.md)
 * [3 函数](3 Function/README.md)
 * [4 模块和包](4 Module and Package/python_module.md)
