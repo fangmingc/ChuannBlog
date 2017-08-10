@@ -6,7 +6,7 @@ https://github.com/fangmingc/my_gitbook
 fangming99@outlook.com  
 
 
-### 
+
 * [简介](README.md)
 * [1 计算机基础](1 Computer Basics/README.md)
 * [2 python基础](2 Basis of Python/README.md)
