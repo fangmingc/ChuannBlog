@@ -1,0 +1,13 @@
+#
+# This is a Account information table.
+#
+# id,username,password,permission
+
+admin,admin,1
+alex,alex,2
+egon,egon,3
+nezha,nezha,2
+yang,yang,3
+chuck,chuck,2
+haohao,haohao,4
+mxt,mxt,4

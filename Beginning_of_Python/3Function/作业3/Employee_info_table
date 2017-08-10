@@ -1,0 +1,11 @@
+#
+# This is a Employee information table.
+#
+# id,name,age,phone,job
+
+1,Alex,22,13651054608,Boss
+2,egon,23,13304320533,Teacher
+3,nezha,25,1333235322,IT
+4,yang,21,13712305297,Teacher
+5,chuck,18,15622325685,Student
+6,haohao,23,18222326368,Student
