@@ -1,10 +1,10 @@
+# Welcome to Chuann's Blog!  
+Blog托管于[github](https://github.com/fangmingc/ChuannBlog)  
+欢迎交流：fangming99@outlook.com   
 
-# Welcome to Chuann's Blog 
-Blog托管于[github](https://github.com/fangmingc/ChuannBlog)
-联系本人：fangming99@outlook.com 
 
 
-* [Python入门](SUMMARY.md)
+* [Python入门](Beginning_of_Python/SUMMARY.md)
 
 
 
