@@ -1,5 +1,5 @@
 # Welcome to Chuann's Blog!  
-Blog托管于[github](https://github.com/fangmingc/ChuannBlog)  
+Blog托管于[GitHub](https://github.com/fangmingc/ChuannBlog)  
 欢迎交流：fangming99@outlook.com   
 
 
