@@ -4,7 +4,7 @@ Blog托管于[GitHub](https://github.com/fangmingc/ChuannBlog)
 
 
 
-* [Python入门](http://chuann.cc/Beginning_of_Python/SUMMARY.md)
+* [Python入门](Beginning_of_Python/SUMMARY.md)
 
 
 
