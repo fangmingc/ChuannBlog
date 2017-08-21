@@ -1,9 +1,9 @@
-# python Socket编程
-网络协议osi七层   
-基于tcp和udp协议的socket  
-基于tcp协议模拟ssh远程协议通信  
+# Socket网络编程
+- [基础知识](#1)
+- [socket(套接字)模块](#2)
+- 
 
-## 基础知识
+## <span id='1'>基础知识</span>
 ### 客户端/服务器架构(C/S)
 - 定义：C/S又称Client/Server或客户/服务器模式。服务器通常采用高性能的PC、工作站或小型机，并采用大型数据库系统，如ORACLE、SYBASE、InfORMix或 SQL Server。客户端需要安装专用的客户端软件。
 - 通过它可以充分利用两端硬件环境的优势，将任务合理分配到Client端和Server端来实现，降低了系统的通讯开销。
@@ -31,7 +31,7 @@
 	- SNMP(Simple Network Management Protocol) 简单网络管理协议，用于管理与监视网络设备
 	- Telnet 远程登录协议，用于实现远程登录功能
 
-## socket(套接字)
+## <span id='1'>socket(套接字)模块</span>
 >网络上的两个程序通过一个双向的通信连接实现数据的交换，这个连接的一端称为一个socket。
 
 - Socket的英文原义是“孔”或“插座”。作为BSD UNIX的进程通信机制，取后一种意思。通常也称作"套接字"，用于描述IP地址和端口，是一个通信链的句柄，可以用来实现不同虚拟机或不同计算机之间的通信。
