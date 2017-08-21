@@ -100,7 +100,8 @@ s.makefile()        创建一个与该套接字相关的文件
 
 ### 基于TCP的套接字
 #### 基础实例
-- server端
+- server端   
+
 ```python  
 import socket
 
@@ -128,7 +129,8 @@ client_connect.close()
 # 6.stop the server
 server.close()
 ```
-- client端
+- client端  
+
 ```python  
 import socket
 
@@ -142,7 +144,8 @@ connect = client.connect(('127.0.0.1', 20000))
 client.close()
 ```
 #### 连接循环和通信循环
-- server端
+- server端  
+
 ```python   
 import socket
 
@@ -187,7 +190,8 @@ while True:
 server.close()
 ```
 
-- client端
+- client端  
+ 
 ```python   
 import socket
 
