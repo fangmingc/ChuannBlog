@@ -30,6 +30,7 @@
 	- SMTP(Simple Mail Transfer Protocol) 简单邮件传送协议，用于实现电子邮箱传送功能
 	- SNMP(Simple Network Management Protocol) 简单网络管理协议，用于管理与监视网络设备
 	- Telnet 远程登录协议，用于实现远程登录功能
+
 ## socket(套接字)
 >网络上的两个程序通过一个双向的通信连接实现数据的交换，这个连接的一端称为一个socket。
 
@@ -42,8 +43,9 @@
 2. 客户端请求：指由客户端的套接字提出请求，目标是服务器端的套接字，需要指出服务器端套接字的地址和端口号
 3. 连接确认：当服务器端套接字监听到客户端套接字的连接请求，就响应请求建立一个新的进程，并返回客户端服务器的套接字描述，当客户端确认描述，连接就正式建立，服务器端继续出于监听状态
 ![](https://baike.baidu.com/pic/socket/281150/0/d000baa1cd11728b45647b06cafcc3cec3fd2c4c?fr=lemma&ct=single)
+
 ### socket模块
-```python
+```python  
 import socket
 socket.socket(socket_family, socket_type,protocal=0)
 # socket_family 可以是 AF_UNIX 或 AF_INET。
@@ -67,9 +69,11 @@ tcpSock = socket(AF_INET, SOCK_STREAM)
 - s.bind() 绑定(主机，端口号)到套接字
 - s.listen() 开始TCP监听
 - s.accept() 被动接受TCP客户的连接，(阻塞式)等待连接到来(阻塞：无响应直到接受到连接请求)
+
 #### 客户端
 - s.connect() 主动初始化TCP服务器连接
 - s.connec_ex() connect()函数的扩展版本，出错时返回出错码，不抛出异常
+
 #### 公共用途
 - s.recv() 接收TCP数据
 	- 不可接收'空'
@@ -84,6 +88,7 @@ s.getsockname()     当前套接字的地址
 s.getsockopt()      返回指定套接字的参数  
 s.setsockopt()      设置指定套接字的参数  
 - s.close() 关闭套接字
+
 #### 面向锁的套接字方法
 s.setblocking()     设置套接字的阻塞与非阻塞模式  
 s.settimeout()      设置阻塞套接字操作的超时时间  
@@ -92,10 +97,11 @@ s.gettimeout()      得到阻塞套接字操作的超时时间
 #### 面向文件的套接字的函数
 s.fileno()          套接字的文件描述符  
 s.makefile()        创建一个与该套接字相关的文件  
+
 ### 基于TCP的套接字
 #### 基础实例
 - server端
-```python
+```python  
 import socket
 
 # 1.create server socket
@@ -123,7 +129,7 @@ client_connect.close()
 server.close()
 ```
 - client端
-```python
+```python  
 import socket
 
 # 1.create client socket
@@ -137,7 +143,7 @@ client.close()
 ```
 #### 连接循环和通信循环
 - server端
-```python 
+```python   
 import socket
 
 # 1.create server socket
@@ -180,8 +186,9 @@ while True:
 # 8.stop the server
 server.close()
 ```
+
 - client端
-```python 
+```python   
 import socket
 
 # 1.create client socket
