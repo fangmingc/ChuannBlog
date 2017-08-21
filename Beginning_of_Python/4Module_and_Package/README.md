@@ -3,7 +3,7 @@
 - [4.2 包](4.2Package.md)
 ### 常用内置模块
 - [4.3 collections](4.3Collections.md)
-- [4.4 time](4.4Cime.md)
+- [4.4 time](4.4Time.md)
 - [4.5 random](4.5Random.md)
 - [4.6 os](4.6Os.md)
 - [4.7 sys](4.7Sys.md)
