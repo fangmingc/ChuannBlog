@@ -1,7 +1,16 @@
 # Socket网络编程
 - [基础知识](#1)
 - [socket(套接字)模块](#2)
-- 
+	- [套接字的连接过程](#2.1)
+	- [socket模块](#2.2)
+	- [套接字(socket)函数](#2.3)
+	- [基于TCP的套接字](#2.4)
+	- [](#2.5)
+	- [](#2.6)
+- []
+
+
+
 
 ## <span id='1'>基础知识</span>
 ### 客户端/服务器架构(C/S)
@@ -31,20 +40,20 @@
 	- SNMP(Simple Network Management Protocol) 简单网络管理协议，用于管理与监视网络设备
 	- Telnet 远程登录协议，用于实现远程登录功能
 
-## <span id='1'>socket(套接字)模块</span>
+## <span id='2'>socket(套接字)</span>
 >网络上的两个程序通过一个双向的通信连接实现数据的交换，这个连接的一端称为一个socket。
 
 - Socket的英文原义是“孔”或“插座”。作为BSD UNIX的进程通信机制，取后一种意思。通常也称作"套接字"，用于描述IP地址和端口，是一个通信链的句柄，可以用来实现不同虚拟机或不同计算机之间的通信。
 - 将传输层及以下的网络协议封装，提供简单使用的接口(API)给应用层的软件，专门面向C/S架构模型设计的
 - 三个参数：协议，本地地址，本地端口
 
-### 套接字的连接过程
+### <span id='2.1'>套接字的连接过程</span>
 1. 服务器监听：不指定具体的客户端套接字，处于等待连接的状态，实时监控网络状态
 2. 客户端请求：指由客户端的套接字提出请求，目标是服务器端的套接字，需要指出服务器端套接字的地址和端口号
 3. 连接确认：当服务器端套接字监听到客户端套接字的连接请求，就响应请求建立一个新的进程，并返回客户端服务器的套接字描述，当客户端确认描述，连接就正式建立，服务器端继续出于监听状态
 ![](https://baike.baidu.com/pic/socket/281150/0/d000baa1cd11728b45647b06cafcc3cec3fd2c4c?fr=lemma&ct=single)
 
-### socket模块
+### <span id='2.2'>socket模块</span>
 ```python  
 import socket
 socket.socket(socket_family, socket_type,protocal=0)
@@ -64,7 +73,7 @@ udpSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 from socket import *
 tcpSock = socket(AF_INET, SOCK_STREAM)
 ```
-### 套接字(socket)函数
+### <span id='2.3'>套接字(socket)函数</span>
 #### 服务端
 - s.bind() 绑定(主机，端口号)到套接字
 - s.listen() 开始TCP监听
@@ -98,7 +107,7 @@ s.gettimeout()      得到阻塞套接字操作的超时时间
 s.fileno()          套接字的文件描述符  
 s.makefile()        创建一个与该套接字相关的文件  
 
-### 基于TCP的套接字
+### <span id='2.4'>基于TCP的套接字</span>
 #### 基础实例
 - server端   
 
