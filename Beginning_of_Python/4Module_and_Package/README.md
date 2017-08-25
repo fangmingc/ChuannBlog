@@ -17,7 +17,6 @@
 - [4.10 hashlib](4.10Hashlib.md)
 - [4.11 configparse](4.11Configparse.md)
 - [4.12 logging](4.12Logging.md)
-- [4.13 Subprocess](4.13Subprocess.md) 
 
 
 
