@@ -30,7 +30,7 @@
 5. 结构特征 进程由程序、数据和进程控制块三部分组成
 
 ### 状态
-
+![](https://github.com/fangmingc/ChuannBlog/blob/master/Intermediate_Python/%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81.png)
 - 运行 
 	1. 程序等待I/O，进入阻塞 
 	2. 进程运行时间过长，调度程序选择另一个进程，该进程进入就绪
