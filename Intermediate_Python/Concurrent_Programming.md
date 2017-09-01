@@ -1,14 +1,31 @@
 # 并发编程
-进程、线程、协程
-## 背景知识
+- [并发](#1)
+- [进程](#2)
+- [线程](#3)
+- [协程](#4)
+- [相关模块](#5)
+	- [multiprocessing](#5.1)
+	- [threading](#5.2)
+	- [concorrent.futures](#5.3)
+	- [gevent](#5.4)
+	- [queue](#5.5)
+- [相关扩展](#6)
+	- [互斥锁](#6.1)
+	- [生产者消费者模型](#6.2)
+	- [回调函数](#6.3)
+	- [I/O模型](#6.4)
+
+## <span id=1>并发</span>
+并发实现的核心原理:
+- 任务之间的切换
+- 保存任务切换前的状态
+
+## <span id=2>进程</span>
 进程的概念起源于操作系统，是操作系统最核心的概念。  
 
 - 操作系统管理进程
 - 进程之间的调度由操作系统的负责切换
 
-并发实现的核心原理不是进程间的切换，而是保留下进程切换前的状态，以便切换回来时继续。
-
-## 进程
 ### 概念
 - 狭义定义
 	- 进程是正在运行的程序的实例
@@ -39,75 +56,7 @@
 - 阻塞
 	4. I/O操作出现结果，进入就绪
 
-### multiprocessing模块
-#### Process类
-```python
-# 服务端
-from socket import *
-from multiprocessing import Process
-s=socket(AF_INET,SOCK_STREAM)
-s.setsockopt(SOL_SOCKET,SO_REUSEADDR,1) #就是它，在bind前加
-s.bind(('127.0.0.1',8088))
-s.listen(5)
-def talk(conn,addr):
-    while True: #通信循环
-        try:
-            data=conn.recv(1024)
-            if not data:break
-            conn.send(data.upper())
-        except Exception:
-            break
-    conn.close()
-if __name__ == '__main__':
-    while True:#链接循环
-        conn,addr=s.accept()
-        p=Process(target=talk,args=(conn,addr))
-        p.start()
-    s.close()
-
-# 客户端
-from socket import *
-c=socket(AF_INET,SOCK_STREAM)
-c.connect(('127.0.0.1',8088))
-
-while True:
-    msg=input('>>: ').strip()
-    if not msg:continue
-    c.send(msg.encode('utf-8'))
-    data=c.recv(1024)
-    print(data.decode('utf-8'))
-c.close()
-
-```
-
-### 互斥锁
-进程间互相排斥强制加锁，当某个进程使用某资源时，其余进程不允许使用该资源。   
-
-
-如何给进程计数，开启了多少个，什么时候结束
-
-### 数据共享
-#### 文件
-#### 内存
-- Manager类
-#### IPC
-- 队列
-	- Queue
-	- JoinableQueue
-- 管道
-
-
-### 生产者消费者模型
-异步并发
-
-
-### 进程池（Pool类）
-
-#### 回调函数
-
-
-
-## 线程
+## <span id=3>线程</span>
 轻量级进程
 
 ### 特点
@@ -121,10 +70,114 @@ c.close()
 ### 数据共享
 
 
+## <span id=4>协程</span>
 
 
+## <span id=5>相关模块</span>
+### multiprocessing模块
+基本与threading相同
+#### Process类
+#### Pool类
+#### 方法
+- cpu_count
+- current_process
+### threading模块
+#### Thread类
+#### Queue类
+#### Lock类
+#### Manager类
+#### Event类
+#### Timer类
+#### 方法
+- currentThread
+- get_ident
+- activeCount
+- enumerate
+- main_thread
 
-### 全局解释器锁（GIL）(Global Interpreter Lock)
-### Thread
+### concurrent.futures模块
+#### Executor类
+#### ProcessPoolExecutor类
+#### ThreadPoolExecutor类
 
+### gevent模块
 
+### queue模块
+#### Queue类
+#### LifoQueue类
+#### PriorityQueue类
+
+## <span id=6>相关扩展</span>
+### <span id=6.1>互斥锁</span>
+#### 原理
+当一个进程/线程拿到数据使用权后，上一把锁，其余进程/线程看到数据被加锁就进入阻塞状态，直到锁被释放。
+- 共享资源
+	- 多个进程/线程的运行都是独立的，但是有可能出现对同一份资源的使用，这样的资源被称为共享资源
+- 数据安全
+	- 多个进程/线程同时对某一份共享资源，进行处理有可能会出现数据错乱
+	- 例子中的资源是终端，最终打印出的数据就是乱的
+
+	```python
+	from multiprocessing import Process
+	import os,time
+	def work():
+	    print('%s is running' %os.getpid())
+	    time.sleep(2)
+	    print('%s is done' %os.getpid())
+	if __name__ == '__main__':
+	    for i in range(3):
+	        p=Process(target=work)
+	        p.start()
+	```
+
+- 特点
+	- ‘锁’可以保证共享资源的数据安全，在共享资源被锁住的期间，其他进程/线程不可以对共享数据操作
+	- 同一时间只有一个进程/线程处理数据，牺牲了并发效果，变成了串行，保证了数据安全
+
+#### 全局解释器锁（GIL）(Global Interpreter Lock)
+- CPython特性
+	- CPython的内存管理不是线程安全的。GIL已经存在，其他功能已经发展到依赖于它的实施。
+- 每当一个Python脚本开启，首先会创建一个进程，其中必有一个主线程，但脚本想要运行肯定会运行解释器，解释器还带有一些线程，例如内存回收，如果不对数据加锁，就会产生数据正在被回收的时候其他线程，使用了该数据的情况，会导致数据错误
+- GIL锁的作用级别是解释器级别，用户无法更改，但是需要了解这种机制
+
+#### 死锁
+- 百科定义
+	- 死锁是指两个或两个以上的进程/线程在执行过程中，由于竞争资源或者由于彼此通信而造成的一种阻塞的现象，若无外力作用，它们都将无法推进下去。此时称系统处于死锁状态或系统产生了死锁，这些永远在互相等待的进程/线程称为死锁进程/线程。
+- 四个必要条件
+	1. **互斥条件** 指进程对所分配到的资源进行排它性使用，即在一段时间内某资源只由一个进程占用。如果此时还有其它进程请求资源，则请求者只能等待，直至占有资源的进程用毕释放。
+	2. **请求和保持条件** 指进程已经保持至少一个资源，但又提出了新的资源请求，而该资源已被其它进程占有，此时请求进程阻塞，但又对自己已获得的其它资源保持不放。
+	3. **不剥夺条件** 指进程已获得的资源，在未使用完之前，不能被剥夺，只能在使用完时由自己释放。
+	4. **环路等待条件** 指在发生死锁时，必然存在一个进程——资源的环形链，即进程集合{P0，P1，P2，···，Pn}中的P0正在等待一个P1占用的资源；P1正在等待P2占用的资源，……，Pn正在等待已被P0占用的资源。
+- 互斥锁引起的死锁
+	- 当加锁资源超过两个且进程/线程超过两个
+	- 一个进程/线程占有了A资源，进入等待B资源的阻塞状态，另一个进程/线程占有了B资源，进入等待A资源的阻塞状态，两个进程/线程互相处于阻塞对方所占有的资源的状态，且无法释放自己的资源，进入死锁状态
+	- 解决办法 递归锁：RLock类
+- 更广泛的死锁解决办法
+	- 增加资源
+	- 银行家算法
+
+### <span id=6.2>生产者消费者模型</span>
+- 共享资源
+	- 概念 多个进程/线程的运行都是独立的，但是有可能出现对同一份资源的使用，这样的资源被称为共享资源
+	- 关于数据交互 
+		- IPC(进程间通信)
+			- 队列Queue
+			- 管道
+		- 共享数据
+			- Manager
+- 生产者和消费者不直接交流，通过缓冲区交流，这是异步且并发的
+- 缓冲区在Python中通常用消息队列实现
+
+### <span id=6.3>回调函数</span>
+
+### <span id=6.4>I/O模型</span>
+#### 同步/异步/阻塞/非阻塞
+- 同步/异步
+	- 描述提交任务的规则
+- 阻塞/非阻塞
+	- 描述进程/线程的两种状态
+#### 阻塞I/O
+#### 非阻塞I/O
+#### I/O多路复用
+#### 异步I/O
+#### 信号驱动I/O（不常用）
