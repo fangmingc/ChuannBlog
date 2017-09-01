@@ -15,12 +15,12 @@
 	- [回调函数](#6.3)
 	- [I/O模型](#6.4)
 
-## <span id=1>并发</span>
+## <span id="1">并发</span>
 并发实现的核心原理:
 - 任务之间的切换
 - 保存任务切换前的状态
 
-## <span id=2>进程</span>
+## <span id="2">进程</span>
 进程的概念起源于操作系统，是操作系统最核心的概念。  
 
 - 操作系统管理进程
@@ -56,7 +56,7 @@
 - 阻塞
 	4. I/O操作出现结果，进入就绪
 
-## <span id=3>线程</span>
+## <span id="3">线程</span>
 轻量级进程
 
 ### 特点
@@ -70,18 +70,19 @@
 ### 数据共享
 
 
-## <span id=4>协程</span>
+## <span id="4">协程</span>
 
 
-## <span id=5>相关模块</span>
-### multiprocessing模块
+## <span id="5">相关模块</span>
+### <span id="5.1">multiprocessing模块</span>
 基本与threading相同
 #### Process类
 #### Pool类
 #### 方法
 - cpu_count
 - current_process
-### threading模块
+
+### <span id="5.2">threading模块</span>
 #### Thread类
 #### Queue类
 #### Lock类
@@ -95,20 +96,20 @@
 - enumerate
 - main_thread
 
-### concurrent.futures模块
+### <span id="5.3">concurrent.futures模块</span>
 #### Executor类
 #### ProcessPoolExecutor类
 #### ThreadPoolExecutor类
 
-### gevent模块
+### <span id="5.4">gevent模块</span>
 
-### queue模块
+### <span id="5.5">queue模块</span>
 #### Queue类
 #### LifoQueue类
 #### PriorityQueue类
 
-## <span id=6>相关扩展</span>
-### <span id=6.1>互斥锁</span>
+## <span id="6">相关扩展</span>
+### <span id="6.1">互斥锁</span>
 #### 原理
 当一个进程/线程拿到数据使用权后，上一把锁，其余进程/线程看到数据被加锁就进入阻塞状态，直到锁被释放。
 - 共享资源
@@ -156,7 +157,7 @@
 	- 增加资源
 	- 银行家算法
 
-### <span id=6.2>生产者消费者模型</span>
+### <span id="6.2">生产者消费者模型</span>
 - 共享资源
 	- 概念 多个进程/线程的运行都是独立的，但是有可能出现对同一份资源的使用，这样的资源被称为共享资源
 	- 关于数据交互 
@@ -168,9 +169,9 @@
 - 生产者和消费者不直接交流，通过缓冲区交流，这是异步且并发的
 - 缓冲区在Python中通常用消息队列实现
 
-### <span id=6.3>回调函数</span>
+### <span id="6.3">回调函数</span>
 
-### <span id=6.4>I/O模型</span>
+### <span id="6.4">I/O模型</span>
 #### 同步/异步/阻塞/非阻塞
 - 同步/异步
 	- 描述提交任务的规则
