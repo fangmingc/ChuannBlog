@@ -8,6 +8,7 @@
 	- [2.5 粘包](#2.5)
 	- [2.6 基于UDP的套接字](#2.6)
 	- [2.7 socketserver模块](#2.7)
+- [3 练习：ftp文件上传下载](#3)
 
 
 ## <span id='1'>1 基础知识</span>
@@ -72,23 +73,32 @@ from socket import *
 tcpSock = socket(AF_INET, SOCK_STREAM)
 ```
 ### <span id='2.3'>2.3 套接字(socket)函数</span>
-#### 服务端
-- s.bind() 绑定(主机，端口号)到套接字
-- s.listen() 开始TCP监听
+#### 服务端 
+- s.bind()       
+绑定(主机，端口号)到套接字 
+- s.listen()    
+	- 开始TCP监听
 	- 必须制定最大连接数（操作系统同时能够链接的最大数目）
-- s.accept() 被动接受TCP客户的连接，(阻塞式)等待连接到来(阻塞：无响应直到接受到连接请求)
+- s.accept()      
+被动接受TCP客户的连接，(阻塞式)等待连接到来(阻塞：无响应直到接受到连接请求)
 
 #### 客户端
-- s.connect() 主动初始化TCP服务器连接
-- s.connec_ex() connect()函数的扩展版本，出错时返回出错码，不抛出异常
+- s.connect()     
+主动初始化TCP服务器连接
+- s.connec_ex()    
+connect()函数的扩展版本，出错时返回出错码，不抛出异常
 
 #### 公共用途
-- s.recv() 接收TCP数据   
-不可接收'空'
-- s.send() 发送TCP数据   
-待发送数量大于己端缓存剩余区空间时，数据丢失，不会发完
+- s.recv()    
+	- 接收TCP数据   
+	- 不可接收'空'
+- s.send()     
+	- 发送TCP数据   
+	- 待发送数量大于己端缓存剩余区空间时，数据丢失，不会发完
 - s.sendall()    
-发送完整的TCP数据，循环调用s.send
+	- 发送完整的TCP数据，循环调用s.send
+	- 通常给数据加上报头将数据打包更安全可靠，不常用sendall
+
 - s.recvfrom()        
 接收UDP数据  
 - s.sendto()          
@@ -338,10 +348,163 @@ while True:
 ```
 - 上面简单实现了一个远程cmd命令行，运行时如果使用返回较多信息的命令（如ipconfig -all）时会发生粘包：
 	- 上一条命令返回的结果不完整，下一条命令返回了上一条命令未完内容
-![]()
-#### 粘包原理
+
+![](https://github.com/fangmingc/ChuannBlog/blob/master/Intermediate_Python/%E7%B2%98%E5%8C%85%E5%8E%9F%E7%90%86.png)
+
+#### 粘包现象解释
+- 粘包问题主要是因为接收方不知道消息之间的界限，不知道一次性提取多少字节的数据所造成的。
+- socket的命令均是对操作系统发出的请求，并不能直接建立链接、收发数据等等这些功能。
+- 其中收发数据均是从系统的缓存中读取和发送。
+- socket的recv和send指定的字节大小都是从操作系统中读取和写入。
+- 如果缓存中保存的数据大于recv指定的字节大小，就会导致收不全数据；或者保存的数据不止一条，但recv远大于缓存的数据，就会将所有数据都接收；以上两种称之为粘包现象。
+
+#### 关于tcp和udp协议
+> TCP（transport control protocol，传输控制协议）是面向连接的，面向流的，提供高可靠性服务。收发两端（客户端和服务器端）都要有一一成对的socket，因此，发送端为了将多个发往接收端的包，更有效的发到对方，使用了优化方法（Nagle算法），将多次间隔较小且数据量小的数据，合并成一个大的数据块，然后进行封包。这样，接收端，就难于分辨出来了，必须提供科学的拆包机制。 即面向流的通信是无消息保护边界的。
+
+> UDP（user datagram protocol，用户数据报协议）是无连接的，面向消息的，提供高效率服务。不会使用块的合并优化算法，, 由于UDP支持的是一对多的模式，所以接收端的skbuff(套接字缓冲区）采用了链式结构来记录每一个到达的UDP包，在每个UDP包中就有了消息头（消息来源地址，端口等信息），这样，对于接收端来说，就容易进行区分处理了。 即面向消息的通信是有消息保护边界的。
+
+> tcp是基于数据流的，于是收发的消息不能为空，这就需要在客户端和服务端都添加空消息的处理机制，防止程序卡住，而udp是基于数据报的，即便是你输入的是空内容（直接回车），那也不是空消息，udp协议会帮你封装上消息头。
+
+#### 粘包条件
+- 发送端需要等缓冲区满才发送出去，造成粘包（发送数据时间间隔很短，数据了很小，会合到一起，产生粘包）
+- 接收方不及时接收缓冲区的包，造成多个包接收（客户端发送了一段数据，服务端只收了一小部分，服务端下次再收的时候还是从缓冲区拿上次遗留的数据，产生粘包） 
+
+#### 补充
+- 为何tcp是可靠传输，udp是不可靠传输      
+	- tcp发送和接收消息是会进行确认的（三次握手，四次挥手）
+	- tcp在数据传输时，发送端先把数据发送到自己的缓存中，然后协议控制将缓存中的数据发往对端，对端返回一个ack=1，发送端则清理缓存中的数据，对端返回ack=0，则重新发送数据，所以tcp是可靠的。而udp发送数据，对端是不会返回确认信息的，因此不可靠
+- send(字节流)和recv(1024)及sendall
+	- recv里指定的1024意思是从缓存里一次拿出1024个字节的数据
+	- send的字节流是先放入己端缓存，然后由协议控制将缓存内容发往对端，如果待发送的字节流大小大于缓存剩余空间，那么数据丢失，用sendall就会循环调用send，数据不会丢失
+
+#### 粘包的解决方案
+- 核心原理
+针对粘包因为接收方不知道消息之间的界限，在发送消息的时候事先声明消息有多长，接收时先收消息长度，再收数据即可。
+- 具体实施
+	- 发送端
+		1. 制作报头
+		报头可以包含数据长度，MD5校验值，数据类型等信息
+		2. 发送报头长度
+		将报头用json或其他序列化模块序列化成字符串，用struct模块将序列化后的报头长度制作成固定长度(通常4个字节足以)的bytes发送过去
+		3. 发送报头
+		4. 发送数据
+	- 接收端
+		1. 接收报头长度
+		接收固定长度(与发送端约定好的长度)的数据，使用struct模块解析出报头长度
+		2. 接收报头
+		接收上一步解析出的报头长度的数据，使用相应的序列化模块反序列化得到报头
+		3. 接收数据
+		从上一步中的报头中的信息取出数据长度，按照相应长度接收
+- 实例   
+服务端     
+```python
+from socket import *
+import subprocess
+import hashlib
+import json
+import struct
+
+servers = socket(AF_INET, SOCK_STREAM)
+servers.bind(('127.0.0.1', 20000))
+servers.listen(5)
+print('The server is started...')
+
+# Link loop
+while True:
+    print('Waiting for client links...')
+    connection, client_address = servers.accept()
+    print('Has been linked %s' % client_address[0])
+
+    # Communication cycle
+    while True:
+        try:
+            cmd = connection.recv(1024)
+            if not cmd:
+                break
+
+            # Execute the client's command
+            result = subprocess.Popen(cmd.decode('utf-8'), shell=True,
+                                      stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout = result.stdout.read()
+            stderr = result.stderr.read()
+
+            md5_obj = hashlib.md5()
+            md5_obj.update(stdout + stderr)
+
+            #  Make the header
+            header_dic = {
+                'total_size': len(stdout) + len(stderr),
+                'md5': md5_obj.hexdigest()}
+            header_bytes = json.dumps(header_dic).encode('utf-8')
+
+            # Make the fixed length of header
+            header_length = struct.pack('i', len(header_bytes))
+
+            # Send the fixed length of header
+            connection.send(header_length)
+
+            # Send the header
+            connection.send(header_bytes)
+
+            # Send the result
+            connection.send(stdout)
+            connection.send(stderr)
+
+        except Exception as error_info:
+            print(error_info)
+            break
+
+    connection.close()
+
+# servers.close()
+```
+客户端   
+```python
+from socket import *
+import struct
+import json
+import hashlib
+
+client = socket(AF_INET, SOCK_STREAM)
+client.connect(('127.0.0.1', 20000))
+
+while True:
+    cmd = input('[+_+] ').strip()
+    if not cmd:
+        continue
+
+    client.send(cmd.encode('utf-8'))
+
+    # Receive the fixed length of header
+    header_length = struct.unpack('i', client.recv(4))
+
+    # Receive the header
+    header_bytes = client.recv(header_length[0])
+    header_dic = json.loads(header_bytes.decode('utf-8'))
+
+    # Receive the message
+    total_size = header_dic['total_size']
+    receive_size = 0
+    total_data = b''
+    while receive_size < total_size:
+        receive_data = client.recv(1024)
+        receive_size += len(receive_data)
+        total_data += receive_data
+
+    md5_obj = hashlib.md5()
+    md5_obj.update(total_data)
+    if md5_obj.hexdigest() == header_dic['md5']:
+        print(total_data.decode('gbk'))
+    else:
+        print('Data is not complete.')
+```
 
 ### <span id='2.6'>2.6 基于UDP的套接字</span>
 
 
 ### <span id='2.7'>2.7 socketserver模块</span>
+
+
+## <span id='3'>3 练习：ftp文件上传下载</span>
+
+
