@@ -6,9 +6,8 @@
 	- [2.3 套接字(socket)函数](#2.3)
 	- [2.4 基于TCP的套接字](#2.4)
 	- [2.5 粘包](#2.5)
-	- [2.6 ](#2.6)
-
-
+	- [2.6 基于UDP的套接字](#2.6)
+	- [2.7 socketserver模块](#2.7)
 
 
 ## <span id='1'>1 基础知识</span>
@@ -84,28 +83,40 @@ tcpSock = socket(AF_INET, SOCK_STREAM)
 - s.connec_ex() connect()函数的扩展版本，出错时返回出错码，不抛出异常
 
 #### 公共用途
-- s.recv() 接收TCP数据
-	- 不可接收'空'
-- s.send() 发送TCP数据
-	- 待发送数量大于己端缓存剩余区空间时，数据丢失，不会发完
-- s.sendall() 发送完整的TCP数据
-	- 循环调用s.send
-s.recvfrom()        接收UDP数据  
-s.sendto()          发送UDP数据  
-s.getpeername()     连接到当前套接字的远端的地址  
-s.getsockname()     当前套接字的地址  
-s.getsockopt()      返回指定套接字的参数  
-s.setsockopt()      设置指定套接字的参数  
-- s.close() 关闭套接字
+- s.recv() 接收TCP数据   
+不可接收'空'
+- s.send() 发送TCP数据   
+待发送数量大于己端缓存剩余区空间时，数据丢失，不会发完
+- s.sendall()    
+发送完整的TCP数据，循环调用s.send
+- s.recvfrom()        
+接收UDP数据  
+- s.sendto()          
+发送UDP数据  
+- s.getpeername()     
+连接到当前套接字的远端的地址  
+- s.getsockname()     
+当前套接字的地址  
+- s.getsockopt()      
+返回指定套接字的参数  
+- s.setsockopt()      
+设置指定套接字的参数  
+- s.close() 
+关闭套接字
 
 #### 面向锁的套接字方法
-s.setblocking()     设置套接字的阻塞与非阻塞模式  
-s.settimeout()      设置阻塞套接字操作的超时时间  
-s.gettimeout()      得到阻塞套接字操作的超时时间  
+- s.setblocking()     
+设置套接字的阻塞与非阻塞模式  
+- s.settimeout()      
+设置阻塞套接字操作的超时时间  
+- s.gettimeout()      
+得到阻塞套接字操作的超时时间  
 
 #### 面向文件的套接字的函数
-s.fileno()          套接字的文件描述符  
-s.makefile()        创建一个与该套接字相关的文件  
+- s.fileno()          
+套接字的文件描述符  
+- s.makefile()        
+创建一个与该套接字相关的文件  
 
 ### <span id='2.4'>2.4 基于TCP的套接字</span>
 #### 基础实例
@@ -233,8 +244,104 @@ while True:
 
 # 5.stop the client
 client.close()
-
 ```
-### <span id='2.6'>2.5 粘包</span>
+#### 出现OSError: [WinError 10048]
+做测试的时候有可能会出现如下错误信息：
+
+> OSError: [WinError 10048] 通常每个套接字地址(协议/网络地址/端口)只允许使用一次。
+
+这个是由于你的服务端仍然存在四次挥手的time_wait状态在占用地址的状态
+
+>其中原理有可能是如下几种，请自行了解：
+1. tcp三次握手，四次挥手 
+2. syn洪水攻击 
+3. 服务器高并发情况下会有大量的time_wait状态的优化方法
+
+解决办法：
+- 加入一条socket配置，在任务结束后重用ip和端口，需要在可以正常运行服务端的时候就使用           
+```python
+phone=socket(AF_INET,SOCK_STREAM)
+phone.setsockopt(SOL_SOCKET,SO_REUSEADDR,1) #就是它，在bind前加
+phone.bind(('127.0.0.1',8080))
+```
+- 发现系统存在大量TIME_WAIT状态的连接，通过调整linux内核参数解决    
+```python
+vi /etc/sysctl.conf
+
+# 编辑文件，加入以下内容：
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_tw_recycle = 1
+net.ipv4.tcp_fin_timeout = 30
+ 
+# 然后执行 /sbin/sysctl -p 让参数生效。
+ 
+net.ipv4.tcp_syncookies = 1 
+# 表示开启SYN Cookies。当出现SYN等待队列溢出时，启用cookies来处理，可防范少量SYN攻击，默认为0，表示关闭；
+
+net.ipv4.tcp_tw_reuse = 1 
+# 表示开启重用。允许将TIME-WAIT sockets重新用于新的TCP连接，默认为0，表示关闭；
+
+net.ipv4.tcp_tw_recycle = 1 
+# 表示开启TCP连接中TIME-WAIT sockets的快速回收，默认为0，表示关闭。
+
+net.ipv4.tcp_fin_timeout 
+# 修改系統默认的 TIMEOUT 时间
+```
+
+### <span id='2.5'>2.5 粘包</span>
+- 服务端    
+```python
+from socket import *
+import subprocess
+
+ip_port=('127.0.0.1',8080)
+
+server=socket(AF_INET,SOCK_STREAM)
+server.bind(ip_port)
+server.listen(5)
+
+while True:
+    conn,addr=tcp_socket_server.accept()
+    print('客户端',addr)
+
+    while True:
+        cmd=conn.recv(1024)
+        if not cmd:break
+        res=subprocess.Popen(cmd.decode('utf-8'),shell=True,
+                         stdout=subprocess.PIPE,
+                         stdin=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+
+        stderr=act_res.stderr.read()
+        stdout=act_res.stdout.read()
+        conn.send(stderr)
+        conn.send(stdout)
+```
+- 客户端    
+```python
+import socket
+ip_port=('127.0.0.1',8080)
+
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+res=s.connect_ex(ip_port)
+
+while True:
+    msg=input('>>: ').strip()
+    if not msg:continue
+    if msg == 'quit':break
+
+    s.send(msg.encode('utf-8'))
+    data=s.recv(1024)
+
+    print(data.decode('utf-8'))
+```
+- 上面简单实现了一个远程cmd命令行，运行时如果使用返回较多信息的命令（如ipconfig -all）时会发生粘包：
+	- 上一条命令返回的结果不完整，下一条命令返回了上一条命令未完内容
+![]()
+#### 粘包原理
+
+### <span id='2.6'>2.6 基于UDP的套接字</span>
 
 
+### <span id='2.7'>2.7 socketserver模块</span>
