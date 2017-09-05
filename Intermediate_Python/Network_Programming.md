@@ -131,7 +131,6 @@ connect()函数的扩展版本，出错时返回出错码，不抛出异常
 ### <span id='2.4'>2.4 基于TCP的套接字</span>
 #### 基础实例
 - server端   
-
 ```python  
 import socket
 
@@ -159,8 +158,8 @@ client_connect.close()
 # 6.stop the server
 server.close()
 ```
-- client端  
 
+- client端   
 ```python  
 import socket
 
@@ -274,6 +273,7 @@ phone=socket(AF_INET,SOCK_STREAM)
 phone.setsockopt(SOL_SOCKET,SO_REUSEADDR,1) #就是它，在bind前加
 phone.bind(('127.0.0.1',8080))
 ```
+
 - 发现系统存在大量TIME_WAIT状态的连接，通过调整linux内核参数解决    
 ```python
 vi /etc/sysctl.conf
@@ -328,6 +328,7 @@ while True:
         conn.send(stderr)
         conn.send(stdout)
 ```
+
 - 客户端    
 ```python
 import socket
@@ -346,6 +347,7 @@ while True:
 
     print(data.decode('utf-8'))
 ```
+
 - 上面简单实现了一个远程cmd命令行，运行时如果使用返回较多信息的命令（如ipconfig -all）时会发生粘包：
 	- 上一条命令返回的结果不完整，下一条命令返回了上一条命令未完内容
 

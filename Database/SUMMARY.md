@@ -1,3 +1,3 @@
 ## Database
 
-- [MySql入门](MySql.md)
+- [MySql入门](MySQL.md)
