@@ -16,14 +16,13 @@
 过去人们将数据存放在文件柜里，现在数据量庞大，已经不再适用   
 数据库是长期存放在计算机内、有组织、可共享的数据即可。   
 数据库中的数据按一定的数据模型组织、描述和储存，具有较小的冗余度、较高的数据独立性和易扩展性，并可为各种 用户共享
+
 #### 数据库分类
 分两大类：
 - 关系型：sqllite，db2，oracle，access，sql server，MySQL，MariaDB，注意：sql语句通用
 - 非关系型：mongodb，redis，memcache
 
-
 ### 什么是数据库管理系统（DataBase Management System 简称DBMS）
-
 在了解了Data与DB的概念后，如何科学地组织和存储数据，如何高效获取和维护数据成了关键   
 这就用到了一个系统软件---数据库管理系统    
 如MySQL、Oracle、SQLite、Access、MS SQL Server   
@@ -37,13 +36,14 @@
 #### 下载
 在官网下载相应版本。  
 官网链接：https://dev.mysql.com/downloads/mysql
+
 #### 解压
 如果想要让MySQL安装在指定目录，那么就将解压后的文件夹移动到指定目录，如：C:\mysql-5.7.16-winx64   
+
 #### 初始化
 - MySQL解压后的 bin 目录下有一大堆的可执行文件，执行如下命令初始化数据   
 	```
 	cd c:\mysql-5.7.16-winx64\bin
-	 
 	mysqld --initialize-insecure
 	```
 
@@ -78,10 +78,10 @@
 	```python
 	# 启动MySQL服务，在终端任意目录输入
 	mysqld
-	 
 	# 连接MySQL服务，在终端任意目录输入：
 	mysql -u root -p
 	```
+
 ##### 将MySQL服务制作成windows服务
 ```python
 # 制作MySQL的Windows服务，在终端执行此命令：
@@ -132,6 +132,7 @@
 	mysql -uroot -p
 	mysql 以root用户登录本机，密码为空
 	```
+
 #### 忘记密码
 ##### linux
 - 方法一：删除授权库mysql，重新初始化         
@@ -230,38 +231,183 @@ password=4573
 	step 3: flush privileges;
 	```
 
-## SQL语句
-查看当前用户信息
+## SQL语句（Structured Query Language）
+- 查看当前用户信息   
 ```sql
 select user();
 ```
+- 分类
+	1. DDL语句	数据库定义语言： 数据库、表、视图、索引、存储过程，例如CREATE DROP ALTER
+	2. DML语句	数据库操纵语言： 插入数据INSERT、删除数据DELETE、更新数据UPDATE、查询数据SELECT
+	3. DCL语句	数据库控制语言： 例如控制用户的访问权限GRANT、REVOKE
+- 系统数据库     
+	- information_schema：	虚拟库，不占用磁盘空间，存储的是数据库启动后的一些参数，如用户表信息、列信息、权限信息、字符信息等
+	- performance_schema： MySQL 5.5开始新增一个数据库：主要用于收集数据库服务器性能参数，记录处理查询请求时发生的各种事件、锁等现象 
+	- mysql：	授权库，主要存储系统用户的权限信息
+	- test：	MySQL 数据库系统自动创建的测试数据库
 
 ### 库（文件夹）操作
-- 增   
+#### 增
+- **CREATE** **{DATABASE | SCHEMA}** [IF NOT EXISTS] **db_name** [create_specification] ... 
+	- **create_specification**: [DEFAULT] CHARACTER SET [=] charset_name | [DEFAULT] COLLATE [=] collation_name     
 ```sql
 create database db1 charset utf8;
 ```
-- 查   
+
+#### 查   
+- **SHOW** **DATABASES** [like_or_where]    
+- **SHOW** **CREATE** **DATABASE** **db_name**     
 ```sql
 show databases;
 show create database db1;
 ```
-- 改  
+
+#### 改  
+- **ALTER** **{DATABASE | SCHEMA}** [db_name] alter_specification ...
+	- **alter_specification**: [DEFAULT] CHARACTER SET [=] charset_name | [DEFAULT] COLLATE [=] collation_name
+- **ALTER** **{DATABASE | SCHEMA}** **db_name** **UPGRADE** **DATA DIRECTORY NAME**    
 ```sql
 alter database db1 charset gbk;
 ```
-- 删   
+
+#### 删   
+- **DROP** **{DATABASE | SCHEMA}** [IF EXISTS] **db_name**      
 ```sql
 drop database db1;
 ```
+
 ### 表（文件）操作
 切换到文件夹下：   
-- 增   
+#### 增   
+**简易例子**：        
 ```sql
 create table t1(id int, name char(10)) engine=innodb;
 create table t2(id int, name char(10)) engine=innodb;
+create table t4 select * from t1 where 1=2;
 ```
-- 查   
+
+**完整命令**：       
+- **CREATE** [TEMPORARY] **TABLE** [IF NOT EXISTS] **tbl_name(create_definition,...)**  [table_options] [partition_options]
+- **CREATE** [TEMPORARY] **TABLE** [IF NOT EXISTS] **tbl_name**[(create_definition,...)]  [table_options] [partition_options] [IGNORE | REPLACE] [AS] **query_expression**
+- **CREATE** [TEMPORARY] **TABLE** [IF NOT EXISTS] **tbl_name{ LIKE old_tbl_name | (LIKE old_tbl_name) }**
+	- **create_definition**:
+		- **col_name** 
+		- **column_definition** 
+		- | [CONSTRAINT [symbol]] **PRIMARY KEY** [index_type] (index_col_name,...)  [index_option] ...
+		- | **{INDEX|KEY}** [index_name] [index_type] (index_col_name,...) [index_option] ...
+		- | [CONSTRAINT [symbol]] **UNIQUE** [INDEX|KEY] [index_name] [index_type] (index_col_name,...) [index_option] ... 
+		- | **{FULLTEXT|SPATIAL}** [INDEX|KEY] [index_name] (index_col_name,...)  [index_option] ...
+		- | [CONSTRAINT [symbol]] **FOREIGN KEY** [index_name] (index_col_name,...) **reference_definition**
+		- | **CHECK(expr)**
+			- **column_definition**:
+		    	- **data_type** [NOT NULL | NULL] [DEFAULT default_value] [AUTO_INCREMENT] [UNIQUE [KEY] | [PRIMARY] KEY] [COMMENT 'string'] [COLUMN_FORMAT {FIXED|DYNAMIC|DEFAULT}] [STORAGE {DISK|MEMORY|DEFAULT}] [reference_definition]
+		    	- | **data_type** [GENERATED ALWAYS] **AS** **(expression)** [VIRTUAL | STORED] [UNIQUE [KEY]] [COMMENT comment] [NOT NULL | NULL] [[PRIMARY] KEY]
+					- **data_type**:
+						- **BIT**[(length)]
+						- | **TINYINT**[(length)] [UNSIGNED] [ZEROFILL]
+						- | **SMALLINT**[(length)] [UNSIGNED] [ZEROFILL]
+						- | **MEDIUMINT**[(length)] [UNSIGNED] [ZEROFILL]
+						- | **INT**[(length)] [UNSIGNED] [ZEROFILL]
+						- | **INTEGER**[(length)] [UNSIGNED] [ZEROFILL]
+						- | **BIGINT**[(length)] [UNSIGNED] [ZEROFILL]
+						- | **REAL**[(length,decimals)] [UNSIGNED] [ZEROFILL]
+						- | **DOUBLE**[(length,decimals)] [UNSIGNED] [ZEROFILL]
+						- | **FLOAT**[(length,decimals)] [UNSIGNED] [ZEROFILL]
+						- | **DECIMAL**[(length[,decimals])] [UNSIGNED] [ZEROFILL]
+						- | **NUMERIC**[(length[,decimals])] [UNSIGNED] [ZEROFILL]
+						- | **DATE**
+						- | **TIME**[(fsp)]
+						- | **TIMESTAMP**[(fsp)]
+						- | **DATETIME**[(fsp)]
+						- | **YEAR**
+						- | **CHAR**[(length)] [BINARY] [CHARACTER SET charset_name] [COLLATE collation_name]
+						- | **VARCHAR(length)** [BINARY] [CHARACTER SET charset_name] [COLLATE collation_name]
+						- | **BINARY**[(length)]
+						- | **VARBINARY(length)**
+						- | **TINYBLOB**
+						- | **BLOB**
+						- | **MEDIUMBLOB**
+						- | **LONGBLOB**
+						- | **TINYTEXT** [BINARY] [CHARACTER SET charset_name] [COLLATE collation_name]
+						- | **TEXT** [BINARY] [CHARACTER SET charset_name] [COLLATE collation_name]
+						- | **MEDIUMTEXT** [BINARY] [CHARACTER SET charset_name] [COLLATE collation_name]
+						- | **LONGTEXT** [BINARY] [CHARACTER SET charset_name] [COLLATE collation_name] 
+						- | **ENUM(value1,value2,value3,...)** [CHARACTER SET charset_name] [COLLATE collation_name]
+						- | **SET(value1,value2,value3,...)** [CHARACTER SET charset_name] [COLLATE collation_name]
+						- | **JSON**
+						- | **spatial_type**
+			- **index_col_name**:
+		    	- **col_name** [(length)] [ASC | DESC]
+			- **index_type**:
+			    - **USING {BTREE | HASH}**
+			- **index_option**:
+				- **KEY_BLOCK_SIZE** [=] **value**
+				- | **index_type**
+				- | **WITH PARSER parser_name**
+				- | **COMMENT 'string'**
+			- **reference_definition**:
+				- **REFERENCES tbl_name(index_col_name,...)** [MATCH FULL | MATCH PARTIAL | MATCH SIMPLE] [ON DELETE reference_option] [ON UPDATE reference_option]
+			- **reference_option**: 
+				- **RESTRICT** | **CASCADE** | **SET NULL** | **NO ACTION** | **SET DEFAULT**
+	- **table_options**:
+		- **table_option** [[,] table_option] ...
+			- **table_option**:
+				- **ENGINE** [=] **engine_name**
+				- | **AUTO_INCREMENT** [=] **value**
+				- | **AVG_ROW_LENGTH** [=] **value**
+				- | [DEFAULT] **CHARACTER SET** [=] **charset_name**
+				- | **CHECKSUM** [=] **{0 | 1}**
+				- | [DEFAULT] **COLLATE** [=] **collation_name**
+				- | **COMMENT** [=] **'string'**
+				- | **COMPRESSION** [=] **{'ZLIB'|'LZ4'|'NONE'}**
+				- | **CONNECTION** [=] **'connect_string'**
+				- | **DATA DIRECTORY** [=] **'absolute path to directory'**
+				- | **DELAY_KEY_WRITE** [=] **{0 | 1}**
+				- | **ENCRYPTION** [=] **{'Y' | 'N'}**
+				- | **INDEX DIRECTORY** [=] **'absolute path to directory'**
+				- | **INSERT_METHOD** [=] **{ NO | FIRST | LAST }**
+				- | **KEY_BLOCK_SIZE** [=] **value**
+				- | **MAX_ROWS** [=] **value**
+				- | **MIN_ROWS** [=] **value**
+				- | **PACK_KEYS** [=] **{0 | 1 | DEFAULT}**
+				- | **PASSWORD** [=] **'string'**
+				- | **ROW_FORMAT** [=] **{DEFAULT|DYNAMIC|FIXED|COMPRESSED|REDUNDANT|COMPACT}**
+				- | **STATS_AUTO_RECALC** [=] **{DEFAULT|0|1}**
+				- | **STATS_PERSISTENT** [=] **{DEFAULT|0|1}**
+				- | **STATS_SAMPLE_PAGES** [=] **value**
+				- | **TABLESPACE tablespace_name** [STORAGE {DISK|MEMORY|DEFAULT}]
+				- | **UNION** [=] **(tbl_name[,tbl_name]...)**
+	- **partition_options**:
+		- **PARTITION BY** { [LINEAR] **HASH(expr)** | [LINEAR] **KEY** [ALGORITHM={1|2}](column_list) | **RANGE{(expr)** | **COLUMNS(column_list)**} | **LIST{(expr)** | **COLUMNS(column_list)**} }
+		- [PARTITIONS num]
+		- [SUBPARTITION BY { [LINEAR] **HASH(expr)** | [LINEAR] **KEY** [ALGORITHM={1|2}] (column_list) } [SUBPARTITIONS num]]
+		- [(partition_definition [, partition_definition] ...)]
+			- **partition_definition**:
+				- **PARTITION** **partition_name**
+					- [VALUES {LESS THAN {(expr | value_list) | MAXVALUE} | IN (value_list)}]
+					- [[STORAGE] **ENGINE** [=] engine_name]
+					- [COMMENT [=] 'comment_text' ]
+					- [DATA DIRECTORY [=] 'data_dir']
+					- [INDEX DIRECTORY [=] 'index_dir']
+					- [MAX_ROWS [=] max_number_of_rows]
+					- [MIN_ROWS [=] min_number_of_rows]
+					- [TABLESPACE [=] tablespace_name]
+					- [(subpartition_definition [, subpartition_definition] ...)]
+						- **subpartition_definition**:
+							- **SUBPARTITION** **logical_name**
+								- [[STORAGE] **ENGINE** [=] engine_name]
+								- [COMMENT [=] 'comment_text' ]
+								- [DATA DIRECTORY [=] 'data_dir']
+								- [INDEX DIRECTORY [=] 'index_dir']
+								- [MAX_ROWS [=] max_number_of_rows]
+								- [MIN_ROWS [=] min_number_of_rows]
+								- [TABLESPACE [=] tablespace_name]
+	- **query_expression**:
+		- SELECT ...   (Some valid select or union statement)
+
+#### 查   
+- **SHOW** [FULL] **TABLES** [{FROM | IN} db_name] [LIKE 'pattern' | WHERE expr]     
+- **SHOW** **CREATE TABLE tbl_name**     
 ```sql
 show tables;
 show create table t1;
@@ -269,35 +415,148 @@ show create table t1;
 # 查看表结构
 desc/describe t1;
 ```
-- 改   
+
+#### 改   
 ```sql
 alter table t1 add age int;
 alter table t1 modify name char(12);
 ```
-- 删  
+**完整命令**
+- **ALTER** **TABLE tbl_name** [alter_specification [, alter_specification] ...] [partition_options]
+	- **alter_specification**:
+		- **table_options** 
+		- | **ADD** [COLUMN] **col_name column_definition** [FIRST | AFTER col_name ]
+		- | **ADD** [COLUMN] **(col_name column_definition,...)**
+		- | **ADD** **{INDEX|KEY}** [index_name] [index_type] **(index_col_name,...)** [index_option] ...
+		- | **ADD** [CONSTRAINT [symbol]] **PRIMARY KEY** [index_type] **(index_col_name,...)** [index_option] ...
+		- | **ADD** [CONSTRAINT [symbol]] **UNIQUE** [INDEX|KEY] [index_name] [index_type] **(index_col_name,...)** [index_option] ...
+		- | **ADD FULLTEXT** [INDEX|KEY] [index_name] **(index_col_name,...)** [index_option] ...
+		- | **ADD SPATIAL** [INDEX|KEY] [index_name] **(index_col_name,...)** [index_option] ...
+		- | **ADD** [CONSTRAINT [symbol]] **FOREIGN KEY** [index_name] **(index_col_name,...) reference_definition**
+		- | **ALGORITHM** [=] **{DEFAULT|INPLACE|COPY}**
+		- | **ALTER** [COLUMN] **col_name {SET DEFAULT literal | DROP DEFAULT}**
+		- | **CHANGE** [COLUMN] **old_col_name new_col_name column_definition** [FIRST|AFTER col_name]
+		- | **LOCK** [=] **{DEFAULT|NONE|SHARED|EXCLUSIVE}**
+		- | **MODIFY** [COLUMN] **col_name column_definition** [FIRST | AFTER col_name]
+		- | **DROP** [COLUMN] **col_name**
+		- | **DROP PRIMARY KEY**
+		- | **DROP {INDEX|KEY} index_name**
+		- | **DROP FOREIGN KEY fk_symbol**
+		- | **DISABLE KEYS**
+		- | **ENABLE KEYS**
+		- | **RENAME** [TO|AS] **new_tbl_name**
+		- | **RENAME {INDEX|KEY} old_index_name TO new_index_name**
+		- | **ORDER BY col_name** [, col_name] ...
+		- | **CONVERT TO CHARACTER SET charset_name** [COLLATE collation_name]
+		- | [DEFAULT] **CHARACTER SET** [=] **charset_name** [COLLATE [=] collation_name]
+		- | **DISCARD TABLESPACE**
+		- | **IMPORT TABLESPACE**
+		- | **FORCE**
+		- | **{WITHOUT|WITH} VALIDATION**
+		- | **ADD PARTITION (partition_definition)**
+		- | **DROP PARTITION partition_names**
+		- | **DISCARD PARTITION {partition_names | ALL} TABLESPACE**
+		- | **IMPORT PARTITION {partition_names | ALL} TABLESPACE**
+		- | **TRUNCATE PARTITION {partition_names | ALL}**
+		- | **COALESCE PARTITION number**
+		- | **REORGANIZE PARTITION partition_names INTO (partition_definitions)**
+		- | **EXCHANGE PARTITION partition_name WITH TABLE tbl_name** [{WITH|WITHOUT} VALIDTION]
+		- | **ANALYZE PARTITION {partition_names | ALL}**
+		- | **CHECK PARTITION {partition_names | ALL}**
+		- | **OPTIMIZE PARTITION {partition_names | ALL}**
+		- | **REBUILD PARTITION {partition_names | ALL}**
+		- | **REPAIR PARTITION {partition_names | ALL}**
+		- | **REMOVE PARTITIONING**
+		- | **UPGRADE PARTITIONING**
+			- **index_col_name**:
+				- **col_name** [(length)] [ASC | DESC]
+			- **index_type**:
+				- **USING {BTREE | HASH}**
+			- **index_option**:
+				- **KEY_BLOCK_SIZE** [=] **value**
+				- | **index_type**
+				- | **WITH PARSER parser_name**
+				- | **COMMENT 'string'**
+			- **table_options**:
+				- **table_option** [[,] table_option] ...
+					- **table_option**:
+						- **ENGINE** [=] **engine_name**
+						- | **AUTO_INCREMENT** [=] **value**
+						- | **AVG_ROW_LENGTH** [=] **value**
+						- | [DEFAULT] **CHARACTER SET** [=] **charset_name**
+						- | **CHECKSUM** [=] **{0 | 1}**
+						- | [DEFAULT] **COLLATE** [=] **collation_name**
+						- | **COMMENT** [=] **'string'**
+						- | **COMPRESSION** [=] **{'ZLIB'|'LZ4'|'NONE'}**
+						- | **CONNECTION** [=] **'connect_string'**
+						- | **DATA DIRECTORY** [=] **'absolute path to directory'**
+						- | **DELAY_KEY_WRITE** [=] **{0 | 1}**
+						- | **ENCRYPTION** [=] **{'Y' | 'N'}**
+						- | **INDEX DIRECTORY** [=] **'absolute path to directory'**
+						- | **INSERT_METHOD** [=] **{ NO | FIRST | LAST }**
+						- | **KEY_BLOCK_SIZE** [=] **value**
+						- | **MAX_ROWS** [=] **value**
+						- | **MIN_ROWS** [=] **value**
+						- | **PACK_KEYS** [=] **{0 | 1 | DEFAULT}**
+						- | **PASSWORD** [=] **'string'**
+						- | **ROW_FORMAT** [=] **{DEFAULT|DYNAMIC|FIXED|COMPRESSED|REDUNDANT|COMPACT}**
+						- | **STATS_AUTO_RECALC** [=] **{DEFAULT|0|1}**
+						- | **STATS_PERSISTENT** [=] **{DEFAULT|0|1}**
+						- | **STATS_SAMPLE_PAGES** [=] **value**
+						- | **TABLESPACE tablespace_name** [STORAGE {DISK|MEMORY|DEFAULT}]
+						- | **UNION** [=] **(tbl_name[,tbl_name]...)**
+	- **partition_options**:(see CREATE TABLE options)
+#### 删  
+- **DROP** [TEMPORARY] **TABLE** [IF EXISTS] **tbl_name** [, tbl_name] ... [RESTRICT | CASCADE]
 ```sql
 drop table t2;
 ```
+
 ### 记录（文件内容）操作
-- 增   
+#### 增   
 ```sql
 insert into db1.t1 values(1,'chuck',19),(2,'chuck2',20),(3,'chuck3',21);
 insert into t1 value(4,'chuck4',20);
 insert into t1(name) value('chuck5');
 ```
-- 查   
+- **INSERT** [LOW_PRIORITY | DELAYED | HIGH_PRIORITY] [IGNORE] [INTO] **tbl_name** [PARTITION (partition_name,...)] [(col_name,...)] **{VALUES | VALUE}({expr | DEFAULT},...)**,(...),... [ ON DUPLICATE KEY UPDATE col_name=expr [, col_name=expr] ... ]
+- **INSERT** [LOW_PRIORITY | DELAYED | HIGH_PRIORITY] [IGNORE] [INTO] **tbl_name** [PARTITION (partition_name,...)] **SET col_name={expr | DEFAULT}**, ... [ ON DUPLICATE KEY UPDATE col_name=expr [, col_name=expr] ... ]
+- **INSERT** [LOW_PRIORITY | HIGH_PRIORITY] [IGNORE] [INTO] **tbl_name** [PARTITION (partition_name,...)] [(col_name,...)] **SELECT** ... [ ON DUPLICATE KEY UPDATE col_name=expr [, col_name=expr] ... ]
+#### 查   
 ```sql
 select \* from t1;
 select name from t1;
 select name,id from t1;
 ```
-- 改   
+
+- **SELECT** 
+	- [ALL | DISTINCT | DISTINCTROW ]
+	- [HIGH_PRIORITY] 
+	- [STRAIGHT_JOIN] 
+	- [SQL_SMALL_RESULT] [SQL_BIG_RESULT] [SQL_BUFFER_RESULT] 
+	- [SQL_CACHE | SQL_NO_CACHE] [SQL_CALC_FOUND_ROWS]
+    - **select_expr** [, select_expr ...]
+    - [**FROM** **table_references** 
+	    - [**PARTITION** partition_list]
+	    - [**WHERE** where_condition]
+	    - [**GROUP BY** {col_name | expr | position} [ASC | DESC], ... [WITH ROLLUP]]
+	    - [**HAVING** where_condition]
+	    - [**ORDER BY** {col_name | expr | position} [ASC | DESC], ...]
+	    - [**LIMIT** {[offset,] row_count | row_count OFFSET offset}]
+	    - [**PROCEDURE** procedure_name(argument_list)]
+	    - [**INTO OUTFILE** 'file_name' [CHARACTER SET charset_name] export_options
+		    - | **INTO DUMPFILE** 'file_name'
+		    - | **INTO** var_name [, var_name]]
+		- [**FOR UPDATE** | **LOCK IN SHARE MODE**]]
+
+#### 改   
 ```sql
 update t1 set name='NOBODY' where id=4;
 update t1 set name='None' where name=chuck;
 update t1 set id=12 where name='None';
 ```
-- 删     
+
+#### 删     
 ```sql
 delete from t1 where id=4;
 delete from t1; # 清空表
@@ -305,6 +564,12 @@ delete from t1; # 清空表
 truncate # :截断，比delete删除快         
 truncate t1; # 清空表      
 ```
+**Single-table syntax**
+- UPDATE [LOW_PRIORITY] [IGNORE] table_reference SET col_name1={expr1|DEFAULT} [, col_name2={expr2|DEFAULT}] ... [WHERE where_condition] [ORDER BY ...] [LIMIT row_count]        
+
+**Multiple-table syntax**
+- UPDATE [LOW_PRIORITY] [IGNORE] table_references SET col_name1={expr1|DEFAULT} [, col_name2={expr2|DEFAULT}] ... [WHERE where_condition]
+
 #### 自增id 
 ```sql
 create table t1(id int not null, name char(10));
@@ -320,7 +585,61 @@ insert into t5(name) values('chuck'),('chuck2'),('chuck3'),('chuck4'),('chuck5')
 ```
 - 自增的字段需要用truncate清空表后才可以从1开始自增
 
+#### 拷贝表
+- 表结构和记录   
+```sql
+create table t6 select * from t5;
+create table t3 like t1;
+```
+- 表结构    
+```sql
+create table t7 select * from t5 where 1=2; 
+alter table t7 modify id int primary key auto_increment;
+```
+
+### 清空记录
+```sql
+
+```
+
+## 授权
+```sql
+# 创建用户
+create user 'temp'@'localhost' identified by '123';
+
+# insert delete update select
+# 级别1：所有库，所有表，所有字段
+grant select on *.* to 'temp'@'localhost' identified by '123';
+
+# 级别2：对db1下的所有表，所有字段
+grant select on db1.* to 'temp2'@'localhost' identified by '123';
+
+# 级别3：对db下的t1表的所有字段
+grant select on db1.t1 to 'temp3'@'localhost' identified by '123';
+
+# 级别4：对db下的t1表的id字段
+grant select (id) on db1.t1 to 'temp4'@'localhost' identified by '123';
+
+# 修改完毕后
+flush privileges;
+
+```
+**完整命令**
+- **GRANT** **priv_type** [(column_list)] [, priv_type [(column_list)]] ... **ON** [object_type] **priv_level** **TO** **user** [auth_option] [, user [auth_option]] ... [REQUIRE {NONE | tls_option [[AND] tls_option] ...}] [WITH {GRANT OPTION | resource_option} ...]   
+- **GRANT** **PROXY** **ON** **user** **TO** **user** [, user] ... [WITH GRANT OPTION]
+	- **object_type**: {TABLE | FUNCTION | PROCEDURE }
+	- **priv_level**: { \* | \*.\* | db_name.\* | db_name.tbl_name | tbl_name | db_name.routine_name }
+	- **user**:(see http://dev.mysql.com/doc/refman/5.7/en/account-names.html)
+	- **auth_option**:{ **# Before MySQL 5.7.6** IDENTIFIED BY 'auth_string' | IDENTIFIED BY PASSWORD 'hash_string' | IDENTIFIED WITH auth_plugin | IDENTIFIED WITH auth_plugin AS 'hash_string'}
+	- **auth_option**: { **# As of MySQL 5.7.6** IDENTIFIED BY 'auth_string' | IDENTIFIED BY PASSWORD 'hash_string' | IDENTIFIED WITH auth_plugin | IDENTIFIED WITH auth_plugin BY 'auth_string' | IDENTIFIED WITH auth_plugin AS 'hash_string'}
+	- **tls_option**: { SSL | X509 | CIPHER 'cipher' | ISSUER 'issuer' | SUBJECT 'subject' }
+	- **resource_option**: { | MAX_QUERIES_PER_HOUR count | MAX_UPDATES_PER_HOUR count | MAX_CONNECTIONS_PER_HOUR count | MAX_USER_CONNECTIONS count }
+
 ## other
+在MySQL内查看所有配置信息          
+```sql
+\s
+```
 LAMP
 
 Apache MySQL PHP
