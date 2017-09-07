@@ -1,6 +1,20 @@
-# MySQL
+# <span id='0'>MySQL</span>
+- [数据库基础](#1.0)
+- [MySQL准备使用](#2.0)
+	- [Liunx环境](#2.1)
+	- [Windows环境](#2.2)
+	- [MySQL软件基本管理](#2.3)
+- [SQL语句(Structured Query Language)](#3.0)
+	- [库操作](#3.1)
+	- [表操作](#3.2)
+	- [记录操作](#3.3)
+	- [授权](#3.4)
+	- [数据类型](#3.5)
+	- [约束条件](#3.6)
 
-## 数据库基础
+
+[<p align=right>回到顶部</p>](#0)
+## <span id='1.0'>数据库基础</span>
 数据库服务器，数据管理系统，数据库，表和记录      
 装文件的电脑，MySQL软件，文件夹，文件和文件的每一行内容     
 
@@ -30,9 +44,10 @@
 - oracle主要用于银行、铁路、飞机场等。该数据库功能强大，软件费用高。也是甲骨文公司的产品。
 - sql server是微软公司的产品，主要应用于大中型企业，如联想、方正等。
 
-## MySQL准备使用
-### Liunx环境
-### Windows环境
+[<p align=right>回到顶部</p>](#0)
+## <span id='2.0'>MySQL准备使用</span>
+### <span id='2.1'>Liunx环境</span>
+### <span id='2.2'>Windows环境</span>
 #### 下载
 在官网下载相应版本。  
 官网链接：https://dev.mysql.com/downloads/mysql
@@ -41,15 +56,17 @@
 如果想要让MySQL安装在指定目录，那么就将解压后的文件夹移动到指定目录，如：C:\mysql-5.7.16-winx64   
 
 #### 初始化
-- MySQL解压后的 bin 目录下有一大堆的可执行文件，执行如下命令初始化数据   
-	```
+- MySQL解压后的 bin 目录下有一大堆的可执行文件，执行如下命令初始化数据    
+
+	```cmd
 	cd c:\mysql-5.7.16-winx64\bin
 	mysqld --initialize-insecure
 	```
 
 #### 启动MySQL服务
 - 执行命令从而启动MySQL服务     
-	```
+
+	```cmd
 	# 进入可执行文件目录
 	cd c:\mysql-5.7.16-winx64\bin
 	 
@@ -58,8 +75,9 @@
 	```
 
 #### 启动MySQL客户端连接到MySQL服务
-- 由于初始化时使用的【mysqld --initialize-insecure】命令，其默认未给root账户设置密码
-	```python
+- 由于初始化时使用的【mysqld --initialize-insecure】命令，其默认未给root账户设置密码    
+
+	```cmd
 	# 进入可执行文件目录
 	cd c:\mysql-5.7.16-winx64\bin
 	 
@@ -75,7 +93,8 @@
 【在第二个内容框中找到 变量名为Path 的一行，双击】 -->    
 【将MySQL的bin目录路径追加到变值值中，用；分割】   
 - 当再次启动服务仅需        
-	```python
+
+	```cmd
 	# 启动MySQL服务，在终端任意目录输入
 	mysqld
 	# 连接MySQL服务，在终端任意目录输入：
@@ -83,7 +102,7 @@
 	```
 
 ##### 将MySQL服务制作成windows服务
-```python
+```cmd
 # 制作MySQL的Windows服务，在终端执行此命令：
 "c:\mysql-5.7.16-winx64\bin\mysqld" --install
  
@@ -91,8 +110,9 @@
 "c:\mysql-5.7.16-winx64\bin\mysqld" --remove
 ```
 
-- 注册成服务之后，以后再启动和关闭MySQL服务时，仅需执行如下命令(管理员权限下)
-	```python
+- 注册成服务之后，以后再启动和关闭MySQL服务时，仅需执行如下命令(管理员权限下)      
+
+	```cmd
 	# 启动MySQL服务
 	net start mysql
 	 
@@ -116,18 +136,21 @@
 	- /F 强制删除进程
 	- /PID 以PID形式删除进程
 
-### MySQL软件基本管理
+[<p align=right>回到顶部</p>](#0)
+### <span id='2.3'>MySQL软件基本管理</span>
 #### 第一次登录后设置密码
 - 初始状态下，管理员root，密码为空，默认只允许从本机登录localhost
-- 设置密码       
-	```python
+- 设置密码        
+
+	```cmd
 	mysqladmin -uroot password "123"        
 	# 设置初始密码 由于原密码为空，因此-p可以不用
 	mysqladmin -uroot -p"123" password "456"        
 	# 修改mysql密码,因为已经有密码了，所以必须输入原密码才能设置新密码
 	``` 
-- 登录命令格式      
-	```python
+- 登录命令格式       
+
+	```cmd
 	mysql -h172.31.0.2 -uroot -p456
 	mysql -uroot -p
 	mysql 以root用户登录本机，密码为空
@@ -136,6 +159,7 @@
 #### 忘记密码
 ##### linux
 - 方法一：删除授权库mysql，重新初始化         
+
 	```linux
 	# rm -rf /var/lib/mysql/mysql #所有授权信息全部丢失！！！
 	# systemctl restart mariadb
@@ -143,6 +167,7 @@
 	```
 
 - 方法二：启动时跳过授权库，修改密码后重新登录    
+
 	```linux
 	# vim /etc/my.cnf    #mysql主配置文件
 	[mysqld]
@@ -155,11 +180,12 @@
 	# #打开/etc/my.cnf去掉skip-grant-table,然后重启
 	# systemctl restart mariadb
 	# mysql -u root -p123 #以新密码登录
-	```     
+	```
    
 ##### windows
 基本方法，跳过授权表登录
 - 方法一     
+
 	```cmd
 	#1 关闭mysql
 	#2 在cmd中执行：
@@ -178,6 +204,7 @@
 	```
 
 - 方法二      
+
 	```cmd
 	#1. 关闭mysql，可以用tskill将其杀死(tskill无法使用时先用tasklist寻找mysqld的PID再用taskkill杀死进程)
 	#2. 在解压目录下，新建mysql配置文件my.ini
@@ -225,13 +252,15 @@ password=4573
 > mac mysql error You must reset your password using ALTER USER statement before executing this statement.
 
 - 解决方法     
-	```python
+
+	```
 	step 1: SET PASSWORD = PASSWORD('your new password');
 	step 2: ALTER USER 'root'@'localhost' PASSWORD EXPIRE NEVER;
 	step 3: flush privileges;
 	```
 
-## SQL语句（Structured Query Language）
+[<p align=right>回到顶部</p>](#0)
+## <span id='3.0'>SQL语句（Structured Query Language）</span>
 - 查看当前用户信息   
 ```sql
 select user();
@@ -246,7 +275,8 @@ select user();
 	- mysql：	授权库，主要存储系统用户的权限信息
 	- test：	MySQL 数据库系统自动创建的测试数据库
 
-### 库（文件夹）操作
+[<p align=right>回到顶部</p>](#0)
+### <span id='3.1'>库（文件夹）操作</span>
 #### 增
 - **CREATE** **{DATABASE | SCHEMA}** [IF NOT EXISTS] **db_name** [create_specification] ... 
 	- **create_specification**: [DEFAULT] CHARACTER SET [=] charset_name | [DEFAULT] COLLATE [=] collation_name     
@@ -276,8 +306,12 @@ alter database db1 charset gbk;
 drop database db1;
 ```
 
-### 表（文件）操作
+[<p align=right>回到顶部</p>](#0)
+### <span id='3.2'>表（文件）操作</span>
 切换到文件夹下：   
+```sql
+use db1;
+```
 #### 增   
 **简易例子**：        
 ```sql
@@ -512,7 +546,8 @@ alter table t1 modify name char(12);
 drop table t2;
 ```
 
-### 记录（文件内容）操作
+[<p align=right>回到顶部</p>](#0)
+### <span id='3.3'>记录（文件内容）操作</span>
 #### 增   
 ```sql
 insert into db1.t1 values(1,'chuck',19),(2,'chuck2',20),(3,'chuck3',21);
@@ -549,12 +584,19 @@ select name,id from t1;
 		    - | **INTO** var_name [, var_name]]
 		- [**FOR UPDATE** | **LOCK IN SHARE MODE**]]
 
+- select \* from mysql.user\G; 
+
 #### 改   
 ```sql
 update t1 set name='NOBODY' where id=4;
 update t1 set name='None' where name=chuck;
 update t1 set id=12 where name='None';
 ```
+**Single-table syntax**
+- UPDATE [LOW_PRIORITY] [IGNORE] table_reference SET col_name1={expr1|DEFAULT} [, col_name2={expr2|DEFAULT}] ... [WHERE where_condition] [ORDER BY ...] [LIMIT row_count]        
+
+**Multiple-table syntax**
+- UPDATE [LOW_PRIORITY] [IGNORE] table_references SET col_name1={expr1|DEFAULT} [, col_name2={expr2|DEFAULT}] ... [WHERE where_condition]
 
 #### 删     
 ```sql
@@ -564,11 +606,7 @@ delete from t1; # 清空表
 truncate # :截断，比delete删除快         
 truncate t1; # 清空表      
 ```
-**Single-table syntax**
-- UPDATE [LOW_PRIORITY] [IGNORE] table_reference SET col_name1={expr1|DEFAULT} [, col_name2={expr2|DEFAULT}] ... [WHERE where_condition] [ORDER BY ...] [LIMIT row_count]        
 
-**Multiple-table syntax**
-- UPDATE [LOW_PRIORITY] [IGNORE] table_references SET col_name1={expr1|DEFAULT} [, col_name2={expr2|DEFAULT}] ... [WHERE where_condition]
 
 #### 自增id 
 ```sql
@@ -595,14 +633,11 @@ create table t3 like t1;
 ```sql
 create table t7 select * from t5 where 1=2; 
 alter table t7 modify id int primary key auto_increment;
+
+create table t8 like t5;
 ```
-
-### 清空记录
-```sql
-
-```
-
-## 授权
+[<p align=right>回到顶部</p>](#0)
+### <span id='3.4'>授权</span>
 ```sql
 # 创建用户
 create user 'temp'@'localhost' identified by '123';
@@ -635,6 +670,369 @@ flush privileges;
 	- **tls_option**: { SSL | X509 | CIPHER 'cipher' | ISSUER 'issuer' | SUBJECT 'subject' }
 	- **resource_option**: { | MAX_QUERIES_PER_HOUR count | MAX_UPDATES_PER_HOUR count | MAX_CONNECTIONS_PER_HOUR count | MAX_USER_CONNECTIONS count }
 
+[<p align=right>回到顶部</p>](#0)
+### <span id='3.5'>数据类型</span>
+#### 数值类型
+##### 整数
+整数的length表示显示的长度（在zerofill启用时有效）    
+- **TINYINT**[(length)] [UNSIGNED] [ZEROFILL]
+	- 1字节，小整数，保存一些小范围的整数数值
+	- 有符号，范围（-128，127）
+	- 无符号，范围（0，255）
+	- MySQL中无布尔值，使用tinyint(1)构造。
+- **INT**[(length)] [UNSIGNED] [ZEROFILL]
+	- 4字节，整数，数据类型用于保存一些中等范围的整数数值
+	- 有符号： -2147483648 ～ 2147483647
+	- 无符号： 0 ～ 4294967295
+- **BIGINT**[(length)] [UNSIGNED] [ZEROFILL]
+	- 8字节，大整数，数据类型用于保存一些大范围的整数数值
+	- 有符号：-9223372036854775808 ～ 9223372036854775807
+	- 无符号：0  ～  18446744073709551615
+##### 浮点数
+- **DECIMAL**[(length[,decimals])] [UNSIGNED] [ZEROFILL]
+	- 准确的小数值，length是数字总个数（负号不算），decimals是小数点后个数。 length最大值为65，decimals最大值为30。
+	- 特别的：对于精确数值计算时需要用此类型，decaimal能够存储精确值的原因在于其内部按照字符串存储。
+- **DOUBLE**[(length,decimals)] [UNSIGNED] [ZEROFILL]
+	- 单精度浮点数（非准确小数值），length是数字总个数，decimals是小数点后个数。
+	- 有符号：
+		- -3.402823466E+38 to -1.175494351E-38
+		- 0
+		- 1.175494351E-38 3.402823466E+38
+	- 无符号：
+		- 0
+		- 1.175494351E-38 to 3.402823466E+38
+- **FLOAT**[(length,decimals)] [UNSIGNED] [ZEROFILL]
+	- 双精度浮点数（非准确小数值），length是数字总个数，decimals是小数点后个数。
+	- 有符号：
+		- -1.7976931348623157E+308 to -2.2250738585072014E-308
+		- 0
+		- 2.2250738585072014E-308 to 1.7976931348623157E+308
+	- 无符号：
+		- 0
+		- 2.2250738585072014E-308 to 1.7976931348623157E+308
+##### 位类型
+- **BIT**[(length)]
+	- 可以用来存放多位二进制数，length范围从1~64，如果不写默认为1位。
+	- 注意：对于位字段需要使用函数读取
+		- bin()显示为二进制
+		- hex()显示为十六进制
+#### 字符串类型
+- **CHAR**[(length)] [BINARY] [CHARACTER SET charset_name] [COLLATE collation_name]
+	- 定长，简单粗暴，浪费空间，存取速度快
+	- 字符长度范围：0-255（一个中文是一个字符，是utf8编码的3个字节）
+	- 存储：
+	    - 存储char类型的值时，会往右填充空格来满足长度
+	    - 例如：指定长度为10，存>10个字符则报错，存<10个字符则用空格填充直到凑够10个字符存储
+    - 检索：
+	    - 在检索或者说查询时，查出的结果会自动删除尾部的空格，除非我们打开pad_char_to_full_length SQL模式（SET sql_mode = 'PAD_CHAR_TO_FULL_LENGTH';）
+- **VARCHAR(length)** [BINARY] [CHARACTER SET charset_name] [COLLATE collation_name]
+	- 变长，精准，节省空间，存取速度慢
+	- 字符长度范围：0-65535（如果大于21845会提示用其他类型 。mysql行最大限制为65535字节，字符编码为utf-8：https://dev.mysql.com/doc/refman/5.7/en/column-count-limit.html）
+	- 存储：
+		- varchar类型存储数据的真实内容，不会用空格填充，如果'ab  ',尾部的空格也会被存起来
+		- 强调：varchar类型会在真实数据前加1-2Bytes的前缀，该前缀用来表示真实数据的bytes字节数（1-2Bytes最大表示65535个数字，正好符合mysql对row的最大字节限制，即已经足够使用）
+		- 如果真实的数据<255bytes则需要1Bytes的前缀（1Bytes=8bit 2**8最大表示的数字为255）
+		- 如果真实的数据>255bytes则需要2Bytes的前缀（2Bytes=16bit 2**16最大表示的数字为65535）
+	- 检索：
+		- 尾部有空格会保存下来，在检索或者说查询时，也会正常显示包含空格在内的内容
+
+#### 日期
+- **DATE**
+	- YYYY-MM-DD（1000-01-01/9999-12-31）
+- **YEAR**
+	- YYYY（1901/2155）
+- **TIME**[(fsp)]
+	- HH:MM:SS（'-838:59:59'/'838:59:59'）
+- **DATETIME**[(fsp)]
+	- YYYY-MM-DD HH:MM:SS（1000-01-01 00:00:00/9999-12-31 23:59:59    Y）
+- TIMESTAMP
+	- YYYYMMDD HHMMSS（1970-01-01 00:00:00/2037 年某时）         
+        
+```sql
+create table student(id int,name char(5),born_date date,born_year year,reg_time datetime,class_time time);
+
+mysql> desc student;
++------------+----------+------+-----+---------+-------+
+| Field      | Type     | Null | Key | Default | Extra |
++------------+----------+------+-----+---------+-------+
+| id         | int(11)  | YES  |     | NULL    |       |
+| name       | char(5)  | YES  |     | NULL    |       |
+| born_date  | date     | YES  |     | NULL    |       |
+| born_year  | year(4)  | YES  |     | NULL    |       |
+| reg_time   | datetime | YES  |     | NULL    |       |
+| class_time | time     | YES  |     | NULL    |       |
++------------+----------+------+-----+---------+-------+
+
+insert into student values(1,'chuck',now(),now(),now(),now());
+
+mysql> select * from student;
++------+-------+------------+-----------+---------------------+------------+
+| id   | name  | born_date  | born_year | reg_time            | class_time |
++------+-------+------------+-----------+---------------------+------------+
+|    1 | chuck | 2017-09-06 |      2017 | 2017-09-06 10:52:12 | 10:52:12   |
++------+-------+------------+-----------+---------------------+------------+
+1 row in set (0.00 sec)
+```
+
+#### 枚举与集合
+- **ENUM(value1,value2,value3,...)** [CHARACTER SET charset_name] [COLLATE collation_name]
+	- 规定一个范围，赋值时只能取其中一个
+- **SET(value1,value2,value3,...)** [CHARACTER SET charset_name] [COLLATE collation_name]
+	- 规定一个范围，赋值时可以取其中一个或多个           
+```sql
+create table student(
+	id int primary key auto_increment,
+	name char(5),
+	sex enum('male','female'),
+	hobbies set('coding','read','music','study')
+	);
+
+mysql> desc student;
++---------+--------------------------------------+------+-----+---------+----------------+
+| Field   | Type                                 | Null | Key | Default | Extra          |
++---------+--------------------------------------+------+-----+---------+----------------+
+| id      | int(11)                              | NO   | PRI | NULL    | auto_increment |
+| name    | char(5)                              | YES  |     | NULL    |                |
+| sex     | enum('male','female')                | YES  |     | NULL    |                |
+| hobbies | set('coding','read','music','study') | YES  |     | NULL    |                |
++---------+--------------------------------------+------+-----+---------+----------------+
+
+insert into student(name,sex,hobbies) values('chuck','male','coding,read,music');
+
+mysql> select * from student;
++----+-------+------+-------------------+
+| id | name  | sex  | hobbies           |
++----+-------+------+-------------------+
+|  1 | chuck | male | coding,read,music |
++----+-------+------+-------------------+
+
+```
+[<p align=right>回到顶部</p>](#0)
+### <span id='3.6'>约束条件</span>
+#### 其他约束条件
+- UNSIGNED 无符号
+- ZEROFILL 使用0填充  
+
+- NOT NULL    标识该字段不能为空
+- DEFAULT    为该字段设置默认值       
+```sql
+[not null]
+create table student2(
+	id int primary key auto_increment,
+	name char(5),
+	sex enum('male','female') not null,
+	hobbies set('coding','read','music','study')
+	);
+
+
+[default]
+insert into student2(name,sex,hobbies) values('chuck',null,'coding,read,music');
+insert into student2(name,hobbies) values('chuck2','coding,read,music');
+
+create table student3(
+	id int primary key auto_increment,
+	name char(5),
+	age int not null default 18
+	);
+```
+#### 唯一、主键
+- PRIMARY KEY (PK)    标识该字段为该表的主键，不为空且唯一
+- UNIQUE KEY (UK)    标识该字段的值是唯一的，若为空则不限
+- 单列唯一     
+```sql
+create table teacher(
+	id int not null unique,
+	name char(5)
+	);
+```
+- 多列唯一         
+```sql
+create table services(
+	name char(10),
+	host char(15),
+	port int,
+	unique(host,port)	
+	);
+
+mysql> desc services;
++-------+----------+------+-----+---------+-------+
+| Field | Type     | Null | Key | Default | Extra |
++-------+----------+------+-----+---------+-------+
+| name  | char(10) | YES  |     | NULL    |       |
+| host  | char(15) | YES  | MUL | NULL    |       |
+| port  | int(11)  | YES  |     | NULL    |       |
++-------+----------+------+-----+---------+-------+
+
+mysql> show create table services;
++----------+-----------------------------------------------------------------+
+| Table    | Create Table                                                    |
++----------+-----------------------------------------------------------------+
+| services | CREATE TABLE `services` (                                       |
+|          |  `name` char(10) DEFAULT NULL,                                  |
+|          |  `host` char(15) DEFAULT NULL,                                  |
+|          |  `port` int(11) DEFAULT NULL,                                   |
+|          |  UNIQUE KEY `host` (`host`,`port`)                              |
+|          |  ) ENGINE=InnoDB DEFAULT CHARSET=utf8                           |
++----------+-----------------------------------------------------------------+
+
+insert into services values('ftp','127.0.0.1',8080);
+insert into services values('ftp','127.0.0.1',8080);
+insert into services values('ftp','127.0.0.1',8081);
+```
+#### 自增长
+- AUTO_INCREMENT    标识该字段的值自动增长（整数类型，而且为主键）
+	- auto_increment_offset 偏移量
+	- auto_increment_increment 步长          
+```sql
+create table dep(
+	id int primary key auto_increment,
+	name char(10)
+	);
+
+insert into dep(name) values('IT'),('Boss'),('HR'),('Sale');
+select * from dep;
++----+------+
+| id | name |
++----+------+
+|  1 | IT   |
+|  2 | Boss |
+|  3 | HR   |
+|  4 | Sale |
++----+------+
+
+show create table dep;
++-------+---------------------------------------------------------+
+| Table | Create Table                                            |
++-------+---------------------------------------------------------+
+| dep   | CREATE TABLE `dep` (
+          `id` int(11) NOT NULL AUTO_INCREMENT,
+          `name` char(10) DEFAULT NULL,
+           PRIMARY KEY (`id`)
+           ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8  |
++-------+---------------------------------------------------------+
+
+# 可以看到AUTO_INCREMENT就是自增的偏移量，可以在建表的时候通过alter修改
+
+create table dep1(
+	id int primary key auto_increment,
+	name char(10)
+	)auto_increment=10;
+
+show create table dep1;
++-------+-------------------------------------------------------+
+| Table | Create Table                                          |
++-------+-------------------------------------------------------+
+| dep1  | CREATE TABLE `dep1` (
+          `id` int(11) NOT NULL AUTO_INCREMENT,
+          `name` char(10) DEFAULT NULL,
+          PRIMARY KEY (`id`)
+         ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 |
++-------+-------------------------------------------------------+
+
+insert into dep1(name) values('IT'),('Boss'),('HR'),('Sale');
+select * from dep1;
++----+------+
+| id | name |
++----+------+
+| 10 | IT   |
+| 11 | Boss |
+| 12 | HR   |
+| 13 | Sale |
++----+------+
+
+create table dep2(
+	id int primary key auto_increment,
+	name char(10)
+	);
+
+# 对单次会话修改
+# 设置步长
+set session auto_increment_increment=2;
+# 设置初始偏移量
+set session auto_increment_offset=2;
+# 全局修改，所有会话都有效
+# set global auto_increment_increment=2;
+
+insert into dep(name) values('IT'),('Boss'),('HR'),('Sale');
+
+# mysql 特性:初始偏移量不能比步长小，否则初始偏移量会失效
+
+```
+#### 外键
+- FOREIGN KEY (FK)    标识该字段为该表的外键     
+```sql
+# 表类型必须是innodb存储引擎，且被关联的字段，即references指定的另外一个表的字段，必须保证唯一
+# 必须先创建被关联的父表
+create table dep(
+	id int primary key auto_increment,
+	name varchar(20) not null
+	)engine=innodb;
+
+# dep_id外键，关联父表（dep主键id），同步更新，同步删除
+create table emp(
+	id int primary key auto_increselment,
+	name varchar(20) not null,
+	dpt_id int,
+	constraint fk_name foreign key(dpt_id) references dep(id)
+	on delete cascade
+	on update cascade 
+	)engine=innodb;
+
+# 先往父表dep中插入记录
+insert into dep values
+	(1,'欧德博爱技术有限事业部'),
+	(2,'艾利克斯人力资源部'),
+	(3,'销售部');
+
+# 再往子表emp插入记录
+insert into emp values
+	(1,'egon',1),
+	(2,'alex',2),
+	(3,'alex2',2),
+	(4,'alex3',2),
+	(5,'jack',3),
+	(6,'jack2',3),
+	(7,'jack3',3),
+	(8,'tom',3),
+	(9,'tom2',3)
+	;
+
+# 删父表dep，子表emp中对应的记录跟着删
+delete from dep where id=2;
+select * from emp;
++----+-------+--------+
+| id | name  | dpt_id |
++----+-------+--------+
+|  1 | egon  |      1 |
+|  5 | jack  |      3 |
+|  6 | jack2 |      3 |
+|  7 | jack3 |      3 |
+|  8 | tom   |      3 |
+|  9 | tom2  |      3 |
++----+-------+--------+
+
+# 更新父表dep，子表emp中对应的记录跟着改
+update dep set id=303 where id =3;
+select * from emp;
++----+-------+--------+
+| id | name  | dpt_id |
++----+-------+--------+
+|  1 | egon  |      1 |
+|  5 | jack  |    303 |
+|  6 | jack2 |    303 |
+|  7 | jack3 |    303 |
+|  8 | tom   |    303 |
+|  9 | tom2  |    303 |
++----+-------+--------+
+```
+
+
+- 多对一
+	- 先建立被关联的表，被关联的字段必须是唯一的
+	- 
+- 一对一
+
+[<p align=right>回到顶部</p>](#0)
 ## other
 在MySQL内查看所有配置信息          
 ```sql
