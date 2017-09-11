@@ -10,10 +10,12 @@
 	- [记录操作](#3.3)
 	- [授权](#3.4)
 	- [数据类型](#3.5)
-	- [约束条件](#3.6)
+	- [完整性约束](#3.6)
+- [查询语句](#4.0)
+	- [单表查询](#4.1)
+	- [多表查询](#4.2)
 
 
-<p style=right>[回到顶部](#0)</p>
 ## <span id='1.0'>数据库基础</span>
 数据库服务器，数据管理系统，数据库，表和记录      
 装文件的电脑，MySQL软件，文件夹，文件和文件的每一行内容     
@@ -44,7 +46,9 @@
 - oracle主要用于银行、铁路、飞机场等。该数据库功能强大，软件费用高。也是甲骨文公司的产品。
 - sql server是微软公司的产品，主要应用于大中型企业，如联想、方正等。
 
-<p align=right>[回到顶部](#0)</p>
+<p align="right">[回到顶部](#0)</p>
+<span style="right">[回到顶部](#0)</span>
+<li style="right">[回到顶部](#0)</li>
 ## <span id='2.0'>MySQL准备使用</span>
 ### <span id='2.1'>Liunx环境</span>
 ### <span id='2.2'>Windows环境</span>
@@ -884,7 +888,7 @@ mysql> select * from student;
 
 ```
 <p align=right>[回到顶部](#0)</p>
-### <span id='3.6'>约束条件</span>
+### <span id='3.6'>完整性约束</span>
 #### 其他约束条件
 - UNSIGNED 无符号
 - ZEROFILL 使用0填充  
@@ -1110,23 +1114,143 @@ select * from emp;
 |  8 | tom   |    303 |
 |  9 | tom2  |    303 |
 +----+-------+--------+
-
 ```
 
-
-- 多对一
-	- 先建立被关联的表，被关联的字段必须是唯一的
-	- 
+- 多对一或一对多
+	- 被关联的表称父表，外键关联父表的称字表，父表必须比子表先建立
+	- 字表多条记录的相同外键值对应父表具有唯一性的一个字段值，称多对一
+	- 父表具有唯一性的一个字段值对应字表多条记录的相同外键值，称一对多
 - 一对一
+	- 子表唯一一条记录对应父表唯一一条记录
+- 多对多
+	- 子表多条记录对应父表一条记录，父表多条记录对应字表一条记录
+	- 专门使用一张新的表记录子表和父表的对应关系
+
+```sql
+create table author(
+id int primary key auto_increment,
+name varchar(20)
+);
+create table book(
+id int primary key auto_increment,
+name varchar(20)
+);
+
+#这张表就存放作者表与书表的关系，即查询二者的关系查这表就可以了
+create table author2book(
+	id int not null unique auto_increment,
+	author_id int not null,
+	book_id int not null,
+	constraint fk_author foreign key(author_id) references author(id)
+	on delete cascade on update cascade,
+	constraint fk_book foreign key(book_id) references book(id)
+	on delete cascade on update cascade,
+	primary key(author_id,book_id)
+);
+```
+<p align=right>[回到顶部](#0)</p>
+## <span id='4.0'>查询语句</span>
+### <span id='4.1'>单表查询</span>
+- **SELECT** 
+	- [DISTINCT] 
+    - **select_expr** [, select_expr ...]
+    - [**FROM** **table_references** 
+	    - [**WHERE** where_condition]
+	    - [**GROUP BY** {col_name \| expr \| position} [ASC \| DESC], ... [WITH ROLLUP]]
+	    - [**HAVING** where_condition]
+	    - [**ORDER BY** {col_name \| expr \| position} [ASC \| DESC], ...]
+	    - [**LIMIT** {[offset,] row_count \| row_count OFFSET offset}]
+
+#### 关键字的执行优先级及详细用法
+- from  导入表
+- where  约束条件取出记录
+	1. 比较运算符：> < >= <= <> !=
+	2. between 80 and 100 值在10到20之间
+	3. in(80,90,100) 值是10或20或30
+	4. like '_egon%'  
+		- %表示任意多字符
+		- _表示一个字符 
+	5. 逻辑运算符：在多个条件直接可以使用逻辑运算符 and or not
+	6. 正则表达式 
+		- REGEXP '^ale'
+		- REGEXP 'on$'
+		- REGEXP 'm{2}'
+
+- group by  将取出的记录按照条件分组
+	- 按照指定字段分组，那么select查询的字段只能是指定分组的字段，想要获取组内的其他相关信息，需要借助聚合函数
+
+- 聚合函数  对分好组的记录按照指定字段聚合
+	- GROUP_CONCAT() 将分组内指定字段组合成一条字符串
+	- COUNT() 将分组内指定字段统计计数
+	- MAX() 从分组内指定字段取出最大值
+	- MIN() 从分组内指定字段取出最小值
+	- SUM() 将分组内指定字段求和
+	- AVG() 将分组内指定字段求平均数
+
+- having  按照筛选条件筛选记录
+	- 筛选条件同where
+	- 如果有分组，还可以使用聚合函数
+
+- select  按照给出字段名组合成虚拟表
+- distinct  字段去重
+- order by  将结果按照条件排序
+	- ASC 从小到大排序
+	- DESC 从大到小排序
+	- 多列排序
+		- 跟多个字段和排序顺序，对前一个排序后结果有相同的时候继续排序
+		- SELECT * from employee ORDER BY age, salary DESC;
+		- 按照年龄从小到大排序，当年龄相同按照薪资从大到小排序
+
+- limit  限制结果的显示条数
+	- limit n  默认从0开始，排到n
+	- limit n,m  从n开始，显示m条 
+
+### <span id='4.2'>多表查询</span>
+- SELECT [DISTINCT] <select_list>
+	- FROM <left_table>
+	- <join_type> JOIN <right_table> ON <join_condition>
+	- WHERE <where_condition>
+	- GROUP BY <group_by_list>
+	- HAVING <having_condition>
+	- ORDER BY <order_by_condition>
+	- LIMIT <limit_number>
+
+#### 连接查询
+- 交叉连接
+	- 使用逗号隔开表，不增加查询条件，生成笛卡尔积，不推荐使用
+	- select \* from t1,t2; 
+
+- 内连接
+	- 找两张表共有的部分，相当于利用条件从笛卡尔积结果中筛选出了正确的结果
+	- select t1.field,t2.field from t1 inner join t2 on t1.filed1=t2.filed2
+
+- 外链接-优先左连接
+	- 在内连接的基础上增加左边有右边没有的结果
+	- select t1.field,t2.field from t1 left join t2 on t1.filed1=t2.filed2
+
+- 外链接-优先右链接
+	- 在内连接的基础上增加右边有左边没有的结果
+	- select t1.field,t2.field from t1 right join t2 on t1.filed1=t2.filed2
+
+- 外链接-全连接
+	- 在内连接的基础上增加左边有右边没有的和右边有左边没有的结果
+	- select t1.field,t2.field from t1 left join t2 on t1.filed1=t2.filed2
+	- union
+	- select t1.field,t2.field from t1 right join t2 on t1.filed1=t2.filed2
+
+#### 子查询(嵌套查询)
+- 子查询是将一个查询语句嵌套在另一个查询语句中
+- 内层查询语句的查询结果，可以为外层查询语句提供查询条件或者表
+- 可用关键字IN、NOT IN、ANY、ALL、EXISTS 和 NOT EXISTS
+- 还可以包含比较运算符：= 、 !=、> 、<等
+- select \* from t1 where field=(select field2 from t2 where id>5);
+
+查询练习：
 
 <p align=right>[回到顶部](#0)</p>
 ## other
 在MySQL内查看所有配置信息          
 
-```sql
-\s
-
-```
 LAMP
 
 Apache MySQL PHP
