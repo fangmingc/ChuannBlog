@@ -13,7 +13,7 @@
 	- [约束条件](#3.6)
 
 
-<p align=right>[回到顶部](#0)</p>
+<p style=right>[回到顶部](#0)</p>
 ## <span id='1.0'>数据库基础</span>
 数据库服务器，数据管理系统，数据库，表和记录      
 装文件的电脑，MySQL软件，文件夹，文件和文件的每一行内容     
@@ -826,23 +826,23 @@ create table student(id int,name char(5),born_date date,born_year year,reg_time 
 
 mysql> desc student;
 +------------+----------+------+-----+---------+-------+
-\| Field      \| Type     \| Null \| Key \| Default \| Extra \|
+| Field      | Type     | Null | Key | Default | Extra |
 +------------+----------+------+-----+---------+-------+
-\| id         \| int(11)  \| YES  \|     \| NULL    \|       \|
-\| name       \| char(5)  \| YES  \|     \| NULL    \|       \|
-\| born_date  \| date     \| YES  \|     \| NULL    \|       \|
-\| born_year  \| year(4)  \| YES  \|     \| NULL    \|       \|
-\| reg_time   \| datetime \| YES  \|     \| NULL    \|       \|
-\| class_time \| time     \| YES  \|     \| NULL    \|       \|
+| id         | int(11)  | YES  |     | NULL    |       |
+| name       | char(5)  | YES  |     | NULL    |       |
+| born_date  | date     | YES  |     | NULL    |       |
+| born_year  | year(4)  | YES  |     | NULL    |       |
+| reg_time   | datetime | YES  |     | NULL    |       |
+| class_time | time     | YES  |     | NULL    |       |
 +------------+----------+------+-----+---------+-------+
 
 insert into student values(1,'chuck',now(),now(),now(),now());
 
 mysql> select * from student;
 +------+-------+------------+-----------+---------------------+------------+
-\| id   \| name  \| born_date  \| born_year \| reg_time            \| class_time \|
+| id   | name  | born_date  | born_year | reg_time            | class_time |
 +------+-------+------------+-----------+---------------------+------------+
-\|    1 \| chuck \| 2017-09-06 \|      2017 \| 2017-09-06 10:52:12 \| 10:52:12   \|
+|    1 | chuck | 2017-09-06 |      2017 | 2017-09-06 10:52:12 | 10:52:12   |
 +------+-------+------------+-----------+---------------------+------------+
 1 row in set (0.00 sec)
 
@@ -864,21 +864,21 @@ create table student(
 
 mysql> desc student;
 +---------+--------------------------------------+------+-----+---------+----------------+
-\| Field   \| Type                                 \| Null \| Key \| Default \| Extra          \|
+| Field   | Type                                 | Null | Key | Default | Extra          |
 +---------+--------------------------------------+------+-----+---------+----------------+
-\| id      \| int(11)                              \| NO   \| PRI \| NULL    \| auto_increment \|
-\| name    \| char(5)                              \| YES  \|     \| NULL    \|                \|
-\| sex     \| enum('male','female')                \| YES  \|     \| NULL    \|                \|
-\| hobbies \| set('coding','read','music','study') \| YES  \|     \| NULL    \|                \|
+| id      | int(11)                              | NO   | PRI | NULL    | auto_increment |
+| name    | char(5)                              | YES  |     | NULL    |                |
+| sex     | enum('male','female')                | YES  |     | NULL    |                |
+| hobbies | set('coding','read','music','study') | YES  |     | NULL    |                |
 +---------+--------------------------------------+------+-----+---------+----------------+
 
 insert into student(name,sex,hobbies) values('chuck','male','coding,read,music');
 
 mysql> select * from student;
 +----+-------+------+-------------------+
-\| id \| name  \| sex  \| hobbies           \|
+| id | name  | sex  | hobbies           |
 +----+-------+------+-------------------+
-\|  1 \| chuck \| male \| coding,read,music \|
+|  1 | chuck | male | coding,read,music |
 +----+-------+------+-------------------+
 
 
@@ -937,23 +937,23 @@ create table services(
 
 mysql> desc services;
 +-------+----------+------+-----+---------+-------+
-\| Field \| Type     \| Null \| Key \| Default \| Extra \|
+| Field | Type     | Null | Key | Default | Extra |
 +-------+----------+------+-----+---------+-------+
-\| name  \| char(10) \| YES  \|     \| NULL    \|       \|
-\| host  \| char(15) \| YES  \| MUL \| NULL    \|       \|
-\| port  \| int(11)  \| YES  \|     \| NULL    \|       \|
+| name  | char(10) | YES  |     | NULL    |       |
+| host  | char(15) | YES  | MUL | NULL    |       |
+| port  | int(11)  | YES  |     | NULL    |       |
 +-------+----------+------+-----+---------+-------+
 
 mysql> show create table services;
 +----------+-----------------------------------------------------------------+
-\| Table    \| Create Table                                                    \|
+| Table    | Create Table                                                    |
 +----------+-----------------------------------------------------------------+
-\| services \| CREATE TABLE `services` (                                       \|
-\|          \|  `name` char(10) DEFAULT NULL,                                  \|
-\|          \|  `host` char(15) DEFAULT NULL,                                  \|
-\|          \|  `port` int(11) DEFAULT NULL,                                   \|
-\|          \|  UNIQUE KEY `host` (`host`,`port`)                              \|
-\|          \|  ) ENGINE=InnoDB DEFAULT CHARSET=utf8                           \|
+| services | CREATE TABLE `services` (                                       |
+|          |  `name` char(10) DEFAULT NULL,                                  |
+|          |  `host` char(15) DEFAULT NULL,                                  |
+|          |  `port` int(11) DEFAULT NULL,                                   |
+|          |  UNIQUE KEY `host` (`host`,`port`)                              |
+|          |  ) ENGINE=InnoDB DEFAULT CHARSET=utf8                           |
 +----------+-----------------------------------------------------------------+
 
 insert into services values('ftp','127.0.0.1',8080);
@@ -976,23 +976,23 @@ create table dep(
 insert into dep(name) values('IT'),('Boss'),('HR'),('Sale');
 select * from dep;
 +----+------+
-\| id \| name \|
+| id | name |
 +----+------+
-\|  1 \| IT   \|
-\|  2 \| Boss \|
-\|  3 \| HR   \|
-\|  4 \| Sale \|
+|  1 | IT   |
+|  2 | Boss |
+|  3 | HR   |
+|  4 | Sale |
 +----+------+
 
 show create table dep;
 +-------+---------------------------------------------------------+
-\| Table \| Create Table                                            \|
+| Table | Create Table                                            |
 +-------+---------------------------------------------------------+
-\| dep   \| CREATE TABLE `dep` (
+| dep   | CREATE TABLE `dep` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `name` char(10) DEFAULT NULL,
            PRIMARY KEY (`id`)
-           ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8  \|
+           ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8  |
 +-------+---------------------------------------------------------+
 
 # 可以看到AUTO_INCREMENT就是自增的偏移量，可以在建表的时候通过alter修改
@@ -1004,24 +1004,24 @@ create table dep1(
 
 show create table dep1;
 +-------+-------------------------------------------------------+
-\| Table \| Create Table                                          \|
+| Table | Create Table                                          |
 +-------+-------------------------------------------------------+
-\| dep1  \| CREATE TABLE `dep1` (
+| dep1  | CREATE TABLE `dep1` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `name` char(10) DEFAULT NULL,
           PRIMARY KEY (`id`)
-         ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 \|
+         ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 |
 +-------+-------------------------------------------------------+
 
 insert into dep1(name) values('IT'),('Boss'),('HR'),('Sale');
 select * from dep1;
 +----+------+
-\| id \| name \|
+| id | name |
 +----+------+
-\| 10 \| IT   \|
-\| 11 \| Boss \|
-\| 12 \| HR   \|
-\| 13 \| Sale \|
+| 10 | IT   |
+| 11 | Boss |
+| 12 | HR   |
+| 13 | Sale |
 +----+------+
 
 create table dep2(
@@ -1087,28 +1087,28 @@ insert into emp values
 delete from dep where id=2;
 select * from emp;
 +----+-------+--------+
-\| id \| name  \| dpt_id \|
+| id | name  | dpt_id |
 +----+-------+--------+
-\|  1 \| egon  \|      1 \|
-\|  5 \| jack  \|      3 \|
-\|  6 \| jack2 \|      3 \|
-\|  7 \| jack3 \|      3 \|
-\|  8 \| tom   \|      3 \|
-\|  9 \| tom2  \|      3 \|
+|  1 | egon  |      1 |
+|  5 | jack  |      3 |
+|  6 | jack2 |      3 |
+|  7 | jack3 |      3 |
+|  8 | tom   |      3 |
+|  9 | tom2  |      3 |
 +----+-------+--------+
 
 # 更新父表dep，子表emp中对应的记录跟着改
 update dep set id=303 where id =3;
 select * from emp;
 +----+-------+--------+
-\| id \| name  \| dpt_id \|
+| id | name  | dpt_id |
 +----+-------+--------+
-\|  1 \| egon  \|      1 \|
-\|  5 \| jack  \|    303 \|
-\|  6 \| jack2 \|    303 \|
-\|  7 \| jack3 \|    303 \|
-\|  8 \| tom   \|    303 \|
-\|  9 \| tom2  \|    303 \|
+|  1 | egon  |      1 |
+|  5 | jack  |    303 |
+|  6 | jack2 |    303 |
+|  7 | jack3 |    303 |
+|  8 | tom   |    303 |
+|  9 | tom2  |    303 |
 +----+-------+--------+
 
 ```
