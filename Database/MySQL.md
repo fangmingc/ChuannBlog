@@ -4,6 +4,7 @@
 	- [Liunx环境](#2.1)
 	- [Windows环境](#2.2)
 	- [MySQL软件基本管理](#2.3)
+	- [MySQL数据库导入导出](#2.4)
 - [SQL语句(Structured Query Language)](#3.0)
 	- [库操作](#3.1)
 	- [表操作](#3.2)
@@ -46,7 +47,7 @@
 - oracle主要用于银行、铁路、飞机场等。该数据库功能强大，软件费用高。也是甲骨文公司的产品。
 - sql server是微软公司的产品，主要应用于大中型企业，如联想、方正等。
 
-[<p align="right">回到顶部</p>](#0)
+<p align="right">[回到顶部](#0)</p>
 <span style="right">[回到顶部](#0)</span>
 <li style="right">[回到顶部](#0)</li>
 ## <span id='2.0'>MySQL准备使用</span>
@@ -61,7 +62,6 @@
 
 #### 初始化
 - MySQL解压后的 bin 目录下有一大堆的可执行文件，执行如下命令初始化数据    
-
 	
 ```cmd
 	cd c:\mysql-5.7.16-winx64\bin
@@ -72,7 +72,6 @@
 #### 启动MySQL服务
 - 执行命令从而启动MySQL服务     
 
-	
 ```cmd
 	# 进入可执行文件目录
 	cd c:\mysql-5.7.16-winx64\bin
@@ -85,7 +84,6 @@
 #### 启动MySQL客户端连接到MySQL服务
 - 由于初始化时使用的【mysqld --initialize-insecure】命令，其默认未给root账户设置密码    
 
-	
 ```cmd
 	# 进入可执行文件目录
 	cd c:\mysql-5.7.16-winx64\bin
@@ -104,7 +102,6 @@
 【将MySQL的bin目录路径追加到变值值中，用；分割】   
 - 当再次启动服务仅需        
 
-	
 ```cmd
 	# 启动MySQL服务，在终端任意目录输入
 	mysqld
@@ -126,7 +123,6 @@
 
 - 注册成服务之后，以后再启动和关闭MySQL服务时，仅需执行如下命令(管理员权限下)      
 
-	
 ```cmd
 	# 启动MySQL服务
 	net start mysql
@@ -157,7 +153,6 @@
 #### 第一次登录后设置密码
 - 初始状态下，管理员root，密码为空，默认只允许从本机登录localhost
 - 设置密码        
-
 	
 ```cmd
 	mysqladmin -uroot password "123"        
@@ -167,7 +162,6 @@
 	
 ``` 
 - 登录命令格式       
-
 	
 ```cmd
 	mysql -h172.31.0.2 -uroot -p456
@@ -175,11 +169,9 @@
 	mysql 以root用户登录本机，密码为空
 	
 ```
-
 #### 忘记密码
 ##### linux
 - 方法一：删除授权库mysql，重新初始化         
-
 	
 ```linux
 	# rm -rf /var/lib/mysql/mysql #所有授权信息全部丢失！！！
@@ -189,7 +181,6 @@
 ```
 
 - 方法二：启动时跳过授权库，修改密码后重新登录    
-
 	
 ```linux
 	# vim /etc/my.cnf    #mysql主配置文件
@@ -203,13 +194,11 @@
 	# #打开/etc/my.cnf去掉skip-grant-table,然后重启
 	# systemctl restart mariadb
 	# mysql -u root -p123 #以新密码登录
-	
 ```
    
 ##### windows
 基本方法，跳过授权表登录
 - 方法一     
-
 	
 ```cmd
 	#1 关闭mysql
@@ -218,23 +207,19 @@
 	#3 在cmd中执行：
 	mysql
 	#4 执行如下sql：
-	
 ```
 	
 ```sql
 	update mysql.user set authentication_string=password('') where user = 'root';
 	flush privileges;
-	
 ```	
 	
 ```cmd
 	#5 tskill mysqld(tskill无法使用时先用tasklist寻找mysqld的PID再用taskkill杀死进程)
 	#6 重新启动mysql
-	
 ```
 
 - 方法二      
-
 	
 ```cmd
 	#1. 关闭mysql，可以用tskill将其杀死(tskill无法使用时先用tasklist寻找mysqld的PID再用taskkill杀死进程)
@@ -247,11 +232,9 @@
 	update mysql.user set authentication_string=password('') where user='root and host='localhost';
 	flush privileges;
 	#6.注释my.ini中的skip-grant-tables，然后重新启动myqsld，然后就可以以新密码登录了
-	
 ```
 
 #### windows下为mysql服务指定配置文件
-
 ```ini
 #在mysql的解压目录下，新建my.ini,然后配置
 #1. 在执行mysqld命令时，下列配置会生效，即mysql服务启动时生效
@@ -279,21 +262,38 @@ user=egon
 password=4573
 
 #！！！如果没有[mysql],则用户在执行mysql命令时的配置以[client]为准
-
 ```
 
 #### mac上MySQL出现error
 > mac mysql error You must reset your password using ALTER USER statement before executing this statement.
 
 - 解决方法     
-
 	
 ```
 	step 1: SET PASSWORD = PASSWORD('your new password');
 	step 2: ALTER USER 'root'@'localhost' PASSWORD EXPIRE NEVER;
 	step 3: flush privileges;
-	
 ```
+
+<p align=right>[回到顶部](#0)</p>
+### <span id='2.4'>MySQL数据库导入导出</span>
+#### 导出
+- 导出数据和结构
+	- mysqldump -h IP -u用户名 -p 数据库 > [.sql文件路径]
+- 导出结构
+	- mysqldump -h IP -u用户名 -p -d 数据库 > [.sql文件路径]
+- 导出多个数据库
+	- mysqldump -h IP -u用户名 -p --databases 数据库1 数据库2... > [.sql文件路径]
+- 导出所有数据库
+	- mysqldump -h IP -u用户名 -p --all-databases > [.sql文件路径]
+
+#### 导入
+在mysql内use数据库时：
+- source [.sql文件路径]
+
+#### 导出其他格式文件
+- select [列名称] from tablename [where] into outfile '目标文件路径' [option]
+
 
 <p align=right>[回到顶部](#0)</p>
 ## <span id='3.0'>SQL语句（Structured Query Language）</span>
@@ -301,7 +301,6 @@ password=4573
 
 ```sql
 select user();
-
 ```
 - 分类
 	1. DDL语句	数据库定义语言： 数据库、表、视图、索引、存储过程，例如CREATE DROP ALTER
@@ -499,7 +498,6 @@ show create table t1;
 
 # 查看表结构
 desc/describe t1;
-
 ```
 
 #### 改   
@@ -507,7 +505,6 @@ desc/describe t1;
 ```sql
 alter table t1 add age int;
 alter table t1 modify name char(12);
-
 ```
 **完整命令**
 - **ALTER** **TABLE tbl_name** [alter_specification [, alter_specification] ...] [partition_options]
@@ -599,13 +596,11 @@ alter table t1 modify name char(12);
 
 ```sql
 drop table t2;
-
 ```
 
 <p align=right>[回到顶部](#0)</p>
 ### <span id='3.3'>记录（文件内容）操作</span>
 #### 增   
-
 ```sql
 insert into db1.t1 values(1,'chuck',19),(2,'chuck2',20),(3,'chuck3',21);
 insert into t1 value(4,'chuck4',20);
@@ -616,12 +611,10 @@ insert into t1(name) value('chuck5');
 - **INSERT** [LOW_PRIORITY \| DELAYED \| HIGH_PRIORITY] [IGNORE] [INTO] **tbl_name** [PARTITION (partition_name,...)] **SET col_name={expr \| DEFAULT}**, ... [ ON DUPLICATE KEY UPDATE col_name=expr [, col_name=expr] ... ]
 - **INSERT** [LOW_PRIORITY \| HIGH_PRIORITY] [IGNORE] [INTO] **tbl_name** [PARTITION (partition_name,...)] [(col_name,...)] **SELECT** ... [ ON DUPLICATE KEY UPDATE col_name=expr [, col_name=expr] ... ]
 #### 查   
-
 ```sql
 select \* from t1;
 select name from t1;
 select name,id from t1;
-
 ```
 
 - **SELECT** 
@@ -647,12 +640,10 @@ select name,id from t1;
 - select \* from mysql.user\G; 
 
 #### 改   
-
 ```sql
 update t1 set name='NOBODY' where id=4;
 update t1 set name='None' where name=chuck;
 update t1 set id=12 where name='None';
-
 ```
 **Single-table syntax**
 - UPDATE [LOW_PRIORITY] [IGNORE] table_reference SET col_name1={expr1\|DEFAULT} [, col_name2={expr2\|DEFAULT}] ... [WHERE where_condition] [ORDER BY ...] [LIMIT row_count]        
@@ -661,35 +652,28 @@ update t1 set id=12 where name='None';
 - UPDATE [LOW_PRIORITY] [IGNORE] table_references SET col_name1={expr1\|DEFAULT} [, col_name2={expr2\|DEFAULT}] ... [WHERE where_condition]
 
 #### 删     
-
 ```sql
 delete from t1 where id=4;
 delete from t1; # 清空表
 
 truncate # :截断，比delete删除快         
 truncate t1; # 清空表      
-
 ```
 
-
 #### 自增id 
-
 ```sql
 create table t1(id int not null, name char(10));
-
 ```
 - primary key为主键，不为空，且唯一，等同not null unique     
 
 ```sql
 create table t4(id int not null unique, name char(10));
-
 ```
 - auto_increment：自增        
 
 ```sql
 create table t5(id int primary key auto_increment, name char(10));
 insert into t5(name) values('chuck'),('chuck2'),('chuck3'),('chuck4'),('chuck5');
-
 ```
 - 自增的字段需要用truncate清空表后才可以从1开始自增
 
@@ -699,7 +683,6 @@ insert into t5(name) values('chuck'),('chuck2'),('chuck3'),('chuck4'),('chuck5')
 ```sql
 create table t6 select * from t5;
 create table t3 like t1;
-
 ```
 - 表结构    
 
@@ -708,11 +691,9 @@ create table t7 select * from t5 where 1=2;
 alter table t7 modify id int primary key auto_increment;
 
 create table t8 like t5;
-
 ```
 <p align=right>[回到顶部](#0)</p>
 ### <span id='3.4'>授权</span>
-
 ```sql
 # 创建用户
 create user 'temp'@'localhost' identified by '123';
@@ -732,9 +713,8 @@ grant select (id) on db1.t1 to 'temp4'@'localhost' identified by '123';
 
 # 修改完毕后
 flush privileges;
-
-
 ```
+
 **完整命令**
 - **GRANT** **priv_type** [(column_list)] [, priv_type [(column_list)]] ... **ON** [object_type] **priv_level** **TO** **user** [auth_option] [, user [auth_option]] ... [REQUIRE {NONE \| tls_option [[AND] tls_option] ...}] [WITH {GRANT OPTION \| resource_option} ...]   
 - **GRANT** **PROXY** **ON** **user** **TO** **user** [, user] ... [WITH GRANT OPTION]
@@ -764,6 +744,7 @@ flush privileges;
 	- 8字节，大整数，数据类型用于保存一些大范围的整数数值
 	- 有符号：-9223372036854775808 ～ 9223372036854775807
 	- 无符号：0  ～  18446744073709551615
+
 ##### 浮点数
 - **DECIMAL**[(length[,decimals])] [UNSIGNED] [ZEROFILL]
 	- 准确的小数值，length是数字总个数（负号不算），decimals是小数点后个数。 length最大值为65，decimals最大值为30。
@@ -786,12 +767,14 @@ flush privileges;
 	- 无符号：
 		- 0
 		- 2.2250738585072014E-308 to 1.7976931348623157E+308
+
 ##### 位类型
 - **BIT**[(length)]
 	- 可以用来存放多位二进制数，length范围从1~64，如果不写默认为1位。
 	- 注意：对于位字段需要使用函数读取
 		- bin()显示为二进制
 		- hex()显示为十六进制
+
 #### 字符串类型
 - **CHAR**[(length)] [BINARY] [CHARACTER SET charset_name] [COLLATE collation_name]
 	- 定长，简单粗暴，浪费空间，存取速度快
@@ -823,7 +806,6 @@ flush privileges;
 	- YYYY-MM-DD HH:MM:SS（1000-01-01 00:00:00/9999-12-31 23:59:59    Y）
 - TIMESTAMP
 	- YYYYMMDD HHMMSS（1970-01-01 00:00:00/2037 年某时）         
-        
 
 ```sql
 create table student(id int,name char(5),born_date date,born_year year,reg_time datetime,class_time time);
@@ -849,7 +831,6 @@ mysql> select * from student;
 |    1 | chuck | 2017-09-06 |      2017 | 2017-09-06 10:52:12 | 10:52:12   |
 +------+-------+------------+-----------+---------------------+------------+
 1 row in set (0.00 sec)
-
 ```
 
 #### 枚举与集合
@@ -884,9 +865,8 @@ mysql> select * from student;
 +----+-------+------+-------------------+
 |  1 | chuck | male | coding,read,music |
 +----+-------+------+-------------------+
-
-
 ```
+
 <p align=right>[回到顶部](#0)</p>
 ### <span id='3.6'>完整性约束</span>
 #### 其他约束条件
@@ -915,7 +895,6 @@ create table student3(
 	name char(5),
 	age int not null default 18
 	);
-
 ```
 #### 唯一、主键
 - PRIMARY KEY (PK)    标识该字段为该表的主键，不为空且唯一
@@ -927,7 +906,6 @@ create table teacher(
 	id int not null unique,
 	name char(5)
 	);
-
 ```
 - 多列唯一         
 
@@ -963,13 +941,11 @@ mysql> show create table services;
 insert into services values('ftp','127.0.0.1',8080);
 insert into services values('ftp','127.0.0.1',8080);
 insert into services values('ftp','127.0.0.1',8081);
-
 ```
 #### 自增长
 - AUTO_INCREMENT    标识该字段的值自动增长（整数类型，而且为主键）
 	- auto_increment_offset 偏移量
 	- auto_increment_increment 步长          
-
 
 ```sql
 create table dep(
@@ -1044,9 +1020,8 @@ set session auto_increment_offset=2;
 insert into dep(name) values('IT'),('Boss'),('HR'),('Sale');
 
 # mysql 特性:初始偏移量不能比步长小，否则初始偏移量会失效
-
-
 ```
+
 #### 外键
 - FOREIGN KEY (FK)    标识该字段为该表的外键     
 
@@ -1246,6 +1221,15 @@ create table author2book(
 - select \* from t1 where field=(select field2 from t2 where id>5);
 
 查询练习：
+
+
+<p align=right>[回到顶部](#0)</p>
+## <span id='5'>索引</span>
+- 索引的目的在于提高查询效率
+- 通过不断地缩小想要获取数据的范围来筛选出最终想要的结果，同时把随机的事件变成顺序的事件，也就是说，有了这种索引机制，我们可以总是用同一种查找方式来锁定数据。
+
+详细参阅http://www.cnblogs.com/linhaifeng/articles/7274563.html#_label2
+
 
 <p align=right>[回到顶部](#0)</p>
 ## other

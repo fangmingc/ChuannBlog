@@ -1,6 +1,6 @@
 # Socket网络编程
-- [1 基础知识](#1)
-- [2 socket(套接字)模块](#2)
+- [1 基础知识](#1.0)
+- [2 socket(套接字)模块](#2.0)
 	- [2.1 套接字的连接过程](#2.1)
 	- [2.2 socket模块](#2.2)
 	- [2.3 套接字(socket)函数](#2.3)
@@ -8,10 +8,10 @@
 	- [2.5 粘包](#2.5)
 	- [2.6 基于UDP的套接字](#2.6)
 	- [2.7 socketserver模块](#2.7)
-- [3 练习：ftp文件上传下载](#3)
+- [3 练习：ftp文件上传下载](#3.0)
 
 
-## <span id='1'>1 基础知识</span>
+## <span id='1.0'>1 基础知识</span>
 ### 客户端/服务器架构(C/S)
 - 定义：C/S又称Client/Server或客户/服务器模式。服务器通常采用高性能的PC、工作站或小型机，并采用大型数据库系统，如ORACLE、SYBASE、InfORMix或 SQL Server。客户端需要安装专用的客户端软件。
 - 通过它可以充分利用两端硬件环境的优势，将任务合理分配到Client端和Server端来实现，降低了系统的通讯开销。
@@ -39,7 +39,7 @@
 	- SNMP(Simple Network Management Protocol) 简单网络管理协议，用于管理与监视网络设备
 	- Telnet 远程登录协议，用于实现远程登录功能
 
-## <span id='2'>2 socket(套接字)</span>
+## <span id='2.0'>2 socket(套接字)</span>
 >网络上的两个程序通过一个双向的通信连接实现数据的交换，这个连接的一端称为一个socket。
 
 - Socket的英文原义是“孔”或“插座”。作为BSD UNIX的进程通信机制，取后一种意思。通常也称作"套接字"，用于描述IP地址和端口，是一个通信链的句柄，可以用来实现不同虚拟机或不同计算机之间的通信。
@@ -131,6 +131,7 @@ connect()函数的扩展版本，出错时返回出错码，不抛出异常
 ### <span id='2.4'>2.4 基于TCP的套接字</span>
 #### 基础实例
 - server端   
+
 ```python  
 import socket
 
@@ -160,6 +161,7 @@ server.close()
 ```
 
 - client端   
+
 ```python  
 import socket
 
@@ -268,6 +270,7 @@ client.close()
 
 解决办法：
 - 加入一条socket配置，在任务结束后重用ip和端口，需要在可以正常运行服务端的时候就使用           
+
 ```python
 phone=socket(AF_INET,SOCK_STREAM)
 phone.setsockopt(SOL_SOCKET,SO_REUSEADDR,1) #就是它，在bind前加
@@ -275,6 +278,7 @@ phone.bind(('127.0.0.1',8080))
 ```
 
 - 发现系统存在大量TIME_WAIT状态的连接，通过调整linux内核参数解决    
+
 ```python
 vi /etc/sysctl.conf
 
@@ -301,6 +305,7 @@ net.ipv4.tcp_fin_timeout
 
 ### <span id='2.5'>2.5 粘包</span>
 - 服务端    
+
 ```python
 from socket import *
 import subprocess
@@ -330,6 +335,7 @@ while True:
 ```
 
 - 客户端    
+
 ```python
 import socket
 ip_port=('127.0.0.1',8080)
@@ -399,6 +405,7 @@ while True:
 		从上一步中的报头中的信息取出数据长度，按照相应长度接收
 - 实例   
 服务端     
+
 ```python
 from socket import *
 import subprocess
@@ -461,6 +468,7 @@ while True:
 # servers.close()
 ```
 客户端   
+
 ```python
 from socket import *
 import struct
@@ -505,8 +513,60 @@ while True:
 
 
 ### <span id='2.7'>2.7 socketserver模块</span>
+- 基于tcp的套接字，关键是两个循环，一个链接循环，一个通信循环
+- socketserver模块中分两大类：
+	- server类（解决链接问题）
+	- request类（解决通信问题）
+
+- 类的继承关系图：       
+[基于进程](https://github.com/fangmingc/ChuannBlog/tree/master/Intermediate_Python/threading.png)
+[基于线程](https://github.com/fangmingc/ChuannBlog/tree/master/Intermediate_Python/forking.png)
+
+- 服务端
+
+```python
+import socketserver
 
 
-## <span id='3'>3 练习：ftp文件上传下载</span>
+class MyServer(socketserver.BaseRequestHandler):
 
+    def handle(self):
+        print(self.request)
+        while True:
+            try:
+                cmd = self.request.recv(1024)
+                if not cmd:
+                    break
+                self.request.send(cmd.upper())
+            except Exception as error_info:
+                print(error_info)
+                break
+        self.request.close()
+
+if __name__ == '__main__':
+    server = socketserver.ThreadingTCPServer(('192.168.20.76', 8000), MyServer)
+    server.allow_reuse_address = True
+    server.serve_forever()
+```
+
+- 客户端
+
+```python
+import socket
+
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect(('192.168.20.76', 8000))
+
+while True:
+    msg = input('[+_+] ').strip()
+    if not msg:
+        continue
+    client.send(msg.encode('utf-8'))
+    result = client.recv(1024)
+    print(result.decode('utf-8'))
+```
+
+
+## <span id='3.0'>3 练习：ftp文件上传下载</span>
+[GitHub地址](https://github.com/fangmingc/ChuannBlog/tree/master/Intermediate_Python/my_ftp)
 
