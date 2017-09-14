@@ -15,6 +15,8 @@
 - [查询语句](#4.0)
 	- [单表查询](#4.1)
 	- [多表查询](#4.2)
+- [索引](#5.0)
+- [Pymysql](#6.0)
 
 
 ## <span id='1.0'>数据库基础</span>
@@ -290,6 +292,17 @@ password=4573
 #### 导入
 在mysql内use数据库时：
 - source [.sql文件路径]
+
+在mysql外部：
+- mysql -uroot -p 数据库 < [.sql文件路径]
+- 在外部查看是否导入成功：mysql -uroot -e "use tmp;show tables;"
+
+导入多个数据库
+- mysql -u用户名 -p < [.sql存有多个库的文件]
+
+#### 数据库迁移
+mysqldump -h 源IP -uroot -p --databases db1 | mysql -h -目标IP -u用户名 -p密码
+
 
 #### 导出其他格式文件
 - select [列名称] from tablename [where] into outfile '目标文件路径' [option]
@@ -1224,12 +1237,191 @@ create table author2book(
 
 
 <p align=right>[回到顶部](#0)</p>
-## <span id='5'>索引</span>
+## <span id='5.0'>索引</span>
 - 索引的目的在于提高查询效率
 - 通过不断地缩小想要获取数据的范围来筛选出最终想要的结果，同时把随机的事件变成顺序的事件，也就是说，有了这种索引机制，我们可以总是用同一种查找方式来锁定数据。
 
 详细参阅http://www.cnblogs.com/linhaifeng/articles/7274563.html#_label2
 
+<p align=right>[回到顶部](#0)</p>
+## <span id='6.0'>Pymysql</span>
+### 用法示例
+#### 查询
+```python
+import pymysql
+
+# 链接mysql，使用数据库
+conn = pymysql.connect(host='localhost', user='root', password='', database='day47', charset='utf8')
+# 拿到mysql的游标（可接收输入命令的）
+cursor = conn.cursor()
+# 编写sql语句
+sql = 'select * from user;'
+# 拿到受影响的行数
+res = cursor.execute(sql)
+print('%s rows in set (0.00sec)'%res)
+
+cursor.close()
+conn.close()
+```
+##### 实现用户登录
+```python
+import pymysql
+
+user = input('username: ').strip()
+pwd = input('password: ').strip()
+
+# 链接mysql，使用数据库
+conn = pymysql.connect(host='localhost', user='root', password='', database='day47', charset='utf8')
+# 拿到mysql的游标（可接收输入命令的）
+cursor = conn.cursor()
+
+sql = 'select * from user where name="%s" and pwd="%s";' % (user, pwd)
+print(sql)
+# 拿到受影响的行数
+res = cursor.execute(sql)
+# 当查询有结果说明用户名和密码是正确的则登录成功
+if res:
+    print('Login success')
+else:
+    print('Login failure')
+
+cursor.close()
+conn.close()
+```
+##### sql注入
+在上面的例子中，按照给定的标准输入用户名和密码可以正常登陆，但是如果非正常输入呢？
+对于上面的例子，登录时输入：
+```python
+username: xxx" or 1=1 #
+password: 
+select * from user where name="xxx" or 1=1 #" and pwd="";
+Login success
+```
+明显用户名和密码不是正确的但是依然登陆成功，可以复制第三行生成的sql语句在终端里面输入一下，看看是什么情况：
+```sql
+mysql> select * from user where name="xxx" or 1=1 #" and pwd="";
+    -> ;
++----+-------+------+
+| id | name  | pwd  |
++----+-------+------+
+|  1 | egon  | 123  |
+|  2 | alex  | 123  |
+|  3 | chuan | 123  |
++----+-------+------+
+3 rows in set (0.00 sec)
+```
+可以发现or语句后面1=1是成立的，所以where总是true，其次'#'号在sql语句中是注释，将后面的语句都注释掉了。这种非正常的用户输入导致的问题就是sql注入。
+解决办法就是对用户的输入进行语法检查（但要知道，这并不总是有效的），对于pymysql来说提供了检查服务：
+```python
+import pymysql
+
+user = input('username: ').strip()
+pwd = input('password: ').strip()
+
+# 链接mysql，使用数据库
+conn = pymysql.connect(host='localhost', user='root', password='', database='day47')
+# 拿到mysql的游标（可接收输入命令的）
+cursor = conn.cursor()
+
+sql = 'select * from user where name=%s and pwd=%s;'
+
+# 拿到受影响的行数
+res = cursor.execute(sql, (user, pwd))
+
+if res:
+    print('Login success')
+else:
+    print('Login failure')
+
+cursor.close()
+conn.close()
+```
+#### 增加、删除、修改
+```python
+import pymysql
+
+# 链接mysql，使用数据库
+# conn = pymysql.connect(host='localhost', user='root', password='', database='day47')
+# conn.set_charset('utf8')
+conn = pymysql.connect(host='localhost', user='root', password='', database='day47', charset='utf8')
+
+
+# 拿到mysql的游标（可接收输入命令的）
+cursor = conn.cursor()
+
+sql = 'insert into user(name, pwd) values(%s, %s);'
+
+# 拿到受影响的行数
+# 插入单条记录
+# res = cursor.execute(sql, ('哈大', '123'))
+# 插入多条记录
+res = cursor.executemany(sql, [('哈大', '123'), ('sada', '123')])
+
+print('%s rows in set (0.00sec)' % res)
+
+# 提交到mysql才算修改了
+conn.commit()
+
+cursor.close()
+conn.close()
+```
+#### 读取查询记录   
+```python
+
+import pymysql
+
+
+# 链接mysql，使用数据库
+conn = pymysql.connect(host='localhost', user='root', password='', database='day47')
+conn.set_charset('utf8')
+# 拿到mysql的游标（可接收输入命令的）
+cursor = conn.cursor()
+
+sql = 'select * from user;'
+
+# 执行sql语句
+cursor.execute(sql)
+```
+- 逐条取出
+
+```python
+rows = cursor.fetchone()
+rows2 = cursor.fetchone()
+rows3 = cursor.fetchone()
+print(rows)
+print(rows2)
+print(rows3)
+```
+- 多条取出
+
+```python
+print(cursor.fetchmany(3))
+print(cursor.fetchone())
+```
+- 全部取出
+
+```python
+print(cursor.fetchall())
+print(cursor.fetchone())
+```
+- 光标移动-绝对位置
+
+```python
+print(cursor.fetchall())
+cursor.scroll(2, mode='absolute')   # 绝对位置，以文件开头为目标，数字表示移动次数
+print(cursor.fetchall())
+```
+- 光标移动相对位位置
+
+```python
+print(cursor.fetchone())
+print(cursor.fetchone())
+cursor.scroll(-1, mode='relative')   # 相对位置，以当前光标为目标，数字表示移动次数
+print(cursor.fetchall())
+
+cursor.close()
+conn.close()
+```
 
 <p align=right>[回到顶部](#0)</p>
 ## other
