@@ -1136,6 +1136,7 @@ create table author2book(
 	primary key(author_id,book_id)
 );
 ```
+
 <p align=right>[回到顶部](#0)</p>
 ## <span id='4.0'>查询语句</span>
 ### <span id='4.1'>单表查询</span>
