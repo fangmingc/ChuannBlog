@@ -1,13 +1,13 @@
 # html
 
 ## 初识html
-html是HyperTxt Makeup Language（超文本标记语言）的简称。  
+<b>html</b>是<b>HyperTxt Makeup Language</b>（超文本标记语言）的简称。  
 HyperText is text displayed on a computer or device that provides access to 
 other text through links, also known as “hyperlinks”.  
 
 ### 标签
 由尖括号包围的关键词，比如 <html>。HTML 标签分为单标签和双标签    
-- 双标签：HTML标签通常是成对出现的，比如 <b> 和 </b>。第一个标签是开始标签，第二个标签是结束标签；开始标签和结束标签也被称为开放标签和闭合标签
+- 双标签：HTML标签通常是成对出现的，比如 \<\b> 和 \</\b>。第一个标签是开始标签，第二个标签是结束标签；开始标签和结束标签也被称为开放标签和闭合标签
 - 常见的单标签有：
 
 ```html
@@ -41,9 +41,8 @@ HTML文档被称为网页，由嵌套的HTML元素构成。浏览器不会显示
 
 ### 实体
 HTML中某些字符是预留的，必须被替换为字符实体
-
+<div>
 <table class="table">
-<tbody>
 <tr><th style="width: 20%;">显示结果</th><th style="width: 20%;">描述</th><th style="width: 30%;">实体名称</th><th style="width: 30%;">实体编号</th></tr>
 <tr>
 <td>&nbsp;</td>
@@ -141,9 +140,8 @@ HTML中某些字符是预留的，必须被替换为字符实体
 <td>&amp;divide;</td>
 <td>&amp;#247;</td>
 </tr>
-</tbody>
 </table>
-
+</div>
 ### html结构
 
 - \<!DOCTYPE html> 告诉浏览器使用什么样的html或者xhtml来解析html文档
