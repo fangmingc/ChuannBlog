@@ -7,7 +7,7 @@ other text through links, also known as “hyperlinks”.
 
 ### 标签
 由尖括号包围的关键词，比如 <html>。HTML 标签分为单标签和双标签    
-- 双标签：HTML标签通常是成对出现的，比如 \<\b> 和 \</\b>。第一个标签是开始标签，第二个标签是结束标签；开始标签和结束标签也被称为开放标签和闭合标签
+- 双标签：HTML标签通常是成对出现的，比如 \<b> 和 \</b>。第一个标签是开始标签，第二个标签是结束标签；开始标签和结束标签也被称为开放标签和闭合标签
 - 常见的单标签有：
 
 ```html
@@ -181,7 +181,7 @@ HTML中某些字符是预留的，必须被替换为字符实体
 ```html
 <meta http-equiv="Refresh" content="2;URL=https://www.oldboy.com"> 
 <meta http-equiv="content-Type" charset=UTF8"> 
-<meta http-equiv = "X-UA-Compatible" content = "IE=EmulateIE7" /> 
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /> 
 ```
 #### \<icon>标签
 定义使用浏览器打开网页的标签页的标题左边的图标
@@ -224,7 +224,7 @@ HTML中某些字符是预留的，必须被替换为字符实体
 - \<hr>:水平线
 
 - 特殊字符：
-      \&lt; \&gt；\&quot；\&copy;\&reg;
+      \&lt\; \&gt；\&quot；\&copy\;\&reg\;
 
 
 #### \<div>和\<span>
@@ -246,7 +246,12 @@ HTML中某些字符是预留的，必须被替换为字符实体
 
 #### 超链接标签(锚标签): \<a> \</a>
 ```html
+<!--普通超链接-->
+<a href="">click</a>
+<!--浏览器新窗口打开超链接-->
 <a href="" target="_blank" >click</a>
+<!--鼠标置于超链接之上显示文字-->
+<a href="" title="all text">click</a>
 ```
 - href属性指定目标网页地址。该地址可以有几种类型：
 	- 绝对 URL - 指向另一个站点（比如 href="http://www.jd.com）
@@ -254,7 +259,7 @@ HTML中某些字符是预留的，必须被替换为字符实体
 	- 锚 URL - 指向页面中的锚（href="#top"）
 
 - 什么是URL？
->URL是统一资源定位器(Uniform Resource Locator)的缩写，也被称为网页地址，是因特网上标准的资源的地址。
+>URL是统一资源定位符(Uniform Resource Locator)的缩写，也被称为网页地址，是因特网上标准的资源的地址。
 URL举例
 http://www.sohu.com/stu/intro.html
 http://222.172.123.33/stu/intro.html
@@ -267,12 +272,14 @@ URL地址由4部分组成
 
 #### 列表标签
 - \<ul>: 无序列表 
+	- \<li>列表中的每一项
 	- [type属性：disc(实心圆点)(默认)、circle(空心圆圈)、square(实心方块)]
 
 - \<ol>: 有序列表
 	- \<li>:列表中的每一项.
+	- 每一项前面是数字序号
 
-- \<dl>  定义列表
+- \<dl>  定义首行缩进列表
 	- \<dt> 列表标题
 	- \<dd> 列表项
 
@@ -297,15 +304,64 @@ URL地址由4部分组成
 	- rowspan:  单元格竖跨多少行
 	- colspan:  单元格横跨多少列（即合并单元格）
 
-#### 列表标签
-
 #### 表单标签 \<form>
-
 - 属性：
 	- name:作为发送到server端的数据的键
 	- value：作为发送到server端的数据的值
 
-### div/sapn
+```html
+<h3>注册页面</h3>
+<form action="" method="post">
+    <p><label for="123">姓名：</label>
+        <input type="text" name="username" value="" placeholder="请输入用户名" id="123"></p>
+    <p>密码：<input type="password" name="password" value="" placeholder="请输入密码"></p>
+    <p>性别：<br>
+        <input type="radio" name="gender" value="male" checked>男
+        <input type="radio" name="gender" value="female">女
+    </p>
+
+    <p>爱好：<br>
+        <input type="checkbox" name="hobby" value="piano">钢琴
+        <input type="checkbox" name="hobby" value="guitar">吉他
+        <input type="checkbox" name="hobby" value="read">阅读
+        <input type="checkbox" name="hobby" value="sports">运动
+    </p>
+    
+    <p>头像：<br>
+        <input type="file" name="fileOBJ">
+    </p>
+
+    <p>
+        <input type="hidden" name="csrf" value="23333333">
+    </p>
+
+    <p>个人简介：<br>
+        <textarea name="personal_info" id="personal_info" cols="30" rows="10"></textarea>
+    </p>
+
+
+    <p>籍贯：<br>
+        <select name="province" id="province" size="2" multiple="multiple">
+            <option value="hebei">河北省</option>
+            <option value="hunan">湖南省</option>
+            <option value="hainan">海南省</option>
+            <option value="guangdong">广东省</option>
+            <option value="sichuan" selected>四川省</option>
+        </select>
+    </p>
+
+
+    <p>
+        <input type="reset" value="让我改一改">
+    </p>
+
+    <p>
+        <input type="button" value="按钮" onclick="alert(233333)">
+    </p>
+
+    <p><input type="submit" value="我决定好了"></p>
+</form>
+```
 
 ### 标签的嵌套
 嵌套原则
