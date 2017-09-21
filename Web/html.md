@@ -259,16 +259,16 @@ HTML中某些字符是预留的，必须被替换为字符实体
 	- 锚 URL - 指向页面中的锚（href="#top"）
 
 - 什么是URL？
->URL是统一资源定位符(Uniform Resource Locator)的缩写，也被称为网页地址，是因特网上标准的资源的地址。
-URL举例
-http://www.sohu.com/stu/intro.html
-http://222.172.123.33/stu/intro.html
-URL地址由4部分组成
-第1部分：为协议：http://、ftp://等 
-第2部分：为站点地址：可以是域名或IP地址
-第3部分：为页面在站点中的目录：stu
-第4部分：为页面名称，例如 index.html
-各部分之间用“/”符号隔开。
+>URL是统一资源定位符(Uniform Resource Locator)的缩写，也被称为网页地址，是因特网上标准的资源的地址。    
+URL举例    
+http://www.sohu.com/stu/intro.html    
+http://222.172.123.33/stu/intro.html    
+URL地址由4部分组成    
+第1部分：为协议：http://、ftp://等     
+第2部分：为站点地址：可以是域名或IP地址    
+第3部分：为页面在站点中的目录：stu    
+第4部分：为页面名称，例如 index.html    
+各部分之间用“/”符号隔开。    
 
 #### 列表标签
 - \<ul>: 无序列表 
