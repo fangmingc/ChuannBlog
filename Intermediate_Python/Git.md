@@ -1,6 +1,9 @@
 ## git
 
 ### 操作命令
+#### git clone [.git文件]
+- 克隆.git文件
+
 #### git add
 - 添加版本追踪：git add [文件名]
 - 追踪所有变化：git add .
