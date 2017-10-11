@@ -247,6 +247,7 @@ console.log(n!=NaN);//NaN参与的所有的运算都是false,除了!=
 		console.log("条件成立!")
 	}
 	```
+
 1. 全等号(===)和非全等号(!==)
 	- 所做的运算与等号(==)和非等号(!=)相同
 	- 但是在运算前，不执行类型转换
@@ -409,7 +410,7 @@ var dd=new Array("星期一","星期二","星期三","星期四");
 //数组对象
 ```
 
-<img src="http://chuann.cc/Web/Object-Classification.png">
+<img src="http://chuann.cc/Web/Object-Classification.png" width="500px" height="auto">
 
 ### <span id="3.1">String对象</span>
 #### 字符串对象的创建
@@ -953,7 +954,7 @@ var func = function(arg){
 - setTimeout()       在指定的毫秒数后调用函数或计算表达式。
 - clearTimeout()     取消由 setTimeout() 方法设置的 timeout。
 
-	```js
+	```html
 	<input id="ID1" type="text" onclick="begin()">
 	<button onclick="begin()">开始</button>
 	<button onclick="end()">停止</button>
