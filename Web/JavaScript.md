@@ -1,11 +1,22 @@
 # JavaScript
 - [介绍](#1.0)
 - [快速入门](#2.0)
-- [BOM](#3.0)
-- [DOM](#4.0)
-	- [相关定义](#4.1)
-	- [节点](#4.2)
-	- [事件](#4.3)
+	- [引入方式](#2.1)
+	- [变量、常量和标识符](#2.2)
+	- [数据类型](#2.3)
+	- [运算符](#2.4)
+	- [流程控制](#2.5)
+- [对象](#3.0)
+	- [String对象](#3.1)
+	- [Array对象](#3.2)
+	- [Date对象](#3.3)
+	- [Math对象](#3.4)
+	- [Function对象](#3.5)
+- [BOM](#4.0)
+- [DOM](#5.0)
+	- [相关定义](#5.1)
+	- [节点](#5.2)
+	- [事件](#5.3)
 
 ## <span id="1.0">JS简介</span>
 JavaScript一种直译式脚本语言，是一种动态类型、弱类型、基于原型的语言，内置支持类型。它的解释器被称为JavaScript引擎，为浏览器的一部分，广泛用于客户端的脚本语言，最早是在HTML（标准通用标记语言下的一个应用）网页上使用，用来给HTML网页增加动态功能。
@@ -15,57 +26,88 @@ JavaScript一种直译式脚本语言，是一种动态类型、弱类型、基�
 那为什么不直接把JavaScript定为标准呢？因为JavaScript是网景的注册商标。            
 不过大多数时候，我们还是用JavaScript这个词。如果你遇到ECMAScript这个词，简单把它替换为JavaScript就行了。       
 
-
-基本语法：ECMA
-
-对象
-
-DOM与BOM
-DOM->document object model操作整个html文档
-BOM->browser object model操作浏览器的行为
-
-
-1. 变量
-2. 运算符
-3. 数据类型
-4. 流程控制
-5. 函数
-6. 对象
-
 ## <span id="2.0">快速入门</span>
-### 基本语法
+### <span id="2.1">引入方式</span>
+- 直接编写
+	- 适用于需要直接对文档对象的操作
+
+```html
+<script>
+    alert('hello world');
+</script>
+```
+- 导入文件
+	- 通常用来导入已经编写好的函数，在文档内操作
+
+```html
+<script src="hello.js"></script>
+```
+
 - 结束符
 	- JavaScript的语法和Java语言类似，每个语句以;结束，语句块用{...}。
-	- 但是，JavaScript并不强制要求在每个语句的结尾加;，浏览器中负责执行JavaScript代码的引擎会自动在每个语句的结尾补上;
+	- 但是，JavaScript并不强制要求在每个语句的结尾加;浏览器中负责执行JavaScript代码的引擎会自动在每个语句的结尾补上;
 	- JavaScript对于缩进没有任何硬性要求，IDE提供的缩进只是有助于对代码的理解
 
-	```js
+	```javascript
 	var x = 1;
 	'helloworld';
 	var x = 1; var y = 2;
 	if (2 > 1) {
-	    x = 1;
-	    y = 2;
-	    z = 3;
+	 x = 1;
+	 y = 2;
+	 z = 3;
 	}
+	
 	```
 
-- 
-- 注释
+### <span id="2.2">变量、常量和标识符</span>
+#### 变量
+1. 声明变量时不用声明变量类型. 全都使用var关键字;
+2. 一行可以声明多个变量.并且可以是不同类型;
+3. 声明变量时 可以不用var. 如果不用var 那么它是全局变量;
+4. 变量命名,首字符只能是字母,下划线,$美元符 三选一，余下的字符可以是下划线、美元符号或任何字母或数字字符且区分大小写，x与X是两个变量;
+
+#### 常量和标识符
+- 常量
+	- 直接在程序中出现的数据值
+- 标识符
+	1. 由不以数字开头的字母、数字、下划线(_)、美元符号($)组成;
+	2. 常用于表示函数、变量等的名称;
+	3. 例如：_abc,$abc,abc,abc123是标识符，而1abc不是;
+	4. JavaScript语言中代表特定含义的词称为保留字，不允许程序再定义为标识符;
 
 
+### <span id="2.3">数据类型</span>
+#### 数字类型(number)
+#### 字符串类型(string)
+#### 布尔类型(boolean)
+#### Null & Undefined类型
 
-## 对象
+### <span id="2.4">运算符</span>
+#### 算术运算符
+#### 比较运算符
+#### 逻辑运算符
+
+### <span id="2.5">流程控制</span>
+#### 顺序结构
+#### 分支结构
+#### 循环结构
+#### 异常处理
+
+## <span id="3.0">对象</span>
+### <span id="3.1">String对象</span>
+### <span id="3.2">Array对象</span>
+### <span id="3.3">Date对象</span>
+### <span id="3.4">Math对象</span>
+### <span id="3.5">Function对象</span>
 
 
-
-
-## <span id="3.0">BOM</span>
+## <span id="4.0">BOM</span>
 ### window对象
 
 
-## <span id="4.0">DOM(Document Object Model)</span>
-### <span id="4.1">相关定义</span>
+## <span id="5.0">DOM(Document Object Model)</span>
+### <span id="5.1">相关定义</span>
 - HTML Document Object Model（文档对象模型）
 - HTML DOM 定义了访问和操作HTML文档的标准方法
 - HTML DOM 把 HTML 文档呈现为带有元素、属性和文本的树结构（节点树)
@@ -84,9 +126,9 @@ BOM->browser object model操作浏览器的行为
 </body>
 </html> 
 ```
-<img src=""></img>
+<img src="http://chuann.cc/Web/DOM-Tree.png" width="500px" height="auto">
 
-### <span id="4.2">节点</span>
+### <span id="5.2">节点</span>
 DOM对节点的定义：
 1. 整个文档是一个文档节点 
 2. 每个 HTML 标签是一个元素节点 
@@ -100,6 +142,8 @@ DOM对节点的定义：
     每个节点都有父节点、除了根（它没有父节点）  
     一个节点可拥有任意数量的子节点   
     同胞是拥有相同父节点的节点  
+
+<img src="http://chuann.cc/Web/DOM-Node-relative.png" width="500px" height="auto">
 
 #### 对节点操作
 ##### 查找节点
@@ -249,9 +293,9 @@ DOM对节点的定义：
 
 
 6. 可以innerHTML给节点添加HTML代码（非W3C标准，但是主流浏览器支持）
-	- node.innerHTML = "<p>增加的内容</p>"
+	- node.innerHTML = "\<p>增加的内容\</p>"
 
-### <span id="4.3">事件</span>
+### <span id="5.3">事件(事件句柄Event Handlers)</span>
 #### 常用事件类型概览
 - **onclick** 用户点击某个对象
 	- 支持的HTML标签：绝大部分标签
@@ -306,9 +350,16 @@ DOM对节点的定义：
 
 - [更多事件类型](http://www.w3school.com.cn/jsref/dom_obj_event.asp)
 
-#### Event对象
+##### Event对象
 Event对象代表事件的状态，比如事件在其中发生的元素、键盘按键的状态、鼠标的位置、鼠标按钮的状态。
 事件通常与函数结合使用，函数不会在事件发生前被执行！event对象在事件发生时系统已经创建好了,并且会在事件函数被调用时传给事件函数.我们获得仅仅需要接收一下即可.比如onkeydown,我们想知道哪个键被按下了，需要问下event对象的属性，这里就是KeyCode.
+
+- event.keycode 获取发生事件的键盘ASCII码
+- event.target 获取发生事件的标签
+	- event.target.tagname
+
+
+
 
 
 
@@ -523,6 +574,73 @@ Event对象代表事件的状态，比如事件在其中发生的元素、键盘
 	</body>
 	</html>
 	```
+
+#### 事件委派
+- 应用场景：原页面每一项已经绑定事件，而用户的新建项也需要绑定事件
+- parentnode.addEventListener(event_type,listener,useCapture)
+
+
+#### 事件实例
+##### 表格全选、反选、取消
+```html
+<button class="select_all">全选</button>
+<button class="select_reverse">反选</button>
+<button class="cancel">取消</button>
+<table border="1">
+    <tr>
+        <td><input type="checkbox" class="ck"></td>
+        <td>111</td>
+        <td>111</td>
+        <td>111</td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" class="ck"></td>
+        <td>222</td>
+        <td>222</td>
+        <td>222</td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" class="ck"></td>
+        <td>333</td>
+        <td>333</td>
+        <td>333</td>
+    </tr>
+    <tr>
+        <td><input type="checkbox" class="ck"></td>
+        <td>444</td>
+        <td>444</td>
+        <td>444</td>
+    </tr>
+</table>
+<script>
+    var ele_select_all = document.getElementsByClassName('select_all')[0];
+    var ele_select_reverse = document.getElementsByClassName('select_reverse')[0];
+    var ele_cancel = document.getElementsByClassName('cancel')[0];
+    var elements = document.getElementsByClassName('ck');
+    ele_select_all.onclick = function () {
+        for (var i=0;i<elements.length;i++){
+            elements[i].checked = true;
+        }
+    };
+    ele_cancel.onclick = function () {
+        for (var i=0;i<elements.length;i++){
+            elements[i].checked = false;
+        }
+    };
+    ele_select_reverse.onclick = function () {
+        for (var i=0;i<elements.length;i++){
+            elements[i].checked?elements[i].checked = false:elements[i].checked = true;
+        }
+    }
+</script>
+```
+
+##### 轮播图，tab切换
+
+[代码链接](https://github.com/fangmingc/Python/blob/master/Web/JavaScript/0926/%E8%BD%AE%E6%92%AD%E5%9B%BE.html)
+
+
+
 
 
 
