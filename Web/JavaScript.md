@@ -230,7 +230,7 @@ DOM对节点的定义：
 5. CSS样式-style属性
 
 	```html
-	<div id="test">Javascript</div>
+	<div id="test">JavaScript</div>
 	<script>
 	    var element = document.getElementById('test');
 	    element.style.display = "inline-block";
@@ -252,28 +252,65 @@ DOM对节点的定义：
 	- node.innerHTML = "<p>增加的内容</p>"
 
 ### <span id="4.3">事件</span>
-#### 事件类型概览
-- onclick 用户点击某个对象
-- ondbclick 用户双击某个对象
+#### 常用事件类型概览
+- **onclick** 用户点击某个对象
+	- 支持的HTML标签：绝大部分标签
+	- 支持的JavaScript对象：button, document, checkbox, link, radio, reset, submit
+- **ondbclick** 用户双击某个对象
+	- 支持的HTML标签：绝大部分标签
+	- 支持的JavaScript对象：document, link
 
-- onfoucs 元素获得焦点（如选中输入框）
-- onblur 元素失去焦点（如当用户离开某个输入框，对输入框内内容进行验证）
-- onchange 域的内容被改变
+- **onfoucs** 元素获得焦点（如选中输入框）
+	- 支持的HTML标签：绝大部分标签
+	- 支持的JavaScript对象：button, checkbox, fileUpload, layer, frame, password, radio, reset, select, submit, text, textarea, window
+- **onblur** 元素失去焦点（如当用户离开某个输入框，对输入框内内容进行验证）
+	- 支持的HTML标签：绝大部分标签
+	- 支持的JavaScript对象：button, checkbox, fileUpload, layer, frame, password, radio, reset, submit, text, textarea, window
+- **onchange** 域的内容被改变
+	- 支持的HTML标签：<input type="text">, <select>, <textarea>
+	- 支持的JavaScript对象：fileUpload, select, text, textarea
 
-- onkeydown 某个键盘按键被按下
-- onkeypress 某个键盘按键被按下并松开
-- onkeyup 某个键盘按键被松开
+- **onkeydown** 某个键盘按键被按下
+- **onkeypress** 某个键盘按键被按下并松开
+- **onkeyup** 某个键盘按键被松开
+	- 以上支持以下
+	- HTML标签：绝大部分标签
+	- JavaScript对象：document, image, link, textarea
 
-- onload 一张页面或一幅图像完成加载
+- **onload** 一张页面或一幅图像完成加载
+	- 支持的HTML标签：<body>, <frame>, <frameset>, <iframe>, <img>, <link>, <script>
+	- 支持的JavaScript对象：image, layer, window
 
-- onmousedown 鼠标按钮被按下
-- onmousemove 鼠标被移动
-- onmouseout 鼠标从某元素移开
-- onmouseover 鼠标移到某元素之上
-- onmouseleave 鼠标从元素离开
+- **onmousedown** 鼠标按钮被按下
+	- 支持的HTML标签：绝大部分标签
+	- 支持的JavaScript对象：button, document, link
+- **onmousemove** 鼠标被移动
+	- 支持的HTML标签：绝大部分标签
+	- 支持的JavaScript对象：默认不支持任何对象，因为过于频繁
+- **onmouseout** 鼠标从某元素移开
+	- 支持的HTML标签：绝大部分标签
+	- 支持的JavaScript对象：layer, link
+- **onmouseover** 鼠标移到某元素之上
+	- 支持的HTML标签：绝大部分标签
+	- 支持的JavaScript对象：layer, link
+- **onmouseleave** 鼠标从某元素移开
+	- 支持的HTML标签：绝大部分标签
+	- 支持的JavaScript对象：layer, link
 
-- onselect 文本被选中
-- onsubmit 确认按钮被点击
+- **onselect** 文本框的文本被选中
+	- 支持的HTML标签：<input type="text">, <textarea>
+	- 支持的JavaScript对象：window
+- **onsubmit** 确认按钮被点击
+	- 支持的HTML标签：<form>
+	- 支持的JavaScript对象：form
+
+- [更多事件类型](http://www.w3school.com.cn/jsref/dom_obj_event.asp)
+
+#### Event对象
+Event对象代表事件的状态，比如事件在其中发生的元素、键盘按键的状态、鼠标的位置、鼠标按钮的状态。
+事件通常与函数结合使用，函数不会在事件发生前被执行！event对象在事件发生时系统已经创建好了,并且会在事件函数被调用时传给事件函数.我们获得仅仅需要接收一下即可.比如onkeydown,我们想知道哪个键被按下了，需要问下event对象的属性，这里就是KeyCode.
+
+
 
 #### 绑定事件的方式
 - 方式一:
@@ -281,10 +318,11 @@ DOM对节点的定义：
 	```html
 	<button id="div" onclick="foo(this)">快点这里</button>
 	<script>
-	    function foo(self){           // 形参不能是this;
+	    function foo(self){           // 形参不能是this
 	        console.log("让你点就点，怎么这么随便？");
 	        console.log(self);
 	    }
+	</script>
 	```
 
 - 方式二:
@@ -361,18 +399,130 @@ DOM对节点的定义：
 	</html>
 	```
 
+##### 事件传播
+- 如果对某标签绑定了事件A，并且对其子标签也绑定了事件B，当子标签遭遇事件A也会执行相应的JS代码，称之为事件传播，通常我们不希望
 
+	```html
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Title</title>
+	</head>
+	<body>
+	<div id="abc_1" style="width:300px;height:300px;background-color: green">
+	        <div id="abc_2" style="width:200px;height:200px;background-color: red">
+	            INNER IDV
+	        </div>
+	    OUTER DIV
+	</div>
+	<script type="text/javascript">
+	        document.getElementById("abc_1").onclick=function(){
+	            alert('111');
+	        };
+	        document.getElementById("abc_2").onclick=function(event){
+	            alert('222');
+	//            event.stopPropagation(); //阻止事件向外层div传播.
+	        }
+	</script>
+	</body>
+	</html>
+	```
 
+##### onchange
+- 当域内容被改变时的事件，通常用于有选项的标签
 
+	```html
+	<select name="" id="">
+	    <option value="">111</option>
+	    <option value="">222</option>
+	    <option value="">333</option>
+	</select>
+	<script>
+	    var ele=document.getElementsByTagName("select")[0];
+	    ele.onchange=function(){
+	          alert(123);
+	    }
+	</script>
+	```
 
+##### onkeydown
+- 捕获键盘发生的事件
 
+> Event对象代表事件的状态，比如事件在其中发生的元素、键盘按键的状态、鼠标的位置、鼠标按钮的状态。
+事件通常与函数结合使用，函数不会在事件发生前被执行！event对象在事件发生时系统已经创建好了,并且会在事件函数被调用时传给事件函数.我们获得仅仅需要接收一下即可.比如onkeydown,我们想知道哪个键被按下了，需要问下event对象的属性，这里就是KeyCode.
 
+```html
+<input type="text" id="ccc">
+<script>
+    var key = document.getElementById('ccc');
+    key.onkeydown = function (event) {
+        console.log(123)
+    };
+    key.onkeyup = function () {
+        console.log(456)
+    };
+</script>
+```
 
+##### onmouseout------onmouseleave
+- 不论鼠标指针离开被选元素还是任何子元素，都会触发 mouseout 事件。
+- 只有在鼠标指针离开被选元素时，才会触发 mouseleave 事件。
 
-
-
-
-
+	```html
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Title</title>
+	    <style>
+	        .container {  width: 40%;}
+	        #container {  float: left;}
+	        #container2 {  float: right;}
+	        .title {  cursor: pointer;  background: #ccc;  height: 50px;  }
+	        .list {  display: none;  background: #fff;  }
+	        .list div {  line-height: 50px;  }
+	        .list .item1 {  background-color: green;  }
+	        .list .item2 {  background-color: rebeccapurple;  }
+	        .list .item3 {  background-color: lemonchiffon;  }
+	    </style>
+	</head>
+	<body>
+	<div class="container" id="container">
+	    <div class="title" id="title">使用了mouseout事件</div>
+	    <div class="list" id="list">
+	        <div class="item1">第一行</div>
+	        <div class="item2">第二行</div>
+	        <div class="item3">第三行</div>
+	    </div>
+	</div>
+	<div class="container" id="container2">
+	    <div class="title" id="title2">使用了mouseleave事件</div>
+	    <div class="list" id="list2">
+	        <div class="item1">第一行</div>
+	        <div class="item2">第二行</div>
+	        <div class="item3">第三行</div>
+	    </div>
+	</div>
+	<script>
+	    var container = document.getElementById("container");
+	    var title = document.getElementById("title");
+	    var list = document.getElementById("list");
+	    title.onmouseover = function () {
+	        list.style.display = "block";};
+	    container.onmouseout = function () {
+	        list.style.display = "none";};
+	    var container2 = document.getElementById("container2");
+	    var title2 = document.getElementById("title2");
+	    var list2 = document.getElementById("list2");
+	    title2.onmouseover = function () {
+	        list2.style.display = "block";};
+	    container2.onmouseleave = function () {
+	        list2.style.display = "none";};
+	</script>
+	</body>
+	</html>
+	```
 
 
 
