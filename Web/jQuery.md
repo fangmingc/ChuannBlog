@@ -6,8 +6,8 @@
 
 ## jQuery使用
 - 导入jQuery文件
-	- <script src="../jquery3_0_0.js"></script>
-	- <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+	- <code><script src="../jquery3_0_0.js"></script></code>
+	- <code><script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script></code>
 
 
 ### 核心
@@ -18,9 +18,6 @@
 #### 第一条jQuery语句
 - 可以打开任意一个支持jQuery的网页，使用浏览器的检查，在console窗口中输入<code>$("head>title").text()</code>
 - 在已导入jQuery库的页面的script标签中输入<code>alert($("head>title").text());</code>
-
-- 
-- 
 - 英文特殊字符$开头
 	- jQuery.xxxxxx
 	- $.xxxxxx
@@ -63,4 +60,4 @@
 
 
 
-<script>$("code").css('color', 'red')</script>
+<script>$("code").css('color', '#D05')$("code").css('padding','0 4px')$("code").css('background','#fafafa')$("code").css('border','1px solid #ddd')</script>
