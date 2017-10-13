@@ -6,8 +6,8 @@
 
 ## jQuery使用
 - 导入jQuery文件
-	- <code><script src="../jquery3_0_0.js"></script></code>
-	- <code><script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script></code>
+	- <code>\<script src="../jquery3_0_0.js">\</script></code>
+	- <code>\<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js">\</script></code>
 
 
 ### 核心
@@ -60,4 +60,4 @@
 
 
 
-<script>$("code").css('color', '#D05')$("code").css('padding','0 4px')$("code").css('background','#fafafa')$("code").css('border','1px solid #ddd')</script>
+<script>$("code").css('color', '#D05');$("code").css('padding','0 4px');$("code").css('background','#fafafa');$("code").css('border','1px solid #ddd');</script>
