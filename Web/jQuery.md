@@ -6,8 +6,8 @@
 
 ## jQuery使用
 - 导入jQuery文件
-	- <code>\<script src="../jquery3_0_0.js">\</script></code>
-	- <code>\<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js">\</script></code>
+	- <code>&lt;script src="../jquery3_0_0.js"&gt;\&lt;/script&gt;</code>
+	- <code>&lt;script src=\"https://cdn.bootcss.com/jquery/3.2.1/jquery.js"&gt;&lt;/script></code>
 
 
 ### 核心
@@ -23,15 +23,41 @@
 	- $.xxxxxx
 
 
-## jQuery的
-
-
+## jQuery语法
 - jQuery对象转成DOM对象
 	- $("#ID").text()
 	- $("#ID")[0],innerText
 - DOM对象转成jQuery对象
 	- var a = $("#ID")[0]
 	- $(a).text()
+
+
+### 文档处理
+- 内部插入
+	- append(content|fn)
+	- appendTo(content)
+	- prepend(content|fn)
+	- prependTo(content)
+- 外部插入
+	- after(content|fn)
+	- before(content|fn)
+	- insertAfter(content)
+	- insertBefore(content)
+- 包裹
+	- wrap(html|ele|fn)
+	- unwrap()
+	- wrapAll(html|ele)
+	- wrapInner(html|ele|fn)
+- 替换
+	- replaceWith(content|fn)
+	- replaceAll(selector)
+- 删除
+	- empty()
+	- remove([expr])
+	- detach([expr])
+- 复制
+	- clone([Even[,deepEven]])
+
 
 
 
