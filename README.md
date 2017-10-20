@@ -8,8 +8,8 @@ Blog托管于[GitHub](https://github.com/fangmingc/ChuannBlog)
 * [Python入门](Beginning_of_Python/README.md)
 * [Python进阶](Intermediate_Python/README.md)
 * [数据库](Database/README.md)
-* [web](Web/README.md)
-* [读书笔记](Reading_notes/README.md)
+* [Web](Web/README.md)
+* [其他](Personal/README.md)
 
 
 
