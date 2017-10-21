@@ -271,15 +271,247 @@ div[attr*="value"]{color:red;}
 	- border(边框):     围绕在内边距和内容外的边框。
 	- content(内容):   盒子的内容，显示文本和图像。
 
+<img src="https://github.com/fangmingc/ChuannBlog/blob/master/Web/box-model.png"  width=400>
 
 
 ### float属性
+- 浮动规则
+	- block元素通常被现实为独立的一块，独占一行，多个block元素会各自新起一行，默认block元素宽度自动填满其父元素宽度。block元素可以设置width、height、margin、padding属性；
+	- inline元素不会独占一行，多个相邻的行内元素会排列在同一行里，直到一行排列不下，才会新换一行，其宽度随元素的内容而变化。inline元素设置width、height属性无效
+	- 所谓的文档流，指的是元素排版布局过程中，元素会自动从左往右，从上往下的流式排列。
+	- 脱离文档流，也就是将元素从普通的布局排版中拿走，其他盒子在定位的时候，会当做脱离文档流的元素不存在而进行定位。
+
+	```html
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Title</title>
+	    <style>
+	        * {
+	            margin: 0;
+	        }
+	        .r1 {
+	            width: 300px;
+	            height: 100px;
+	            background-color: #7A77C8;
+	            float: left;
+	        }
+	        .r2 {
+	            width: 200px;
+	            height: 200px;
+	            background-color: wheat;
+	            /*float: left;*/
+	        }
+	        .r3 {
+	            width: 100px;
+	            height: 200px;
+	            background-color: darkgreen;
+	            float: left;
+	        }
+	    </style>
+	</head>
+	<body>
+	<div class="r1"></div>
+	<div class="r2"></div>
+	<div class="r3"></div>
+	</body>
+	</html>
+	```
+- 非完全脱离文档流
+	- 左右结构div盒子重叠现象，一般是由于相邻两个DIV一个使用浮动一个没有使用浮动。一个使用浮动一个没有导致DIV不是在同个“平面”上，但内容不会造成覆盖现象，只有DIV形成覆盖现象。
+	- 要么都不使用浮动；要么都使用float浮动；要么对没有使用float浮动的DIV设置margin样式
+
+	```html
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Title</title>
+	    <style>
+	        *{
+	            margin: 0;
+	        }
+	        .r1{
+	            width: 100px;
+	            height: 100px;
+	            background-color: #7A77C8;
+	            float: left;
+	        }
+	        .r2{
+	            width: 200px;
+	            height: 200px;
+	            background-color: wheat;
+	        }
+	    </style>
+	</head>
+	<body>
+	<div class="r1"></div>
+	<div class="r2">region2</div>
+	</body>
+	</html>
+	```
+
+- 父级坍塌现象
+
+	```html
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Title</title>
+	    <style type="text/css">
+	        * {
+	            margin: 0;
+	            padding: 0;
+	        }
+	        .container {
+	            border: 1px solid red;
+	            width: 300px;
+	        }
+	        #box1 {
+	            background-color: green;
+	            float: left;
+	            width: 100px;
+	            height: 100px;
+	        }
+	        #box2 {
+	            background-color: deeppink;
+	            float: right;
+	            width: 100px;
+	            height: 100px;
+	        }
+	        #box3 {
+	            background-color: pink;
+	            height: 40px;
+	        }
+	    </style>
+	</head>
+	<body>
+	<div class="container">
+	    <div id="box1">box1 向左浮动</div>
+	    <div id="box2">box2 向右浮动</div>
+	</div>
+	<div id="box3">box3</div>
+	</body>
+	</body>
+	</html>
+	```
+	- .container和box3的布局是上下结构，上图发现box3跑到了上面，与.container产生了重叠，但文本内容没有发生覆盖，只有div发生覆盖现象。这个原因是因为第一个大盒子里的子元素使用了浮动，脱离了文档流，导致.container没有被撑开。box3认为.container没有高度（未被撑开），因此跑上去了
+
+#### 解决方法一：固定高度
+- 给.container设置固定高度或者给.container加一个固定高度的子div
+- 但一般一般情况下文字内容不确定多少就不能设置固定高度，所以一般不能设置“.container”高度
+- 能确定内容多高，这种情况下“.container是可以设置一个高度即可解决覆盖问题。
+
+	```html
+	<div class="container" style="height: 100px">
+	    <div id="box1">box1 向左浮动</div>
+	    <div id="box2">box2 向右浮动</div>
+	    <!--<div id="empty" style="height: 100px"></div>-->
+	</div>
+	<div id="box3">box3</div>
+	```
+
+#### 解决办法二：清除浮动（clear属性）
+clear属性只会对自身起作用，而不会影响其他元素。
+- clear:none  默认值。允许两边都可以有浮动对象
+- clear:left  不允许左边有浮动对象
+- clear:right  不允许右边有浮动对象
+- clear:both  不允许有浮动对象
+- 解决父级坍塌现象：
+	- CSS代码
+
+	```CSS
+	.clearfix:after {             		/*在类名为“clearfix”的元素内最后面加入内容；
+	    content: ".";                 	/*内容为“.”就是一个英文的句号而已。也可以不写。
+	    display: block;               	/*加入的这个元素转换为块级元素。
+	    clear: both;                  	/*清除左右两边浮动。
+	    visibility: hidden;           	/*可见度设为隐藏。注意它和display:none;是有区别的。这里仍然占据空间，只是看不到而已；
+	    line-height: 0;               	/*行高为0；
+	    height: 0;                    	/*高度为0；
+	    font-size:0;                  	/*字体大小为0；
+	    }
+	```
+	- html 整段代码就相当于在浮动元素后面跟了个宽高为0的空div，然后设定它clear:both来达到清除浮动的效果。这样的操作就不必在html文件中写入大量无意义的空标签，又能清除浮动。
+
+	```html
+	<div class="container">
+	    <div id="box1">box1 向左浮动</div>
+	    <div id="box2">box2 向右浮动</div>
+	    <div class="clearfix"></div>
+	</div>
+	<div id="box3">box3</div>
+	```
+
+#### 解决办法三：overflow:hidden
+overflow：hidden的含义是超出的部分要裁切隐藏，float的元素虽然不在普通流中，但是他是浮动在普通流之上的，可以把普通流元素+浮动元素想象成一个立方体。如果没有明确设定包含容器高度的情况下，它要计算内容的全部高度才能确定在什么位置hidden，这样浮动元素的高度就要被计算进去。这样包含容器就会被撑开，清除浮动。
+
 ### position属性
+-  static
+	- 默认值，无定位，不能当作绝对定位的参照物，并且设置标签对象的left、top等值是不起作用的的。
+- position: relative／absolute
+	- relative: 相对定位。
+		- 相对定位是相对于该元素在文档流中的原始位置，即以自己原始位置为参照物。
+		- 即使设定了元素的相对定位以及偏移值，元素还占有着原来的位置，即占据文档流空间。
+		- 对象遵循正常文档流，但将依据top，right，bottom，left等属性在正常文档流中偏移位置。
+		- 而其层叠通过z-index属性定义。
+		- 主要用法：方便绝对定位元素找到参照物。
+	- absolute: 绝对定位。
+		- 定义：设置为绝对定位的元素框从文档流完全删除，并相对于最近的已定位祖先元素定位，如果元素没有已定位的祖先元素，那么它的位置相对于最初的包含块（即body元素）。
+		- 元素原先在正常文档流中所占的空间会关闭，就好像该元素原来不存在一样。
+		- 元素定位后生成一个块级框，而不论原来它在正常流中生成何种类型的框。
+		- 重点：如果父级设置了position属性，例如position:relative;，那么子元素就会以父级的左上角为原始点进行定位。这样能很好的解决自适应网站的标签偏离问题，即父级为自适应的，那我子元素就设置position:absolute;父元素设置position:relative;，然后Top、Right、Bottom、Left用百分比宽度表示。
+		- 另外，对象脱离正常文档流，使用top，right，bottom，left等属性进行绝对定位。
+		- 而其层叠通过z-index属性定义。
+	
+	```html
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Title</title>
+	    <style>
+	        *{
+	            margin: 0;
+	        }
+	        .outet{
+	            /*position: relative;*/
+	        }
+	        .item{
+	            width: 200px;
+	            height:200px ;
+	        }
+	        .r1{
+	            background-color: #7A77C8;
+	        }
+	        .r2{
+	            background-color: wheat;
+	            /*position: relative;*/
+	            position: absolute;
+	            top: 200px;
+	            left: 200px;
+	        }
+	        .r3{
+	            background-color: darkgreen;
+	        }
+	    </style>
+	</head>
+	<body>
+	<div class="item r1"></div>
+	<div class="outet">
+	    <div class="item r2"></div>
+	    <div class="item r3"></div>
+	</div>
+	</body>
+	</html>
+	```
 
-
-
-
-
+- position:fixed
+	- 对象脱离正常文档流，使用top，right，bottom，left等属性以窗口为参考点进行定位，当出现滚动条时，对象不会随着滚动。
+	- 而其层叠通过z-index属性定义。 
+	- 注意： 一个元素若设置了 position:absolute | fixed; 则该元素就不能设置float。
+	- 在理论上，被设置为fixed的元素会被定位于浏览器窗口的一个指定坐标，不论窗口是否滚动，它都会固定在这个位置。
 
 
 
