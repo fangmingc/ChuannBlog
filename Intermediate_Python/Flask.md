@@ -414,7 +414,7 @@ if __name__ == '__main__':
 - 可用来改变模板的渲染流程
 1. 条件控制
 
-	```
+	```html
 	{% id user%}
 	    Hello, {{ user }}!
 	{% else %}
@@ -424,7 +424,7 @@ if __name__ == '__main__':
 
 2. for循环
 
-	```
+	```html
 	<ul>
 	    {% for comment in comments %}
 	    <li>{{ comment }}</li>
@@ -436,7 +436,7 @@ if __name__ == '__main__':
 	- 直接定义
 
 
-	```
+	```html
 	{% macro render_comment(comment) %}
 	    <li>{{ comment }}</li>
 	{% endmacro %}
@@ -449,7 +449,7 @@ if __name__ == '__main__':
 
 	- 保存使用
 
-	```
+	```html
 	{% import 'macros.html' as macros %}
 	<ul>
 	    {% for comment in comments %}
@@ -460,7 +460,7 @@ if __name__ == '__main__':
 
 4. 将多出重复使用的模板代码写入文件，再包含在所有模板
 
-	```
+	```html
 	{% include 'common.html' %}
 	```
 
@@ -483,7 +483,7 @@ if __name__ == '__main__':
 
 	- **衍生模板**  extends 指令声明这个模板衍生自 base.html。在 extends 指令之后，基模板中的 3 个块被重新定义，模板引擎会将其插入适当的位置。注意新定义的 head 块，在基模板中其内容不是空的，所以使用 super() 获取原来的内容。
 
-	```
+	```html
 	{% extends "base.html" %}
 	{% block title %}Index{% endblock %}
 	{% block head %}
