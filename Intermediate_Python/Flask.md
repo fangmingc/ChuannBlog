@@ -415,7 +415,7 @@ if __name__ == '__main__':
 1. 条件控制
 
 	```html
-	{% id user%}
+	{% if user%}
 	    Hello, {{ user }}!
 	{% else %}
 	    Hello, Stranger!
