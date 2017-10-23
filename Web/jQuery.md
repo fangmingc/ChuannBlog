@@ -34,22 +34,22 @@
 
 ### 文档处理
 - 内部插入
-	- append(content|fn)
+	- append(content\|fn)
 	- appendTo(content)
-	- prepend(content|fn)
+	- prepend(content\|fn)
 	- prependTo(content)
 - 外部插入
-	- after(content|fn)
-	- before(content|fn)
+	- after(content\|fn)
+	- before(content\|fn)
 	- insertAfter(content)
 	- insertBefore(content)
 - 包裹
-	- wrap(html|ele|fn)
+	- wrap(html\|ele\|fn)
 	- unwrap()
-	- wrapAll(html|ele)
-	- wrapInner(html|ele|fn)
+	- wrapAll(html\|ele)
+	- wrapInner(html\|ele\|fn)
 - 替换
-	- replaceWith(content|fn)
+	- replaceWith(content\|fn)
 	- replaceAll(selector)
 - 删除
 	- empty()

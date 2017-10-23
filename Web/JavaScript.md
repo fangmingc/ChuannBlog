@@ -1187,7 +1187,7 @@ DOM对节点的定义：
 	- 支持的HTML标签：绝大部分标签
 	- 支持的JavaScript对象：button, checkbox, fileUpload, layer, frame, password, radio, reset, submit, text, textarea, window
 - **onchange** 域的内容被改变
-	- 支持的HTML标签：<input type="text">, <select>, <textarea>
+	- 支持的HTML标签：\<input type="text"\>, \<select>, \<textarea>
 	- 支持的JavaScript对象：fileUpload, select, text, textarea
 
 - **onkeydown** 某个键盘按键被按下
@@ -1198,7 +1198,7 @@ DOM对节点的定义：
 	- JavaScript对象：document, image, link, textarea
 
 - **onload** 一张页面或一幅图像完成加载
-	- 支持的HTML标签：<body>, <frame>, <frameset>, <iframe>, <img>, <link>, <script>
+	- 支持的HTML标签：\<body>, \<frame>, \<frameset>, \<iframe>, \<img>, \<link>, \<script>
 	- 支持的JavaScript对象：image, layer, window
 
 - **onmousedown** 鼠标按钮被按下
@@ -1218,7 +1218,7 @@ DOM对节点的定义：
 	- 支持的JavaScript对象：layer, link
 
 - **onselect** 文本框的文本被选中
-	- 支持的HTML标签：<input type="text">, <textarea>
+	- 支持的HTML标签：\<input type="text"\>, \<textarea>
 	- 支持的JavaScript对象：window
 - **onsubmit** 确认按钮被点击
 	- 支持的HTML标签：<form>

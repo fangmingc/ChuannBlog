@@ -6,7 +6,7 @@
 - [JavaScript](JavaScript.md)
 
 - 框架
-	- [\* JQuery](jQuery.md)
+	- [JQuery\*](jQuery.md)
 	- [Bootstrap](Bootstrap.md)
 	- React
 	- Vue

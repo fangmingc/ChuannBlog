@@ -90,16 +90,19 @@ HTML中某些字符是预留的，必须被替换为字符实体
 ```html
 <link rel="icon" href="http://www.jd.com/favicon.ico">
 ```
+
 #### \<title>标签
 定义使用浏览器打开网页的标签页的标题文字
 ```html
 <title>oldboy</title>
 ```
+
 #### \<link>标签
 指定CSS样式
 ```html
 <link rel="stylesheet" href="css.css">
 ```
+
 #### \<script>标签
 指定JS文件
 ```html
@@ -266,9 +269,3 @@ URL地址由4部分组成
 	    <p><input type="submit" value="我决定好了"></p>
 	</form>
 	```
-
-
-
-
-
-
