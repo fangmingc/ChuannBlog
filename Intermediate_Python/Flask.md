@@ -436,7 +436,7 @@ if __name__ == '__main__':
 	- 直接定义
 
 
-```html
+<code>
 {% macro render_comment(comment) %}
     <li>{{ comment }}</li>
 {% endmacro %}
@@ -445,7 +445,7 @@ if __name__ == '__main__':
     {{ render_comment(comment) }}
     {% endfor %}
 </ul>
-```
+</code>
 
 	- 保存使用
 
