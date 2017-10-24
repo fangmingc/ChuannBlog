@@ -171,8 +171,8 @@ def current_time(req):
 
 
 ### 标签
-标签看起来像是这样的： {% tag %}。标签比变量更加复杂：一些在输出中创建文本，一些通过循环或逻辑来控制流程，一些加载其后的变量将使用到的额外信息到模版中。         
-一些标签需要开始和结束标签 （例如{% tag %} ...标签 内容 ... {% endtag %}）。
+标签看起来像是这样的： \{\% tag %}。标签比变量更加复杂：一些在输出中创建文本，一些通过循环或逻辑来控制流程，一些加载其后的变量将使用到的额外信息到模版中。         
+一些标签需要开始和结束标签 （例如\{\% tag %} ...标签 内容 ... \{\% endtag %}）。
 - for标签:遍历每一个元素
 
 	```template
@@ -180,7 +180,7 @@ def current_time(req):
 	    <p>{{ person.name }}</p>
 	{% endfor %}
 	```
-	- 可以利用<code>{% for obj in list reversed %}</code>反向完成循环。
+	- 可以利用<code>\{\% for obj in list reversed %}</code>反向完成循环。
 
 	```template
 	{% for key,val in dic.items %}
@@ -197,7 +197,7 @@ def current_time(req):
 	forloop.first           True if this is the first time through the loop
 	forloop.last            True if this is the last time through the loop
 	```
-- for ... empty:for 标签带有一个可选的{% empty %} 从句，以便在给出的组是空的或者没有被找到时，可以有所操作。
+- for ... empty:for 标签带有一个可选的\{\% empty %} 从句，以便在给出的组是空的或者没有被找到时，可以有所操作。
 
 	```template
 	{% for person in person_list %}
