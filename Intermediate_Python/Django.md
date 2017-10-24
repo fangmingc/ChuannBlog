@@ -50,7 +50,7 @@ urlpatterns = {
 		- url(r'^blog/', include('blog.urls'))
 		- urls为blog应用文件夹下的urls.py
 	- 反向查询
-		- 在模板中使用<code>{% url "别名" %}</code>，表示此处为指定别名代表的路径
+		- 在模板中使用<code>\{\% url "别名" %}</code>，表示此处为指定别名代表的路径
 		- 当修改路径时可以自动同步
 
 [练习文件](https://github.com/fangmingc/Python/tree/master/Frame/Django/URLconf)
