@@ -132,7 +132,7 @@
 	```python
 	@app.route('/user/<name>')
 	def user(name):
-	    return '<h1>Hello, %s</h1>'%name
+	    return '<h1>Hello, \%s</h1>'\%name
 	```
 
 - 尖括号中的内容就是动态部分，任何能匹配静态部分的 URL 都会映射到这个路由上。调用视图函数时，Flask 会将动态部分作为参数传入函数。在这个视图函数中，参数用于生成针对个人的欢迎消息。
@@ -176,7 +176,7 @@ def index():
 
 @app.route('/user/<name>')
 def uesr(name):
-    return '<h1>Hello %s!</h1>'%name
+    return '<h1>Hello \%s!</h1>'\%name
 
 
 if __name__ == '__main__':
@@ -197,7 +197,7 @@ from flask import request
 @app.route('/')
 def index():
     user_agent = request.headers.get('User-Agent')
-    return '<p>Your browser is %s</p>' % user_agent
+    return '<p>Your browser is \%s</p>' \% user_agent
 ```
 
 >User Agent(用户代理)，是一个特殊字符串头，使得服务器能够识别客户使用的操作系统及版本、CPU 类型、浏览器及版本、浏览器渲染引擎、浏览器语言、浏览器插件等。
@@ -304,7 +304,7 @@ def index():
 	    user = load_user(id)
 	    if not user:
 	        abort(404)
-	    return '<h1>Hello, %s</h1>' % user.name
+	    return '<h1>Hello, \%s</h1>' \% user.name
 	```
 
 #### Flask扩展
@@ -415,20 +415,20 @@ if __name__ == '__main__':
 1. 条件控制
 
 ```template
-{% if user%}
+{\% if user\%}
     Hello, {{ user }}!
-{% else %}
+{\% else \%}
     Hello, Stranger!
-{% endif%}
+{\% endif\%}
 ```
 
 2. for循环
 
 ```template
 <ul>
-    {% for comment in comments %}
+    {\% for comment in comments \%}
     <li>{{ comment }}</li>
-    {% endfor %}
+    {\% endfor \%}
 </ul>
 ```
 
@@ -436,31 +436,31 @@ if __name__ == '__main__':
 	- 直接定义
 
 ```template
-{% macro render_comment(comment) %}
+{\% macro render_comment(comment) \%}
     <li>{{ comment }}</li>
-{% endmacro %}
+{\% endmacro \%}
 <ul>
-    {% for comment in comments %}
+    {\% for comment in comments \%}
     {{ render_comment(comment) }}
-    {% endfor %}
+    {\% endfor \%}
 </ul>
 ```
 
 	- 保存使用
 
 ```template
-{% import 'macros.html' as macros %}
+{\% import 'macros.html' as macros \%}
 <ul>
-    {% for comment in comments %}
+    {\% for comment in comments \%}
     {{ macros.render_comment(comment) }}
-    {% endfor %}
+    {\% endfor \%}
 </ul>
 ```
 
 4. 将多出重复使用的模板代码写入文件，再包含在所有模板
 
 ```template
-{% include 'common.html' %}
+{\% include 'common.html' \%}
 ```
 
 5. **模板继承**
@@ -469,13 +469,13 @@ if __name__ == '__main__':
 ```template
 <html>
 <head>
-    {% block head %}
-    <title>{% block title %}{% endblock %} - My Application</title>
-    {% endblock %}
+    {\% block head \%}
+    <title>{\% block title \%}{\% endblock \%} - My Application</title>
+    {\% endblock \%}
 </head>
 <body>
-    {% block body %}
-    {% endblock %}
+    {\% block body \%}
+    {\% endblock \%}
 </body>
 </html>
 	```
@@ -483,16 +483,16 @@ if __name__ == '__main__':
 	- **衍生模板**  extends 指令声明这个模板衍生自 base.html。在 extends 指令之后，基模板中的 3 个块被重新定义，模板引擎会将其插入适当的位置。注意新定义的 head 块，在基模板中其内容不是空的，所以使用 super() 获取原来的内容。
 
 ```template
-{% extends "base.html" %}
-{% block title %}Index{% endblock %}
-{% block head %}
+{\% extends "base.html" \%}
+{\% block title \%}Index{\% endblock \%}
+{\% block head \%}
     {{ super() }}
     <style>
     </style>
-{% endblock %}
-{% block body %}
+{\% endblock \%}
+{\% block body \%}
 <h1>Hello, World!</h1>
-{% endblock %}
+{\% endblock \%}
 ```
 
 ##### 使用Flask-Bootstrap集成Twitter Bootstrap
@@ -511,9 +511,9 @@ bootstrap = Bootstrap(app)
 示例 3-5 是把 user.html 改写为衍生模板后的新版本。
 
 ```template
-{% extends "bootstrap/base.html" %}
-{% block title %}Flasky{% endblock %}
-{% block navbar %}
+{\% extends "bootstrap/base.html" \%}
+{\% block title \%}Flasky{\% endblock \%}
+{\% block navbar \%}
 <div class="navbar navbar-inverse" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -533,14 +533,14 @@ bootstrap = Bootstrap(app)
         </div>
     </div>
 </div>
-{% endblock %}
-{% block content %}
+{\% endblock \%}
+{\% block content \%}
 <div class="container">
     <div class="page-header">
         <h1>Hello, {{ name }}!</h1>
     </div>
 </div>
-{% endblock %}
+{\% endblock \%}
 ```
 基模板中定义了可在衍生模板中重定义的块。block 和 endblock 指令定义的块中的内容可添加到基模板中。       
 上面这个 user.html 模板定义了 3 个块，分别名为 title、navbar 和 content。这些块都是基模板提供的，可在衍生模板中重新定义。title 块的作用很明显，其中的内容会出现在渲染后的 HTML 文档头部，放在 <title> 标签中。navbar 和 content 这两个块分别表示页面中的导航条和主体内容。
@@ -577,10 +577,10 @@ Flask-Bootstrap 的 base.html 模板还定义了很多其他块，都可在衍�
 
 大部分是bootstrap自用的，如果程序需要向已经有内容的块中添加新内容，必须使用 Jinja2 提供的 super() 函数。例如，如果要在衍生模板中添加新的 JavaScript 文件，需要这么定义 scripts 块：       
 ```template
-{% block scripts %}
+{\% block scripts \%}
 {{ super() }}
 <script type="text/javascript" src="my-script.js"></script>
-{% endblock %}
+{\% endblock \%}
 ```
 
 #### 自定义错误页面
@@ -608,9 +608,9 @@ Jinja2 的模板继承机制可以帮助我们解决这一问题。Flask-Bootstr
 - 示例 3-7 templates/base.html：包含导航条的程序基模板：
 
 ```template
-{% extends "bootstrap/base.html" %}
-{% block title %}Flasky{% endblock %}
-{% block navbar %}
+{\% extends "bootstrap/base.html" \%}
+{\% block title \%}Flasky{\% endblock \%}
+{\% block navbar \%}
 <div class="navbar navbar-inverse" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -630,52 +630,52 @@ Jinja2 的模板继承机制可以帮助我们解决这一问题。Flask-Bootstr
         </div>
     </div>
 </div>
-{% endblock %}
-{% block content %}
+{\% endblock \%}
+{\% block content \%}
 <div class="container">
-    {% block page_content %}{% endblock %}
+    {\% block page_content \%}{\% endblock \%}
 </div>
-{% endblock %}
+{\% endblock \%}
 ```
 
 - 示例 3-8 templates/404.html：使用模板继承机制自定义 404 错误页面
 	
 ```template
-{% extends "base.html" %}
-{% block title %}Flasky - Page Not Found{% endblock %}
-{% block page_content %}
+{\% extends "base.html" \%}
+{\% block title \%}Flasky - Page Not Found{\% endblock \%}
+{\% block page_content \%}
 <div class="page-header">
     <h2>Page Not Found!</h2>
     <a href="">Click to diagnose network.</a>
 </div>
-{% endblock %}
+{\% endblock \%}
 ```
 
 - 示例 3-9 templates/user.html：使用模板继承机制简化页面模板
 
 ```template
-{% extends "base.html" %}
-{% block title %}Flasky{% endblock %}
-{% block page_content %}
+{\% extends "base.html" \%}
+{\% block title \%}Flasky{\% endblock \%}
+{\% block page_content \%}
 <div class="page-header">
     <h1>Hello, {{ name }}!</h1>
     <h2>Welcome to your space!</h2>
 </div>
-{% endblock %}
+{\% endblock \%}
 ```
 
 - 使用模板简化修改首页
 
 ```template
-{% extends "base.html" %}
-{% block title %}Flasky{% endblock %}
-{% block page_content %}
+{\% extends "base.html" \%}
+{\% block title \%}Flasky{\% endblock \%}
+{\% block page_content \%}
 <div class="page-header">
     <h1>Welcome to Flasky Blog.</h1>
     <h3>Blog is under construction...</h3>
     <h3>Please look forward to.</h3>
 </div>
-{% endblock %}
+{\% endblock \%}
 ```
 
 #### 链接
@@ -705,9 +705,9 @@ def user(name):
 ```
 ```html
 <!--base.html增加代码-->
-{% block scripts %}
+{\% block scripts \%}
 {{ super() }}
-{% endblock %}
+{\% endblock \%}
 <!--user.html增加代码-->
 {{ super() }}
 <script>
@@ -715,7 +715,7 @@ def user(name):
     a_arrs[0].firstChild.setAttribute('href', '{{ a_dict["a_home"] }}');
     a_arrs[1].firstChild.setAttribute('href', '{{ a_dict["a_me"] }}');
 </script>
-{% endblock %}
+{\% endblock \%}
 ```
 
 #### 静态文件
@@ -725,13 +725,13 @@ Web 程序不是仅由 Python 代码和模板组成。大多数程序还会使�
 - 示例 3-10 templates/base.html：定义收藏夹图标
 
 ```template
-{% block head %}
+{\% block head \%}
 {{ super() }}
 <link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.ico') }}"
     type="image/x-icon">
 <link rel="icon" href="{{ url_for('static', filename = 'favicon.ico') }}"
     type="image/x-icon">
-{% endblock %}
+{\% endblock \%}
 ```
 
 #### 使用Flask-Moment本地化日期和时间
@@ -751,10 +751,10 @@ Web 程序不是仅由 Python 代码和模板组成。大多数程序还会使�
 - 示例 3-12 templates/base.html：引入 moment.js 库
 
 ```template
-{% block scripts %}
+{\% block scripts \%}
 {{ super() }}
 {{ moment.include_moment() }}
-{% endblock %}
+{\% endblock \%}
 ```
 
 为了处理时间戳，Flask-Moment 向模板开放了 moment 类。示例 3-13 中的代码把变量current_time 传入模板进行渲染.
@@ -846,7 +846,7 @@ StringField 构造函数中的可选参数 validators 指定一个由验证函�
 即便能指定 HTML 属性，但按照这种方式渲染表单的工作量还是很大，所以在条件允许的情况下最好能使用 Bootstrap 中的表单样式。Flask-Bootstrap 提供了一个非常高端的辅助函数，可以使用 Bootstrap 中预先定义好的表单样式渲染整个 Flask-WTF 表单，而这些操作只需一次调用即可完成。使用 Flask-Bootstrap，上述表单可使用下面的方式渲染：
 
 ```template
-{% import "bootstrap/wtf.html" as wtf %}
+{\% import "bootstrap/wtf.html" as wtf \%}
 {{ wtf.quick_form(form) }}
 ```
 
@@ -855,15 +855,15 @@ import 指令的使用方法和普通 Python 代码一样，允许导入模板�
 - 示例 4-3 templates/index.html：使用 Flask-WTF 和 Flask-Bootstrap 渲染表单
 
 ```template
-{% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
-{% block title %}Flasky{% endblock %}
-{% block page_content %}
+{\% extends "base.html" \%}
+{\% import "bootstrap/wtf.html" as wtf \%}
+{\% block title \%}Flasky{\% endblock \%}
+{\% block page_content \%}
 <div class="page-header">
-    <h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
+    <h1>Hello, {\% if name \%}{{ name }}{\% else \%}Stranger{\% endif \%}!</h1>
 </div>
 {{ wtf.quick_form(form) }}
-{% endblock %}
+{\% endblock \%}
 ```
 
 #### 在视图函数中处理表单
@@ -956,17 +956,17 @@ def index():
 - 示例 4-7 templates/base.html：渲染 Flash 消息
 
 ```template
-{% block content %}
+{\% block content \%}
 <div class="container">
-    {% for message in get_flashed_messages() %}
+    {\% for message in get_flashed_messages() \%}
     <div class="alert alert-warning">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         {{ message }}
     </div>
-    {% endfor %}
-    {% block page_content %}{% endblock %}
+    {\% endfor \%}
+    {\% block page_content \%}{\% endblock \%}
 </div>
-{% endblock %}
+{\% endblock \%}
 ```
 
 在模板中使用循环是因为在之前的请求循环中每次调用 flash() 函数时都会生成一个消息，所以可能有多个消息在排队等待显示。get_flashed_messages() 函数获取的消息在下次调用时不会再次返回，因此 Flash 消息只显示一次，然后就消失了。

@@ -1,5 +1,6 @@
 # Django
 
+
 1. 安装Django
 	- 'pip3 install django'
 2. 创建django项目
@@ -106,7 +107,8 @@ def current_time(req):
     # ================================原始的视图函数
     # import datetime
     # now=datetime.datetime.now()
-    # html="<html><body>现在时刻：<h1>%s.</h1></body></html>" %now
+    # html="<html><body>现在时刻：<h1>\%s.</h1></body></html>" \%now
+
 
     # ================================django模板修改的视图函数
     # from django.template import Template,Context
@@ -117,6 +119,7 @@ def current_time(req):
     # html=t.render(c)
     #
     # return HttpResponse(html)
+
 
     # 另一种写法(推荐)
     import datetime
@@ -166,25 +169,25 @@ def current_time(req):
 	- 在Django中关闭HTML的自动转义可以通过过滤器“|safe”的方式告诉Django这段代码是安全的不必转义。
 	- <code>{{ value|safe}}</code>
 
-:blush:
+
 ### 标签
 标签看起来像是这样的： {\% tag \%}。标签比变量更加复杂：一些在输出中创建文本，一些通过循环或逻辑来控制流程，一些加载其后的变量将使用到的额外信息到模版中。         
 一些标签需要开始和结束标签 （例如{\% tag \%} ...标签 内容 ... {\% endtag \%}）。
 - for标签:遍历每一个元素
 
 	```template
-	{% for person in person_list %}
+	{\% for person in person_list \%}
 	    <p>{{ person.name }}</p>
-	{% endfor %}
+	{\% endfor \%}
 	```
 	- 可以利用<code>{\% for obj in list reversed \%}</code>反向完成循环。
 
 	```template
-	{% for key,val in dic.items %}
+	{\% for key,val in dic.items \%}
 	    <p>{{ key }}:{{ val }}</p>
-	{% endfor %}
+	{\% endfor \%}
 	```
-	- 循环序号可以通过{{forloop}}显示
+	- 循环序号可以通过｛｛forloop｝｝显示
 
 	```
 	forloop.counter         The current iteration of the loop (1-indexed)
@@ -197,36 +200,34 @@ def current_time(req):
 - for ... empty:for 标签带有一个可选的{\% empty \%} 从句，以便在给出的组是空的或者没有被找到时，可以有所操作。
 
 	```template
-	{% for person in person_list %}
+	{\% for person in person_list \%}
 	    <p>{{ person.name }}</p>
 	
-	{% empty %}
+	{\% empty \%}
 	    <p>sorry,no person here</p>
-	{% endfor %}
+	{\% endfor \%}
 	```
 
 - if 标签:{\% if \%}会对一个变量求值，如果它的值是“True”（存在、不为空、且不是boolean类型的false值），对应的内容块会输出。
 
 	```template
-	{% if num > 100 or num < 0 %}
+	{\% if num > 100 or num < 0 \%}
 	    <p>无效</p>
-	{% elif num > 80 and num < 100 %}
+	{\% elif num > 80 and num < 100 \%}
 	    <p>优秀</p>
-	{% else %}
+	{\% else \%}
 	    <p>凑活吧</p>
-	{% endif %}
+	{\% endif \%}
 	```
 - with:使用一个简单地名字缓存一个复杂的变量，当你需要使用一个“昂贵的”方法（比如访问数据库）很多次的时候是非常有用的
 
 	```template
-	{% with total=business.employees.count %}
+	{\% with total=business.employees.count \%}
 	    {{ total }} employee{{ total|pluralize }}
-	{% endwith %}
+	{\% endwith \%}
 	```
 
 - csrf_token:这个标签用于跨站请求伪造保护
-```.+({%).+(%}).+```
-
 
 ### 自定义标签和过滤器
 1. 在settings中的INSTALLED_APPS配置当前app，不然django无法找到自定义的simple_tag.
@@ -250,7 +251,7 @@ def current_time(req):
 	
 	@register.simple_tag
 	def my_input(id,arg):
-	    result = "<input type='text' id='%s' class='%s' />" %(id,arg,)
+	    result = "<input type='text' id='\%s' class='\%s' />" \%(id,arg,)
 	    return mark_safe(result)
 	```
 4. 在使用自定义simple_tag和filter的html文件中导入之前创建的 my_tags.py
@@ -259,15 +260,15 @@ def current_time(req):
 
 	```template
 	-------------------------------.html
-	{% load xxx %}  
+	{\% load xxx \%}  
 	      
 	# num=12
 	{{ num|filter_multi:2 }} #24
 	 
 	{{ num|filter_multi:"[22,333,4444]" }}
 	 
-	{% simple_tag_multi 2 5 %}  参数不限,但不能放在if for语句中
-	{% simple_tag_multi num 5 %}
+	{\% simple_tag_multi 2 5 \%}  参数不限,但不能放在if for语句中
+	{\% simple_tag_multi num 5 \%}
 	```
 - 注意：filter可以用在if等语句后，simple_tag不可以
 
@@ -283,21 +284,21 @@ def current_time(req):
 <html lang="en">
 <head>
     <link rel="stylesheet" href="style.css" />
-    <title>{% block title %}My amazing site{% endblock %}</title>
+    <title>{\% block title \%}My amazing site{\% endblock \%}</title>
 </head>
 
 <body>
     <div id="sidebar">
-        {% block sidebar %}
+        {\% block sidebar \%}
         <ul>
             <li><a href="/">Home</a></li>
             <li><a href="/blog/">Blog</a></li>
         </ul>
-        {% endblock %}
+        {\% endblock \%}
     </div>
 
     <div id="content">
-        {% block content %}{% endblock %}
+        {\% block content \%}{\% endblock \%}
     </div>
 </body>
 </html>
