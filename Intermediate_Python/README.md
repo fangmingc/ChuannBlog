@@ -8,6 +8,11 @@
 - [Git](Git.md)
 
 ### 框架
+#### Web应用框架(Web application framework)
+- [Django](Django.md)
+- [Flask](Flask.md)
+- Tornado
+
 #### 什么是框架？
 1. DRY原则
 	- Don't Repeat Yourself，不要重复你的代码。
@@ -19,8 +24,5 @@
 3. 框架需要对基础知识有足够的了解才能使用，否则遇到问题不清楚细节，无法自行排查解决。 
 4. [写一个Web框架](DIY_Frame.md)
 
-#### Web应用框架(Web application framework)
-- [Django](Django.md)
-- [Flask](Flask.md)
-- Tornado
+
 

@@ -1,6 +1,7 @@
 ## Web
 
 - [Web基础](Basic_of_Web.md)
+	- [http协议](http_protocol.md)
 - [html](html.md)
 - [CSS](CSS.md)
 - [JavaScript](JavaScript.md)
@@ -15,5 +16,5 @@
 	- CSS图标库：Font Awesome
 	- 自定义alert：SweetAlert
 	- 图片延迟加载：jQuery lazyload
-	- Toastr
+	- 消息提示：Toastr
 

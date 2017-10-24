@@ -175,13 +175,135 @@ def current_time(req):
 一些标签需要开始和结束标签 （例如{% tag %} ...标签 内容 ... {% endtag %}）。
 - for标签:遍历每一个元素
 
+	```template
+	{% for person in person_list %}
+	    <p>{{ person.name }}</p>
+	{% endfor %}
+	```
+	- 可以利用<code>{% for obj in list reversed %}</code>反向完成循环。
+
+	```template
+	{% for key,val in dic.items %}
+	    <p>{{ key }}:{{ val }}</p>
+	{% endfor %}
+	```
+	- 循环序号可以通过｛｛forloop｝｝显示
+
+	```
+	forloop.counter         The current iteration of the loop (1-indexed)
+	forloop.counter0    	The current iteration of the loop (0-indexed)
+	forloop.revcounter  	The number of iterations from the end of the loop (1-indexed)
+	forloop.revcounter0 	The number of iterations from the end of the loop (0-indexed)
+	forloop.first           True if this is the first time through the loop
+	forloop.last            True if this is the last time through the loop
+	```
+- for ... empty:for 标签带有一个可选的{% empty %} 从句，以便在给出的组是空的或者没有被找到时，可以有所操作。
+
+	```template
+	{% for person in person_list %}
+	    <p>{{ person.name }}</p>
+	
+	{% empty %}
+	    <p>sorry,no person here</p>
+	{% endfor %}
+	```
+
+- if 标签:{% if %}会对一个变量求值，如果它的值是“True”（存在、不为空、且不是boolean类型的false值），对应的内容块会输出。
+
+	```template
+	{% if num > 100 or num < 0 %}
+	    <p>无效</p>
+	{% elif num > 80 and num < 100 %}
+	    <p>优秀</p>
+	{% else %}
+	    <p>凑活吧</p>
+	{% endif %}
+	```
+- with:使用一个简单地名字缓存一个复杂的变量，当你需要使用一个“昂贵的”方法（比如访问数据库）很多次的时候是非常有用的
+
+	```template
+	{% with total=business.employees.count %}
+	    {{ total }} employee{{ total|pluralize }}
+	{% endwith %}
+	```
+
+- csrf_token:这个标签用于跨站请求伪造保护
+
+### 自定义标签和过滤器
+1. 在settings中的INSTALLED_APPS配置当前app，不然django无法找到自定义的simple_tag.
+2. 在app中创建templatetags模块(模块名只能是templatetags)
+3. 创建任意 .py 文件，如：my_tags.py
+
+	```python
+	from django import template
+	from django.utils.safestring import mark_safe
+	 
+	register = template.Library()   #register的名字是固定的,不可改变
+	 
+	 
+	@register.filter
+	def filter_multi(v1,v2):
+	    return  v1 * v2
+	
+	@register.simple_tag
+	def simple_tag_multi(v1,v2):
+	    return  v1 * v2
+	
+	@register.simple_tag
+	def my_input(id,arg):
+	    result = "<input type='text' id='%s' class='%s' />" %(id,arg,)
+	    return mark_safe(result)
+	```
+4. 在使用自定义simple_tag和filter的html文件中导入之前创建的 my_tags.py
+	- <code>{% load my_tags %}　</code>
+5. 使用simple_tag和filter（如何调用）
+
+	```template
+	-------------------------------.html
+	{% load xxx %}  
+	      
+	# num=12
+	{{ num|filter_multi:2 }} #24
+	 
+	{{ num|filter_multi:"[22,333,4444]" }}
+	 
+	{% simple_tag_multi 2 5 %}  参数不限,但不能放在if for语句中
+	{% simple_tag_multi num 5 %}
+	```
+- 注意：filter可以用在if等语句后，simple_tag不可以
+
+### 模板继承
+模板继承将模板分为两种
+- 基模板:block 标签定义的元素可在衍生模板中修改
+- 衍生模板：extends 指令声明这个模板衍生自 base.html。在 extends 指令之后，基模板中的 block块被重新定义，模板引擎会将其插入适当的位置。在基模板中其内容不是空的block，需要使用 super() 获取原来的内容。     
+
+通过从下面这个base.html开始：
+
 ```template
-{% for person in person_list %}
-    <p>{{ person.name }}</p>
-{% endfor %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css" />
+    <title>{% block title %}My amazing site{% endblock %}</title>
+</head>
+
+<body>
+    <div id="sidebar">
+        {% block sidebar %}
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/blog/">Blog</a></li>
+        </ul>
+        {% endblock %}
+    </div>
+
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
 ```
-	- <code></code>
-	- <code></code>
+
 	- <code></code>
 	- <code></code>
 	- 
