@@ -16,5 +16,5 @@
 	- CSS图标库：Font Awesome
 	- 自定义alert：SweetAlert
 	- 图片延迟加载：jQuery lazyload
-	- 消息提示：Toastr
+	- 消息提示：[Toastr](Toastr)
 
