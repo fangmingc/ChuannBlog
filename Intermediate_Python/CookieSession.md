@@ -42,12 +42,101 @@ request.get_signed_cookie(key, default=RAISE_ERROR, salt='', max_age=None)
 #### 设置Cookie
 
 ```python
-rep = HttpResponse(...) 或 rep ＝ render(request, ...) 或 rep ＝ redirect()
+response = HttpResponse(...) 
+response ＝ render(request, ...) 
+response ＝ redirect()
  
-rep.set_cookie(key,value,...)
-rep.set_signed_cookie(key,value,salt='加密盐',...)　
+response.set_cookie(key,value,...)
+response.set_signed_cookie(key,value,salt='加密盐',...)　
 ```
+- set_cookie(self, key, value='', max_age=None, expires=None, path='/', domain=None, secure=False, httponly=False)
+	- key:cookie的键
+	- value:cookie的键对应的值
+	- max_age:cookie有效时间，单位为秒，int类型，比较通用
+	- expires：cookie有效时间，必须是时间对象，不一定通用
+	- path：有效路径，cookie只在指定路径有效
+		- "/"：根路径
+		- "/home/":首页及首页下的路径
+	- domain:cookie生效的域名
+	- secure:是否启用https传送cookie
+	- httponly:只用http协议传送，无法被JavaScript获取
 
+#### 删除cookie
+
+
+
+#### cookie的优缺点
+- 优点
+	- 数据存在在客户端，减轻服务器端的压力，提高网站的性能。
+- 缺点
+	- 所有信息都在客户端，不安全，容易被查看或破解
+
+### cookie + session
+
+#### session流程
+- 登录视图函数中，验证通过后，给request的session设置两组键：IS_LOGIN和USER
+- django在django-session中添加纪录
+	- 三组值：session-key, session-data(键值通过加密的字符串)，有效时间
+- 给responses设置cookie，返回cookie
+	- sessionID:session-key
+
+
+
+#### session存储的相关配置
+
+- 数据库配置（默认）：
+	- Django默认支持Session，并且默认是将Session数据存储在数据库中，即：django_session 表中。
+	- 配置 settings.py
+
+	```python
+	SESSION_ENGINE = 'django.contrib.sessions.backends.db'   # 引擎（默认）,数据源
+	SESSION_COOKIE_NAME = "sessionid"  				# Session的cookie保存在浏览器上时的key，即：sessionid＝随机字符串（默认）
+	SESSION_COOKIE_PATH = "/"                               # Session的cookie保存的路径（默认）
+	SESSION_COOKIE_DOMAIN = None                             # Session的cookie保存的域名（默认）
+	SESSION_COOKIE_SECURE = False                            # 是否Https传输cookie（默认）
+	SESSION_COOKIE_HTTPONLY = True                           # 是否Session的cookie只支持http传输（默认）
+	SESSION_COOKIE_AGE = 1209600                             # Session的cookie失效日期（2周）（默认）
+	SESSION_EXPIRE_AT_BROWSER_CLOSE = False                  # 是否关闭浏览器使得Session过期（默认）
+	SESSION_SAVE_EVERY_REQUEST = False                       # 是否每次请求都保存Session，默认修改之后才保存（默认）
+	```
+
+- 缓存配置　
+	- 配置 settings.py
+
+	```python
+	SESSION_ENGINE = 'django.contrib.sessions.backends.cache'  # 引擎,数据源
+	SESSION_CACHE_ALIAS = 'default'                            # 使用的缓存别名（默认内存缓存，也可以是memcache），此处别名依赖缓存的设置
+	SESSION_COOKIE_NAME = "sessionid"                        # Session的cookie保存在浏览器上时的key，即：sessionid＝随机字符串
+	SESSION_COOKIE_PATH = "/"                                # Session的cookie保存的路径
+	SESSION_COOKIE_DOMAIN = None                              # Session的cookie保存的域名
+	SESSION_COOKIE_SECURE = False                             # 是否Https传输cookie
+	SESSION_COOKIE_HTTPONLY = True                            # 是否Session的cookie只支持http传输
+	SESSION_COOKIE_AGE = 1209600                              # Session的cookie失效日期（2周）
+	SESSION_EXPIRE_AT_BROWSER_CLOSE = False                   # 是否关闭浏览器使得Session过期
+	SESSION_SAVE_EVERY_REQUEST = False                        # 是否每次请求都保存Session，默认修改之后才保存
+	```
+
+- 文件配置
+
+	```python
+	SESSION_ENGINE = 'django.contrib.sessions.backends.file'    # 引擎,数据源
+	SESSION_FILE_PATH = None                                    # 缓存文件路径，如果为None，则使用tempfile模块获取一个临时地址tempfile.gettempdir()        
+	SESSION_COOKIE_NAME ＝ "sessionid"                          # Session的cookie保存在浏览器上时的key，即：sessionid＝随机字符串
+	SESSION_COOKIE_PATH ＝ "/"                                  # Session的cookie保存的路径
+	SESSION_COOKIE_DOMAIN = None                                # Session的cookie保存的域名
+	SESSION_COOKIE_SECURE = False                               # 是否Https传输cookie
+	SESSION_COOKIE_HTTPONLY = True                              # 是否Session的cookie只支持http传输
+	SESSION_COOKIE_AGE = 1209600                                # Session的cookie失效日期（2周）
+	SESSION_EXPIRE_AT_BROWSER_CLOSE = False                     # 是否关闭浏览器使得Session过期
+	SESSION_SAVE_EVERY_REQUEST = False                          # 是否每次请求都保存Session，默认修改之后才保存
+	```
+
+### auth模块
+- 基于django自带的auth_user表写的模块
+
+
+
+[综合练习文件](https://github.com/fangmingc/Python/tree/master/Frame/Django/CMS)
 
 
 
