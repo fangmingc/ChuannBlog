@@ -1,4 +1,8 @@
-## Django--URL的分发和映射(urls.py)
+## Django路由系统--URL的分发和映射(urls.py)
+
+- 路由系统
+	- 主要解析URl的路径，并将请求送往相应的视图函数
+
 结构：
 ```
 urlpatterns = {
@@ -23,7 +27,13 @@ urlpatterns = {
 		- url(r'^blog/', include('blog.urls'))
 		- urls为blog应用文件夹下的urls.py
 	- 反向查询
-		- 在模板中使用<code>{% url "别名" %}</code>，表示此处为指定别名代表的路径
+		- 在模板中使用<code>{% url "别名" [[参数1] ...] %}</code>，表示此处为指定别名代表的路径
+			- 参数可以是值(1)或键值对(a=1)
 		- 当修改路径时可以自动同步
+		- 在视图函数中，反向指定url，使用reverse
+			- from django.shortcuts import reverse
+			- reverse("别名")
+			- reverse("别名",args=(11,))
+			- reverse("别名",kwargs={'nid':11})
 
 [练习文件](https://github.com/fangmingc/Python/tree/master/Frame/Django/URLconf)

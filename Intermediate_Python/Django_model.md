@@ -132,17 +132,40 @@
 
 #### 字段选项
 - max_length=None
+	- 最大长度
 - primary_key=False
+	- 主键
+- auto_created=False
+	- 是否自增
 - unique=False
-
+	- 唯一键
 - default=NOT_PROVIDED
+	- 默认值
 - choices=None
+	- 它是一个可迭代的结构(比如，列表或是元组)，由可迭代的二元组组成(比如[(A, B), (A, B) ...])，用来给这个字段提供选择项。
+	- 如果设置了 choices ，默认表格样式就会显示选择框，而不是标准的文本框，而且这个选择框的选项就是 choices 中的元组。
+	- 一般来说，最好在模型类内部定义choices，然后再给每个值定义一个合适名字的常量。
+
+	```python
+	user_types = (
+	        (1, "员工"),
+	        (2, "老板"),
+	    )
+    identity = models.IntegerField(choices=user_types)
+	```
 
 - verbose_name=None
-- name=None
+	- 可读性更高的文字
+- help_text=''
+	- 额外的 ‘help' 文本将被显示在表单控件form中
+	- 需要在help_text文本中添加html样式
+- validators=()
+	- 该字段将要运行的一个Validator 的列表
+	- 验证器是一个可调用的对象，它接受一个值，并在不符合一些规则时抛出ValidationError异常
+- null=False
+	- 是否允许为空
 
 - blank=False
-- null=False
 - db_index=False
 - rel=None
 - editable=True
@@ -150,11 +173,8 @@
 - unique_for_date=None
 - unique_for_month=None
 - unique_for_year=None
-- help_text=''
 - db_column=None
 - db_tablespace=None
-- auto_created=False
-- validators=()
 - error_messages=None
 
 ### 添加表记录
@@ -210,6 +230,9 @@
 - all()
 	- 查询所有结果
 	- 返回QuerySet，一个列表，元素是表记录（对象）
+	- only(*args):只要对象指定的字段名
+		- 但在额外取未指定的字段会重新发一次sql语句，耗时耗性能
+	- defer(*args):不要指定的字段名
 - filter(**kwargs)
 	- 它包含了与所给筛选条件相匹配的对象
 	- 返回QuerySet，一个列表，元素是表记录（对象）
@@ -325,7 +348,14 @@
 
 
 #### F查询和Q查询
-
+- F查询
+	- 可以将表的字段当作查询条件
+	- 查询书籍字数大于阅读数的书籍
+	- models.Book.objects.filter(word_num__lt=F(read_num))
+- Q查询
+	- 可以使用更加复杂的逻辑判断
+	- 查询单价大于100或书名以A开头的书籍
+	- models.Book.objects.filter(Q(price__lt=100)|Q(title__startswith="A"))
 
 
 [练习文件](https://github.com/fangmingc/Python/tree/master/Frame/Django/models)

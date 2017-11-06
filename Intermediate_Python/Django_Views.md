@@ -1,11 +1,46 @@
 ## Django--视图函数
+- 视图函数
+	- Django项目的核心，绝大部分请求和响应都是在这里完成
+	- 项目的业务逻辑就写在这里
+	- 分类
+		- FBV:函数视图
+		- CBV:类视图
+- 流程
+	- 接收路由系统分发过来的请求数据
+	- 使用ORM获取数据
+		- 连上数据库读取数据
+		- 转换为ORM对象返回
+	- python语法处理数据
+	- 模板语法渲染模板Templates
+	- 生成响应字符串
+	- 返回给wsgi
+
+### 请求与响应
 - request--->请求信息
-	- request.GET:GET请求的数据，字典
-	- request.POST:POST请求的数据，字典
-		- request.POST.getlist(""): 获取具有多个值的表单，列表
-	- request.method:请求方式，GET or POST，字符串
-	- request.path:URL的路径，字符串
-	- request.get_full_path():路径加之后的请求数据（GET请求才有）
+ 	- request.method
+		- 请求方式，GET or POST，字符串
+	- request.GET
+		- GET请求的数据，字典
+		- POST请求也可以通过GET发送数据
+	- request.POST
+		- POST请求的数据，字典
+		- reqeust.POST.get("xxx")：按照key-value获取对应值
+		- request.POST.getlist("xxx"): 获取具有多个值的表单，列表
+	- request.path/reqeust.path_info
+		- URL的路径，字符串
+	- request.get_full_path()
+		- 路径加之后的请求数据
+	- reqeust.COOKIES
+		- cookies,字典
+	- reqeust.session
+		- session，字典
+		- 由django.contrib.sessions.middleware.SessionMiddleware中间件添加
+		- reqeust.user
+			- django自带的用户认证系统的对象
+			- 当未使用django自带的用户认证系统，返回值是AnonymousUser，匿名用户
+			- 当使用django自带的用户认证系统，返回值是当前用户的用户名
+	- reqeust.body
+		- 获取请求体
 - Httpresponse--->响应字符串
 	- render(request, template_name, context=None, content_type=None, status=None, using=None)
 		- request：用于生成响应的请求对象
