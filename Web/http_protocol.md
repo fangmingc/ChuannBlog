@@ -15,124 +15,34 @@ http的特点：
 		- 请求首行：方法，url，协议版本
 			- eg：GET http://127.0.01:8080/path/blog HTTP/1.1
 		- 请求头：
-
-			```
-			Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
-			Accept-Encoding:gzip, deflate, br
-			Accept-Language:zh-CN,zh;q=0.8
-			Cache-Control:max-age=0
-			Connection:keep-alive
-			Cookie:BAIDUID=7E66B164F4B2989A816152F5960C0EF0:FG=1; PSTM=1507796505; BIDUPSID=D7A0800EC577F886EC849DEE2B09675E; ispeed_lsm=2; BDUSS=5rZ3YyZ09uVkNUWGR1ZVo4a05Uc21OU2cxWjM1d1dsdnRzQ3NSQWFGRVlIQXhhSVFBQUFBJCQAAAAAAAAAAAEAAAB0XdQ01LXD8LXEvccAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABiP5FkYj-RZak; pgv_pvi=6320977920; pgv_si=s6795073536; BD_CK_SAM=1; PSINO=1; H_PS_645EC=53e3w8qMtgP3wtPKpRKgdsdslAz00prkBU%2FYqB7JlOyJyBFIkirirUcQ6CM; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; BD_HOME=1; H_PS_PSSID=1459_21118_17001; BD_UPN=12314753; sug=3; sugstore=1; ORIGIN=2; bdime=0
-			Host:www.baidu.com
-			Upgrade-Insecure-Requests:1
-			User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36
-			```
+			- User-Agent:发出请求的设备信息，包含设备操作系统及版本、CPU 类型、浏览器及版本、浏览器渲染引擎、浏览器语言、浏览器插件等
+			- Accept:可以接收的文件格式
+				- \*/*:任何文件
+				- text/html：html文本文件
+				- 其他
+					- application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng....
+			- Accept-Encoding:可以接受的压缩格式
+			- Connection:keep-alive 持久连接，即TCP链接默认不关闭，可以被多个请求复用，不用声明
+				- 客户端和服务器发现对方一段时间没有活动，就可以主动关闭连接。
+				- 不过，规范的做法是，客户端在最后一个请求时，发送Connection: close，明确要求服务器关闭TCP连接。
+			- Host:指定服务器的域名，可以将请求发往同一台服务器上的不同网站
+			- Cookie/Session:浏览器缓存,不是http协议规定的
 		- 空行：用于分割
 		- 请求体
 			- GET请求此处为空，其数据跟在请求首行的URL之后以键值对的形式与URL用?分割
 			- POSt请求使用此种方式，格式为键值对
-
-			```
-			Bdpagetype:2
-			Bdqid:0xecac837c0000bbcc
-			Bduserid:886332788
-			Cache-Control:private
-			Connection:Keep-Alive
-			Content-Encoding:gzip
-			Content-Type:text/html;charset=utf-8
-			Date:Thu, 19 Oct 2017 01:59:29 GMT
-			Expires:Thu, 19 Oct 2017 01:59:29 GMT
-			Server:BWS/1.1
-			Set-Cookie:BDSVRTM=162; path=/
-			Set-Cookie:BD_HOME=1; path=/
-			Set-Cookie:H_PS_PSSID=1459_21118_17001; path=/; domain=.baidu.com
-			Strict-Transport-Security:max-age=172800
-			Transfer-Encoding:chunked
-			X-Ua-Compatible:IE=Edge,chrome=1
-			```
-
 	- 响应协议（response）
-		- 响应行
-			- 协议 状态码
-			- HTTP/1.1 200 OK
-		- 消息报头
-			- 'ALLUSERSPROFILE': 'C:\\ProgramData', 
-			- 'APPDATA': 'C:\\Users\\fangm\\AppData\\Roaming', 
-			- 'COMMONPROGRAMFILES': 'C:\\Program Files\\Common Files', 
-			- 'COMMONPROGRAMFILES(X86)': 'C:\\Program Files (x86)\\Common Files',
-			- 'COMMONPROGRAMW6432': 'C:\\Program Files\\Common Files', 
-			- 'COMPUTERNAME': 'CHUCK', 
-			- 'COMSPEC': 'C:\\Windows\\system32\\cmd.exe', 
-			- 'CONFIGSETROOT': 'C:\\Windows\\ConfigSetRoot', 
-			- 'FPS_BROWSER_APP_PROFILE_STRING': 'Internet Explorer', 
-			- 'FPS_BROWSER_USER_PROFILE_STRING': 'Default',
-			- 'HOMEDRIVE': 'C:', 
-			- 'HOMEPATH': '\\Users\\fangm', 
-			- 'LOCALAPPDATA': 'C:\\Users\\fangm\\AppData\\Local', 
-			- 'LOGONSERVER': '\\\\CHUCK', 
-			- 'NUMBER_OF_PROCESSORS': '8', 
-			- 'ONEDRIVE': 'C:\\Users\\fangm\\OneDrive', 
-			- 'OS': 'Windows_NT', 
-			- 'PATH': 'D:\\Python36\\Scripts\\;D:\\Python36\\;C:\\Program Files (x86)\\Intel\\iCLS Client\\;C:\\Program Files\\Intel\\iCLS Client\\;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files (x86)\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files\\Intel\\Intel(R) Management Engine Components\\DAL;C:\\Program Files (x86)\\Intel\\Intel(R) Management Engine Components\\IPT;C:\\Program Files\\Intel\\Intel(R) Management Engine Components\\IPT;D:\\Python27;D:\\Python27\\Scripts;D:\\Program Files\\Git;D:\\mysql-5.7.19-winx64\\bin;D:\\Program Files (x86)\\Vim\\vim80;C:\\Users\\fangm\\AppData\\Local\\Microsoft\\WindowsApps;', 
-			- 'PATHEXT': '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.PY;.PYW', 
-			- 'PROCESSOR_ARCHITECTURE': 'AMD64', 
-			- 'PROCESSOR_IDENTIFIER': 'Intel64 Family 6 Model 158 Stepping 9, GenuineIntel', 
-			- 'PROCESSOR_LEVEL': '6', 
-			- 'PROCESSOR_REVISION': '9e09', 
-			- 'PROGRAMDATA': 'C:\\ProgramData', 
-			- 'PROGRAMFILES': 'C:\\Program Files', 
-			- 'PROGRAMFILES(X86)': 'C:\\Program Files (x86)', 
-			- 'PROGRAMW6432': 'C:\\Program Files', 
-			- 'PSMODULEPATH': 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules', 
-			- 'PUBLIC': 'C:\\Users\\Public', 
-			- 'PYCHARM_HOSTED': '1', 
-			- 'PYTHONIOENCODING': 'UTF-8', 
-			- 'PYTHONPATH': 'E:\\Excellence\\Python', 
-			- 'PYTHONUNBUFFERED': '1', 
-			- 'SESSIONNAME': 'Console', 
-			- 'SYSTEMDRIVE': 'C:', 
-			- 'SYSTEMROOT': 'C:\\Windows', 
-			- 'TEMP': 'C:\\Users\\fangm\\AppData\\Local\\Temp', 
-			- 'TMP': 'C:\\Users\\fangm\\AppData\\Local\\Temp', 
-			- 'USERDOMAIN': 'CHUCK', 
-			- 'USERDOMAIN_ROAMINGPROFILE': 'CHUCK', 
-			- 'USERNAME': 'fangm', 
-			- 'USERPROFILE': 'C:\\Users\\fangm', 
-			- 'WINDIR': 'C:\\Windows', 
-			- 'SERVER_NAME': 'chuck', 
-			- 'GATEWAY_INTERFACE': 'CGI/1.1', 
-			- 'SERVER_PORT': '8080', 
-			- 'REMOTE_HOST': '', 
-			- 'CONTENT_LENGTH': '', 
-			- 'SCRIPT_NAME': '', 
-			- 'SERVER_PROTOCOL': 'HTTP/1.1', 
-			- 'SERVER_SOFTWARE': 'WSGIServer/0.2', 
-			- 'REQUEST_METHOD': 'GET', 'PATH_INFO': '/', 
-			- 'QUERY_STRING': '', 
-			- 'REMOTE_ADDR': '127.0.0.1', 
-			- 'CONTENT_TYPE': 'text/plain', 
-			- 'HTTP_HOST': '127.0.0.1:8080', 
-			- 'HTTP_CONNECTION': 'keep-alive', 
-			- 'HTTP_USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36', 
-			- 'HTTP_UPGRADE_INSECURE_REQUESTS': '1', 
-			- 'HTTP_ACCEPT': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8', 
-			- 'HTTP_ACCEPT_ENCODING': 'gzip, deflate, br', 
-			- 'HTTP_ACCEPT_LANGUAGE': 'zh-CN,zh;q=0.8', 
-			- 'wsgi.input': <_io.BufferedReader name=492>, 
-			- 'wsgi.errors': <_io.TextIOWrapper name='<stderr>' mode='w' encoding='UTF-8'>, 
-			- 'wsgi.version': (1, 0), 
-			- 'wsgi.run_once': False, 
-			- 'wsgi.url_scheme': 'http', 
-			- 'wsgi.multithread': True, 
-			- 'wsgi.multiprocess': False, 
-			- 'wsgi.file_wrapper': <class 'wsgiref.util.FileWrapper'>
-
-
-
-
+		- 响应头
+			- 响应首行：协议 状态码
+				- HTTP/1.1 200 OK
+			- 响应源信息
+				- Content-Type: 响应正文的格式
+				- Content-Encoding：说明数据的压缩方式
+				- Connection:keep-alive 持久连接，即TCP链接默认不关闭
 		- 空行
 		- 响应正文
-		- 
+			- 通常为html文档
+			- 也可是二进制文件，如图片，视频等
 
 
 
