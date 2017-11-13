@@ -1244,6 +1244,15 @@ create table author2book(
 
 详细参阅http://www.cnblogs.com/linhaifeng/articles/7274563.html#_label2
 
+- 普通索引
+- 主键索引
+- 唯一索引
+- 联合索引
+	- 最左前缀原则，匹配时只匹配最左边的
+	- 如name,email,pwd，只有包括name的条件才能命中索引
+- 命中索引，创建索引也未命中，需要了解如何命中索引
+
+
 <p align=right>[回到顶部](#0)</p>
 ## <span id='6.0'>Pymysql</span>
 ### 用法示例

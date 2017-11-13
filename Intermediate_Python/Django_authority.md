@@ -116,7 +116,6 @@
 	       __init__.py
 	```
 
-
 #### 第三版设计
 - 增加组，多个权限url隶属于一个组，通常一个组意味着同一个页面上的一些url
 - 增加菜单，多个组隶属一个菜单，通常需要组中的菜单url生成页面上的二级菜单
@@ -291,9 +290,95 @@
         rbac.py
 ```
 
-- [第三版文件](https://github.com/fangmingc/Python/tree/master/Frame/Django/URLconf))
+- [第三版文件](https://github.com/fangmingc/Python/tree/master/Frame/Django/rbac_version_0.3))
 
+#### 第四版--完善设计
+- 到第三版已经基本完成权限的管理和应用，不过实际中仍有问题
+	- 示例：active效果是增加--OK--
 
+	```
+	用户管理 <--OK-->
+	---- 用户列表 <--OK-->
+	---- 订单列表 <>
+	订单管理 <>
+	---- 报   表 <>
+	```
+	- 问题：当用户停留在二级菜单用户列表(/userinfo/)，此页面上有增加(/userinfo/add/)编辑(/userinfo/edit/)/删除(/userinfo/del/)链接，在点击链接后，二级菜单用户列表的active显示不会出现
+	- 原因：在自定义标签的函数中匹配当前请求的url时，只能匹配二级菜单的url(/userinfo/)，如果是/userinfo/add/就无法给二级菜单添加上active属性
+- 解决方案一：
+	- 在现有基础上修改，在自定义标签函数中对所有权限url判断，当符合某一条时，给该条权限所属组/组所属菜单增加active
+	- 修改初始化权限函数，增加组ID；修改自定义标签函数；
+
+	```python
+	@register.inclusion_tag("menu.html")
+	def menu_html(request):
+	    """
+	    生成菜单HTML
+	    """
+		# 初步处理，给url所属组添加active
+		"""
+	menu_dict = {
+	    菜单ID: {
+	        组1ID: {
+	            "menu": {'title': .., 'url': .., 'is_menu': .., 'group_id': .., 'menu_id': .., 'menu_title': .., "active": ..},
+	            "urls": ['/userinfo/','/userinfo/add/','/userinfo/del/(\d+)/','/userinfo/edit/(\d+)/'...]
+	        },
+	        组2ID: {
+	            "menu": {'title': '...', 'url': '...', 'is_menu': .., 'group_id': .., 'menu_id': .., 'menu_title': "..."},
+	            "urls": ['/order/','/order/add/','/order/del/(\d+)/','/order/edit/(\d+)/'...]
+	        }
+	        ...
+	    }
+	    ...
+	}
+		"""
+	    menu_dict = {}
+	    for item in request.session.get(settings.PERMISSION_MENU_LIST_KEY):
+	        tpd1 = menu_dict.setdefault(item["menu_id"], {})
+	
+	        tpd2 = tpd1.setdefault(item["group_id"], {})
+	        tpd2.setdefault("menu", item)
+	        if re.match("^{0}$".format(item["url"]), current_url):
+	            tpd2.setdefault("menu", item).setdefault("active", True)
+	    # 二次处理，与之前模板处理契合
+	    """
+	menu_dict = {
+	    菜单ID: {
+	        "menu_title": "",
+	        "active": ""
+	        "children": [
+	            {'title': '用户列表', 'url': '/userinfo/', "active": True},
+	            {'title': '用户列表', 'url': '/userinfo/', "active": True},
+	            ...
+	        ]
+	    }
+	}
+	    """
+	
+	    sub_menu_dict = {}
+	    for k, item in menu_dict.items():
+	        tpd = sub_menu_dict.setdefault(k, {})
+	
+	        for value in item.values():
+	            tpd.setdefault("title", value["menu"]["menu_title"])
+	            if value["menu"].get("active"):
+	                tpd.setdefault("active", value["menu"].get("active"))
+	            tpd.setdefault("urls", []).append({"title": value["menu"]["title"], "url": value["menu"]["url"], "active": value["menu"].get("active")})
+	
+	    return {"menu_dict": sub_menu_dict}
+	```
+	- 优点：在原有基础上直接修改，无需修改其他地方
+- 解决方案二
+	- 修改权限表结构，去掉is_menu字段，增加组内菜单字段menu_group，外键权限表本身，当为空时该url为二级菜单
+		- 权限表(Permission)
+			- ID
+			- url，URL，最长64字符
+			- title，URL别名，最长32字符
+			- menu_group，组内菜单，外键自身，允许为空
+			- role，与角色表多对多
+			- code，申明在组中的功能，最长32字符
+			- group，所属组，外键权限组
+	- 修改初始化权限函数，替换is_menu为组内ID，获取所有url；修改自定义标签函数；
 
 
 
