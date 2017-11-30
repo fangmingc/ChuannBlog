@@ -42,6 +42,11 @@
 ### git log
 - 查看版本日志：git log
 
+### git remote
+- 远端仓库相关指令
+- 先有本地文件，后有GitHub仓库，将本地文件上传至GitHub
+	- git remote add origin fangmc@https://github.com/fangmingc/MyConponent.git
+	- git push https://github.com/fangmingc/MyConponent.git
 
 ## 回退远端仓库
 ### 方法一

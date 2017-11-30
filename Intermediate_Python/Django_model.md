@@ -362,7 +362,13 @@
 [综合练习文件](https://github.com/fangmingc/Python/tree/master/Frame/Django/CMS)
 
 
+### 事物
 
+```python
+from django.db import transaction
+with transaction.atomic():
+    sql操作
+```
 
 
 

@@ -63,8 +63,6 @@ response.set_signed_cookie(key,value,salt='加密盐',...)　
 
 #### 删除cookie
 
-
-
 #### cookie的优缺点
 - 优点
 	- 数据存在在客户端，减轻服务器端的压力，提高网站的性能。
@@ -80,6 +78,19 @@ response.set_signed_cookie(key,value,salt='加密盐',...)　
 - 给responses设置cookie，返回cookie
 	- sessionID:session-key
 
+##### 往session添加数据
+```python
+request.session["is_login"] = True
+request.session["username"] = "chuck"
+```
+
+##### 删除session中的数据
+```python
+# 删除指定
+del request.session["is_login"]
+# 全部清除
+request.session.clear()
+```
 
 
 #### session存储的相关配置

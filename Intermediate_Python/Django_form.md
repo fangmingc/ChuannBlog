@@ -73,7 +73,7 @@
 	- validators=[RegexVlidator("xxx")]
 	- 通常用于自定义的一些正则表达式校验
 	- from django.core.validators import RegexValidator, ValidationError
-2. 钩子函数
+2. 局部钩子函数
 	- 定义form组件时，可以额外定义的函数，用于form组件校验流程完毕之后自定义的校验
 	- 不通过则主动抛异常ValidationError("xxx")
 	- 定义格式
@@ -119,9 +119,19 @@
 	        raise ValidationError("用户名不存在！")
 	    return user
 	```
+3. 全局钩子函数
+	- 局部钩子函数验证结束后进行全局的校验，在这里可以从cleaned_data取到所有已经验证过的数据进行多项联合校验，如注册时验证两次密码是否一致
+	- 务必返回clean_data
 
+```python
+def clean(self):
+    """全局校验"""
+    if self.cleaned_data.get("password") != self.cleaned_data.get("repeat_password"):
+        self.add_error("repeat_password", "两次密码不一致！")
+    return self.cleaned_data
+```
 
-3. 数据源实时更新
+4. 数据源实时更新
 	1. 重写构造方法（\_\_init__）
 		- 注意继承父类的构造方法
 		- 推荐使用此方法，因为数据源可以与不直接操作数据库
@@ -150,4 +160,149 @@
 	- form.as_p
 	- form.as_ul
 	- form.as_table
+
+
+### 实例：博客项目的注册
+```python
+class RegisterForm(Form):
+    """
+    注册表单
+    """
+    email = fields.EmailField(
+        required=True,
+        error_messages={
+            "required": "邮箱不能为空！",
+            "invalid": "邮箱格式错误！",
+        },
+        widget=widgets.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "请输入您的邮箱地址",
+            "id": "email",
+        }),
+    )
+    username = fields.CharField(
+        required=True,
+        max_length=32,
+        min_length=3,
+        error_messages={
+            "required": "用户名不能为空！",
+            "max_length": "用户名过长!",
+            "min_length": "用户名过短！"
+        },
+        widget=widgets.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "请输入用户名，必须是字母、数字、下划线、'-'组成",
+            "id": "username",
+        }),
+    )
+    password = fields.CharField(
+        required=True,
+        max_length=32,
+        min_length=6,
+        error_messages={
+            "required": "密码不能为空！",
+            "max_length": "密码过长!",
+            "min_length": "密码过短！"
+        },
+        widget=widgets.PasswordInput(attrs={
+            "class": "form-control",
+            "placeholder": "请输入密码",
+            "id": "password",
+        }),
+    )
+    repeat_password = fields.CharField(
+        required=True,
+        max_length=32,
+        min_length=6,
+        error_messages={
+            "required": "密码不能为空！",
+            "max_length": "密码过长!",
+            "min_length": "密码过短！"
+        },
+        widget=widgets.PasswordInput(attrs={
+            "class": "form-control",
+            "placeholder": "请再次输入密码",
+            "id": "repeat_password",
+        })
+    )
+    nickname = fields.CharField(
+        required=True,
+        min_length=2,
+        error_messages={
+            "required": "昵称不能为空！",
+            "min_length": "昵称过短！"
+        },
+        widget=widgets.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "请输入昵称",
+            "id": "nickname",
+        }),
+    )
+    phone = fields.CharField(
+        required=True,
+        error_messages={
+            "required": "手机号不能为空！",
+        },
+        widget=widgets.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "请输入手机号",
+            "id": "phone",
+        }),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        from app01.models import User
+        self.user = User
+
+    def clean(self):
+        """全局校验"""
+        # 校验两次密码是否一致
+        if not self.cleaned_data.get("password") == self.cleaned_data.get("repeat_password"):
+            self.add_error("repeat_password", "两次密码不一致")
+
+        return self.cleaned_data
+
+    def clean_email(self):
+        """邮箱验证"""
+        email = self.cleaned_data.get("email")
+        if self.user.objects.filter(userinfo__email=email):
+            raise ValidationError("该邮箱已注册！")
+        else:
+            return email
+
+    def clean_username(self):
+        """校验用户名"""
+        username = self.cleaned_data.get("username")
+        user = self.user.objects.filter(username=username)
+        if user:
+            raise ValidationError("用户名已存在！")
+        from re import search
+        if len(search("[\w-]*", username).group()) != len(username):
+            raise ValidationError("用户名只能是数字、字母、下划线和'-'组成！")
+        return username
+
+    def clean_password(self):
+        """校验密码"""
+        from re import findall
+        password = self.cleaned_data.get("password")
+        if findall("\d+", password) and findall("[a-zA-Z]+", password):
+            return password
+        raise ValidationError("密码必须包含数字和字母")
+
+    def clean_phone(self):
+        """校验手机号"""
+        from re import findall
+        phone = self.cleaned_data.get("phone")
+        if phone and len(phone) == 11:
+            if findall("^(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$", phone):
+                if self.user.objects.filter(userinfo__phone=phone):
+                    raise ValidationError("该手机号已注册！")
+                else:
+                    return phone
+            else:
+                raise ValidationError("请输入正确的手机号！")
+        else:
+            raise ValidationError("手机号必须是11位！")
+```
 
