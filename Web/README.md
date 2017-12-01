@@ -6,6 +6,8 @@
 - [CSS](CSS.md)
 - [JavaScript](JavaScript.md)
 
+- [ajax](Ajax.md)
+
 - 框架
 	- [JQuery\*](jQuery.md)
 	- [Bootstrap](Bootstrap.md)

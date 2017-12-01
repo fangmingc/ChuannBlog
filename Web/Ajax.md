@@ -84,6 +84,8 @@ $.ajax({
 	```
 
 2. 发送请求
+	- 如果需要添加头信息，则可以在此处添加
+		- xmlHttp.setRequestHeader("X-CSRFTokenh",'当前表单的csrf输入框的值');
 	- 当使用open打开连接后，就可以调用XMLHttpRequest对象的send()方法发送请求了。
 	- send()方法的参数为POST请求参数，即对应HTTP协议的请求体内容，若是GET请求，需要在open方法中URL后连接参数。
 	- 没有参数，需要给出null为参数！若不给出null为参数，可能会导致FireFox浏览器不能正常发送请求！
@@ -112,6 +114,11 @@ $.ajax({
 	};
 	```
 
+- POST请求需要设置请求头：
+	- xmlHttp.setRequestHeader(“Content-Type”, “application/x-www-form-urlencoded”)；
+	- 注意 :form表单会默认这个键值对不设定，Web服务器会忽略请求体的内容。
+- 使用JS制作的ajax在django中无法通过request.is_ajax()的认证，因为缺少头信息（X-Requested-With）
+	- 可以手动添加元信息xmlHttp.setRequestHeader("X-Requested-With",'XMLHttpRequest');
 
 ### jsonP
 为了突破同源策略的一种方式

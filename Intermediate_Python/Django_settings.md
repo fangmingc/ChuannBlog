@@ -27,6 +27,7 @@ TEMPLATES = [
 ```
 
 #### 静态文件相关
+##### static
 - 路径别名，在模板中使用
 
 	```python
@@ -40,6 +41,26 @@ TEMPLATES = [
 	    os.path.join(BASE_DIR, 'static')
 	]
 	```
+##### media
+- settings
+
+	```python
+	MEDIA_ROOT = os.path.join(BASE_DIR, "app01", "media")
+	MEDIA_URL = "/media/"
+	```
+- models
+	- upload_to的路径直接接'/media/'
+
+	```python
+	avatar = models.ImgField(upload_to='avatar')
+	```
+- 客户端
+	
+	```html
+	<img src="/media/avatar/a.png">
+	```
+
+
 
 
 ### 数据库相关
@@ -128,4 +149,9 @@ LOGIN_URL = "/login/"
 	SESSION_EXPIRE_AT_BROWSER_CLOSE = False                     # 是否关闭浏览器使得Session过期
 	SESSION_SAVE_EVERY_REQUEST = False                          # 是否每次请求都保存Session，默认修改之后才保存
 	```
+
+
+
+
+
 
