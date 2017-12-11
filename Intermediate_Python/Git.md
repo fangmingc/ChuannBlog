@@ -1,5 +1,9 @@
 # git版本控制系统
 
+## git 配置
+- git log 展示的信息时中文乱码
+	- git config --global i18n.logoutputencoding utf-8
+
 ## 操作命令
 可以通过git 命令 --help调出官方文档查看相应命令文档
 
@@ -12,19 +16,6 @@
 
 ### git commit
 - 确认提交：git commit -m "提交说明"
-
-### git checkout
-- 切换分支： git checkout [分支名]
-
-### git merge
-- 合并分支： git merge [分支名]
-
-### git branch
-- 查看所有分支
-	- git branch --list
-- 查看分支：git branch  
-- 删除分支：git branch -d [分支名]
-- 强制删除分支：git branch -D [分支名]
 
 ### git pull
 - 同步远端到本地:git pull
@@ -42,11 +33,42 @@
 ### git log
 - 查看版本日志：git log
 
+### git reflog
+- 查看操作记录（仅限本地执行的操作）
+
+### git stash
+- 处理问题：
+	- 新功能开发未完成，上一个版本出问题需要紧急修复
+- 使用git stash将内容存到某个地方，工作区回到上一个版本的代码
+	- 修复bug之后，使用git stash pop将暂存区的内容拿回来
+		- 格外注意：
+			- 修bug的代码可能会和stash缓存的工作代码冲突
+	- git stash list
+	- git stash clear
+	- git stash pop
+	- git stash apply
+	- git stash drop
+- 更多命令使用git stash --help查看
+
 ### git remote
 - 远端仓库相关指令
 - 先有本地文件，后有GitHub仓库，将本地文件上传至GitHub
 	- git remote add origin fangmc@https://github.com/fangmingc/MyConponent.git
 	- git push https://github.com/fangmingc/MyConponent.git
+
+### git checkout
+- 切换分支： git checkout [分支名]
+
+### git merge
+- 合并分支： git merge [分支名]
+
+### git branch
+- 查看所有分支
+	- git branch --list
+- 查看分支：git branch  
+- 删除分支：git branch -d [分支名]
+- 强制删除分支：git branch -D [分支名]
+
 
 ## 回退远端仓库
 ### 方法一
@@ -113,6 +135,26 @@ git push origin master -f
 	- 软件正式发布以后，难免会出现bug。这时就需要创建一个分支，进行bug修补。
 	- 修补bug分支是从Master分支上面分出来的。修补结束以后，再合并进Master和Develop分支。它的命名，可以采用fixbug-*的形式
 	- 命令顺序类似预发布分支
+
+
+## 项目上线
+### 方式一
+- 公司
+	- 平时写代码
+- gitlab
+	- 各种项目版本，分支
+- 公司服务器
+	- 从gitlab下载master最新版本
+
+### 方式二
+- 公司
+- gitlab
+- 代码服务器
+	- 编译代码/构建(Vue)
+	- 分发代码到公司服务器
+		- saltstack，远程推送文件，操纵服务器
+- 公司服务器
+
 
 
 

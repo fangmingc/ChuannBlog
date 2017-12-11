@@ -163,9 +163,16 @@
 	- 该字段将要运行的一个Validator 的列表
 	- 验证器是一个可调用的对象，它接受一个值，并在不符合一些规则时抛出ValidationError异常
 - null=False
-	- 是否允许为空
-
+	- 数据库是否允许为空
 - blank=False
+	- django自带的admin页面下修改表记录可以为空
+	- 与null字段没有关系，即便设置了null=True，在使用admin插入数据时依然无法设置为空
+- 当为外键，一对一关系时可以设置级联删除（on cascade delete）:
+	- on_delete
+	- 必须使用models.SET_NULL修改
+	- 均默认为True
+
+
 - db_index=False
 - rel=None
 - editable=True
@@ -225,6 +232,13 @@
 
 #### class RelatedManager类关系管理器
 
+
+### 删除表记录
+- delete()
+	- 该方法必须的对象必须是QuerySet，不能是对象
+	- 默认级联删除（sql中的on casade delete）
+
+
 ### 查找表记录
 #### 通用查询
 - all()
@@ -269,6 +283,15 @@
 - exists()
 	- 如果QuerySet包含数据，就返回True，否则返回False
 
+##### QuerySet数据类型的特性
+- 可切片，可迭代，具有部分列表的性质————[obj,...]
+- 惰性查询:
+	- 当不使用QuerySet时，不会生成sql语句
+	- 何为使用？
+		- 对查询数据增删改查
+
+
+
 #### 双下划线之单表查询
 - __gt:大于
 - __gte:大于等于
@@ -295,22 +318,11 @@
 	- __day
 	- __week_day
 
-
-
-[
-	{'book__title': '算法导论', 'book__author_list__name': 'chuck'}, 
-	{'book__title': '算法导论', 'book__author_list__name': 'egon'}, 
-	{'book__title': '算法导论', 'book__author_list__name': 'ann'}, 
-	{'book__title': 'Python', 'book__author_list__name': 'chuck'}, 
-	{'book__title': 'Linux', 'book__author_list__name': 'chuck'}
-]
-
-
 #### 跨表查询
 ##### 基于对象查询
 - 一对多查询
 	- 正向查询，字段
-		- 
+		- `models.`
 	- 反向查询，表名_set
 - 一对一
 	- 正向查询，字段
@@ -355,7 +367,7 @@
 - Q查询
 	- 可以使用更加复杂的逻辑判断
 	- 查询单价大于100或书名以A开头的书籍
-	- models.Book.objects.filter(Q(price__lt=100)|Q(title__startswith="A"))
+	- models.Book.objects.filter(Q(price__lt=100)\|Q(title__startswith="A"))
 
 
 [练习文件](https://github.com/fangmingc/Python/tree/master/Frame/Django/models)

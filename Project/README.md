@@ -25,6 +25,23 @@
 - Django知识
 	- 参考
 
+## 权限管理系统
+- [总览](ManageAuthority.md)
+
+## 博客系统
+- [总览](blog/README.md)
+- [表设计](blog/表设计.md)
+- [验证码](blog/验证码.md)
+- [优化查询](blog/优化查询.md)
+
+- [email](email.md)
+
+
+## 问卷调查
+- [总览](questionnaire.md)
+
+## 会议室预定
+- [总览](order_meeting_room.md)
 
 
 
