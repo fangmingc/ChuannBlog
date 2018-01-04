@@ -26,4 +26,21 @@
 4. [写一个Web框架](DIY_Frame.md)
 
 
+#### 数据库的使用
+- 链接数据库的两种方式
+	- ORM
+	- 原生SQL
+
+- Django自带ORM
+- FLask/Tornado/爬虫
+	- pymysql
+	- SQLAlchemy
+
+- ORM
+	- 优点
+		- 使用方便
+		- 省却大量的sql语句
+	- 缺点
+		- 可能有速度上的缺陷
+		- 难以构造复杂的sql语句
 

@@ -374,6 +374,19 @@
 [综合练习文件](https://github.com/fangmingc/Python/tree/master/Frame/Django/CMS)
 
 
+- Q补充用法
+
+	```python
+	search_fields = ["username", "email"]
+	query_key = "tom"
+	condition = Q()
+	condition.connector = "OR"
+	for item in search_fields:
+	    condition.children.append(("%s__contains" % item, query_key))
+	data_list = models.UserInfo.objects.filter(condition)
+	```
+
+
 ### 事物
 
 ```python
