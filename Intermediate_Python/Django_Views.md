@@ -106,7 +106,8 @@ return redirct("/idnex/")
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
-return HttpResponseRedirect(reverse('index'))
+return HttpResponseRedirect(reverse('别名'))
+return HttpResponseRedirect(reverse('别名', args=(参数,)))
 ```
 
 

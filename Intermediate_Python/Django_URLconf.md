@@ -37,3 +37,13 @@ urlpatterns = {
 			- reverse("别名",kwargs={'nid':11})
 
 [练习文件](https://github.com/fangmingc/Python/tree/master/Frame/Django/URLconf)
+
+### django2.0特性
+- django.urls下的re_path代替了url
+- 但原url仍然可用
+
+
+### 进阶：url分发
+- include
+
+

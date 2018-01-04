@@ -60,6 +60,8 @@ response.set_signed_cookie(key,value,salt='加密盐',...)　
 	- domain:cookie生效的域名
 	- secure:是否启用https传送cookie
 	- httponly:只用http协议传送，无法被JavaScript获取
+- set_signed_cookie(self, key, value, salt='', **kwargs)
+	- 加盐签名cookie
 
 #### 删除cookie
 
@@ -77,6 +79,7 @@ response.set_signed_cookie(key,value,salt='加密盐',...)　
 	- 三组值：session-key, session-data(键值通过加密的字符串)，有效时间
 - 给responses设置cookie，返回cookie
 	- sessionID:session-key
+- 主动设置超时时间，request.session.set_expiry(60*60*24*30)
 
 ##### 往session添加数据
 ```python

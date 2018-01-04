@@ -79,3 +79,13 @@ Django使用的框架模型是MTV模型加控制，其中控制主要是URl的�
 - 设置文件
 	- 数据库
 	- 静态文件和模板
+
+### 进阶
+#### QueryDict
+- request.GET
+	- ?name=alex&age=18&age=19
+	- params = {'name': ['alex',], 'age': ['18', '19']}
+	- params._mutable = True
+		- 默认reqeust.GET不可修改，需要修改保护
+	- params['hobby'] = 'apple'
+	- params.setlist('hobby', ['apple',])
