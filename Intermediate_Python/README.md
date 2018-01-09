@@ -10,8 +10,8 @@
 
 ### 框架
 #### Web应用框架(Web application framework)
-- [Django](Django.md)
-- [Flask](https://github.com/fangmingc/Python/blob/master/Frame/Flask/Flask.md)
+- [Django](django/Django.md)
+- [Flask](flask/flask.md)
 - Tornado
 
 #### 什么是框架？
