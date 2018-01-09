@@ -11,7 +11,6 @@
 	g = LocalProxy(partial(_lookup_app_object, 'g'))
 	```
 
-
 1. 创建Local类
 
 	```
@@ -37,4 +36,5 @@
 	- 单线程
 	- 多线程
 	- 协程
+	- 全部由local中实现的get_ident获取的唯一ID标识
 
