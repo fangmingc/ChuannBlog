@@ -15,11 +15,11 @@
 - flask依赖一个实现了WSGI协议的模块：werkzeug模块
 
 
-- [开始使用](Intermediate_Python/flask/fisrt_flask.md)
-- [flask基础](Intermediate_Python/flask/flask基础.md)
-- [上下文管理(重要)](Intermediate_Python/flask/上下文管理.md)
-- [数据库连接池](Intermediate_Python/flask/数据库连接池.md)
-- [flask原理剖析](Intermediate_Python/flask/Flask原理剖析.md)
+- [开始使用](fisrt_flask.md)
+- [flask基础](flask基础.md)
+- [上下文管理(重要)](上下文管理.md)
+- [数据库连接池](数据库连接池.md)
+- [flask原理剖析](Flask原理剖析.md)
 
 
 
