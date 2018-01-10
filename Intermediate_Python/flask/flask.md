@@ -17,13 +17,12 @@
 
 - [开始使用](fisrt_flask.md)
 - [flask基础](basis_of_flask.md)
-- [上下文管理(重要)](context_management.md)
 - [数据库连接池](database_connection_pool.md)
-- [session](session.md)
-- [flask信号](singal_of_flask.md)
 - [wtforms](wtforms.md)
 
 
 - [flask原理剖析](analyze_principle_of_flask.md)
-
+	- [上下文管理(重要)](context_management.md)
+	- [flask信号](singal_of_flask.md)
+	- [session](session.md)
 
