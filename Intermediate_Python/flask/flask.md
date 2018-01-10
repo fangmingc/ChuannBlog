@@ -18,7 +18,8 @@
 - [开始使用](fisrt_flask.md)
 - [flask基础](basis_of_flask.md)
 - [数据库连接池](database_connection_pool.md)
-- [wtforms](wtforms.md)
+- [wtforms快速使用和源码分析](wtforms.md)
+	- [自定义一个form组件](diy_form.md)
 
 
 - [flask原理剖析](analyze_principle_of_flask.md)
