@@ -25,22 +25,18 @@
 3. 框架需要对基础知识有足够的了解才能使用，否则遇到问题不清楚细节，无法自行排查解决。 
 4. [写一个Web框架](DIY_Frame.md)
 
-
 #### 数据库的使用
-- 链接数据库的两种方式
+- 操作数据库的两种方式
+	- [原生SQL](http://chuann.cc/Database/MySQL.html)
 	- ORM
-	- 原生SQL
+		- Django这个框架有自带的ORM：[Django模型层](http://chuann.cc/Intermediate_Python/django/Django_model.html)
+		- [SQLAlchemy](SQLAlchemy.md)比较通用，适用于多个框架
+		- 优点
+			- 使用方便
+			- 省却大量的sql语句
+		- 缺点
+			- 可能有速度上的缺陷
+			- 难以构造复杂的sql语句
 
-- Django自带ORM
-- FLask/Tornado/爬虫
-	- pymysql
-	- SQLAlchemy
 
-- ORM
-	- 优点
-		- 使用方便
-		- 省却大量的sql语句
-	- 缺点
-		- 可能有速度上的缺陷
-		- 难以构造复杂的sql语句
 
