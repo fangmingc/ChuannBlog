@@ -24,7 +24,6 @@
 	- message_flashed = _signals.signal('message-flashed')                # 调用flask在其中添加数据时，自动触发
 
 #### flask自定义信号
-
 ```python
 from flask.singals import _singals
 
@@ -37,8 +36,7 @@ def func(*args, **kwargs):
 
 test.connect(func)
 ```
-
-
+- 在视图函数中使用`test.send(...)`用于触发信号
 
 ### 信号与特殊装饰器的区别
 - 信号不需要返回值，特殊的装饰器视情况而定
