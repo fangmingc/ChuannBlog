@@ -1,7 +1,14 @@
 ## wtforms
+- [开始使用](#1)
+- [源码分析](#2)
+	- [项目加载form类所在模块](#21)
+	- [在视图函数中实例化form类](#22)
+	- [模板渲染调用form的字段](#23)
+	- [前端填好数据，返回后端校验](#24)
+
 - 和django的form组件大同小异，下面给出一个应用举例以便快速查询。
 
-### 开始使用
+### <span id='1'>开始使用</span>
 ```python
 from flask import Flask, render_template, request, redirect
 
@@ -180,7 +187,7 @@ if __name__ == '__main__':
 ```
 
 
-### 源码分析
+### <span id='2'>源码分析</span>
 - 高级用法
 	- metaclass的另类使用
 - 切入点：
@@ -190,7 +197,7 @@ if __name__ == '__main__':
 	- 前端填好数据，返回后端校验时，代码做了什么？
 
 #### 详细分析
-1. 项目加载form类所在模块
+1. <span id='21'>项目加载form类所在模块</span>
 	- form类
 		- 这是声明Form的代码：`class Form(with_metaclass(FormMeta, BaseForm))`
 		- 可见这里调用一个函数with_metaclass
@@ -235,7 +242,7 @@ if __name__ == '__main__':
 						- `if _translations is not None: self._translations = _translations`
 							- 通过这两行代码可以看出，wtforms内部还实现了实现了多语言的提示信息
 		- 最后得出结论，form类的静态字段如username此时存储的是UnboundField类的实例
-2. 在视图函数中实例化form类
+2. <span id='22'>在视图函数中实例化form类</span>
 	- 首先执行元类的\_\_call__方法
 
 		```python
@@ -322,7 +329,7 @@ if __name__ == '__main__':
 			- 注意：此时的字段已经变回了原来的Field，尚不明确为何要多进行这样的操作
 		- 这行代码主要是针对有数据传入时的操作`self.process(formdata, obj, data=data, **kwargs)`
 			- 在第4点详细查看
-3. 模板渲染调用form的字段
+3. <span id='23'>模板渲染调用form的字段</span>
 	- 此时本质上就是调用了字段的\_\_str__方法，把返回的字符串放置在模板
 
 		```python
@@ -377,7 +384,7 @@ if __name__ == '__main__':
 		    return HTMLString('<input %s>' % self.html_params(name=field.name, **kwargs))
 		```
 	- 至此，完成了Form类实例的\_\_str__方法，返回了一个HTML的input标签的字符串
-4. 前端填好数据，返回后端校验
+4. <span id='24'>前端填好数据，返回后端校验</span>
 	- 依然是实例化一个Form类的对象，大部分流程和第2点讨论的一致，不过在执行到Form类的\_\_init__方法的最后一行时开始不同
 		- `self.process(formdata, obj, data=data, **kwargs)`
 	

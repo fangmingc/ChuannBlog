@@ -1,6 +1,18 @@
 ## flask基础
+- [创建FLask对象](#1)
+- [配置文件](#2)
+- [路由系统](#3)
+- [视图函数](#4)
+	- [请求](#41)
+	- [响应](#42)
+	- [session](#43)
+	- [闪现](#44)
+- [模板](#5)
+- [blueprint](#6)
+- [特殊装饰器](#7)
 
-### 创建FLask对象
+
+### <span id='1'>创建FLask对象</span>
 - mport_name，通常使用当前flask项目启动文件名，不固定
 - static_url_path=None，静态文件目录的别名，用于模板中反向指定静态文件，格式'/xxx'
 - static_folder='static'，静态文件目录
@@ -9,7 +21,7 @@
 - instance_path=None,
 - instance_relative_config=False
 
-### 配置文件
+### <span id='2'>配置文件</span>
 ```python
 # 方式一
 app.config["NNN"] = 123
@@ -26,7 +38,7 @@ app.config.from_envvar("FLASK_SETTINGS")
 app.config.from_object("settings2.DevConfig")
 ```
 
-### 路由系统
+### <span id='3'>路由系统</span>
 - 流程
 	- 将函数和url封装到Rule对象
 	- 将Rule对象添加到app.url_map(Map对象)
@@ -102,7 +114,7 @@ app.config.from_object("settings2.DevConfig")
 		app.run()
 	```
 
-### 视图函数
+### <span id='4'>视图函数</span>
 - FBV:
 
 	```
@@ -142,7 +154,7 @@ app.config.from_object("settings2.DevConfig")
 	app.add_url_rule('/index', view_func=IndexView.as_view(name='index'))
 	```
 
-#### 请求
+#### <span id='41'>请求</span>
 - request.method
 - request.args
 - request.form
@@ -162,7 +174,7 @@ app.config.from_object("settings2.DevConfig")
 - obj.save('/var/www/uploads/' + secure_filename(f.filename))
 
 
-#### 响应
+#### <span id='42'>响应</span>
 - "字符串"
 - jsonfy
 - render_template('html模板路径',**{})
@@ -175,7 +187,7 @@ app.config.from_object("settings2.DevConfig")
 - response.headers['X-Something'] = 'A value'
 - return response
 
-#### session
+#### <span id='43'>session</span>
 - 设置：session['username'] ＝ 'xxx'
 - 删除：session.pop('username', None)
 
@@ -212,13 +224,13 @@ app.config.from_object("settings2.DevConfig")
 	app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 	```
 
-#### 闪现
+#### <span id='44'>闪现</span>
 基于Session实现的用于保存数据的集合，其特点是：使用一次就删除
 - flash("msg")
 - msg = get_flashed_messages()
 
 
-### 模板
+### <span id='5'>模板</span>
 - 基本语法
 	- django有的基本都有
 	- 宏
@@ -239,7 +251,7 @@ app.config.from_object("settings2.DevConfig")
 	    return a1 + a2 + a3
 	```
 
-### blueprint 蓝图
+### <span id='6'>blueprint 蓝图</span>
 - 对项目目录结构规则化
 
 	```python
@@ -286,7 +298,7 @@ app.config.from_object("settings2.DevConfig")
 	    return 'Order'
 	```
 
-### 特殊装饰器
+### <span id='7'>特殊装饰器</span>
 #### 模拟中间件
 ```python
 @app.before_first_request
