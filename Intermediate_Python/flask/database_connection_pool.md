@@ -1,6 +1,10 @@
 ## 数据库连接池
+- [本地线程](#1)
+- [DBUtils数据库连接池](#2)
+	- [模式一](#21)
+	- [模式二](#22)
 
-### 本地线程
+### <span id='1'>本地线程</span>
 - 为什么用本地线程
 	- 每次操作数据库操作都要连接数据库
 		- 当在全局定义一个公用链接，多线程时会出问题
@@ -122,7 +126,7 @@
 	            return object.__delattr__(self, name)
 	```
 
-### DBUtils数据库连接池
+### <span id='2'>DBUtils数据库连接池</span>
 - 连接池参数
 
 	```python
@@ -188,7 +192,7 @@
 	- maxshared设置的最大共享连接数是无效的
 		- 除非设置pymysql中threadsafety>1
 
-#### 模式一
+#### <span id='21'>模式一</span>
 ```python
 from DBUtils.PersistentDB import PersistentDB
 import pymysql
@@ -233,7 +237,7 @@ for i in range(10):
     t.start()
 ```
 
-#### 模式二
+#### <span id='22'>模式二</span>
 ```python
 import time
 import pymysql

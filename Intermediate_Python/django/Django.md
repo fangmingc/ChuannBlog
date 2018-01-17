@@ -5,6 +5,7 @@
 - [创建Django流程](Django_start.md)
 - [URl的分发和映射](Django_URLconf.md)
 - [views视图函数](Django_Views.md)
+- [cookie和session](CookieSession.md)
 - [template模板](https://github.com/fangmingc/Python/tree/master/Frame/Django/Django_templates.md)
 - [model](Django_model.md)
 

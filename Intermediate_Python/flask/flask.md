@@ -17,13 +17,28 @@
 
 - [开始使用](fisrt_flask.md)
 - [flask基础](basis_of_flask.md)
-- [数据库连接池](database_connection_pool.md)
 - [wtforms快速使用和源码分析](wtforms.md)
 	- [自定义一个form组件](diy_form.md)
+- 数据库选择
+	- 原生SQL，借助[数据库连接池](database_connection_pool.md)
+	- ORM，借助[flask-sqlalchemy](flask-sqlalchemy.md)
 - [flask-script](flask-script.md)
 
-- [flask原理剖析](analyze_principle_of_flask.md)
-	- [上下文管理(重要)](context_management.md)
-	- [flask信号](singal_of_flask.md)
-	- [session](session.md)
+- flask原理剖析
+	- [请求到达flask之前]()
+	- [处理请求的准备工作]()
+		- [上下文管理](context_management.md)
+			- 本地线程
+		- [flask信号](singal_of_flask.md)
+			- blinker
+			- 对比Django信号
+		- [session](session.md)
+			- flask-session
+	- [处理请求的过程]()
+		- 中间件
+		- 视图函数
+		- 模板渲染
+	- [返回响应]()
+	- flask扩展点
 
+flask最难的就是local和stack完成上下文管理

@@ -357,7 +357,7 @@ while True:
 - 上面简单实现了一个远程cmd命令行，运行时如果使用返回较多信息的命令（如ipconfig -all）时会发生粘包：
 	- 上一条命令返回的结果不完整，下一条命令返回了上一条命令未完内容
 
-![](https://github.com/fangmingc/ChuannBlog/blob/master/Intermediate_Python/%E7%B2%98%E5%8C%85%E5%8E%9F%E7%90%86.png)
+![](https://github.com/fangmingc/ChuannBlog/blob/master/Intermediate_Python/base/%E7%B2%98%E5%8C%85%E5%8E%9F%E7%90%86.png)
 
 #### 粘包现象解释
 - 粘包问题主要是因为接收方不知道消息之间的界限，不知道一次性提取多少字节的数据所造成的。
@@ -519,8 +519,8 @@ while True:
 	- request类（解决通信问题）
 
 - 类的继承关系图：       
-[基于进程](https://github.com/fangmingc/ChuannBlog/tree/master/Intermediate_Python/threading.png)
-[基于线程](https://github.com/fangmingc/ChuannBlog/tree/master/Intermediate_Python/forking.png)
+[基于进程](https://chuann.cc/Intermediate_Python/threading.png)
+[基于线程](https://chuann.cc/Intermediate_Python/forking.png)
 
 - 服务端
 
@@ -568,5 +568,5 @@ while True:
 
 
 ## <span id='3.0'>3 练习：ftp文件上传下载</span>
-[GitHub地址](https://github.com/fangmingc/ChuannBlog/tree/master/Intermediate_Python/my_ftp)
+[GitHub地址](https://chuann.cc/Intermediate_Python/my_ftp)
 
