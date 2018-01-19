@@ -1,7 +1,7 @@
 ## Python 进阶
 本部分为Python进阶知识。
 
-- [模块进阶](base/Advanced_Module.md)
+- [模块进阶](module/Advanced_Module.md)
 - [网络编程](base/Network_Programming.md)
 - [并发编程](base/Concurrent_Programming.md)
 
@@ -23,6 +23,6 @@
 
 ### 爬虫
 - [爬虫基础](spider/start_spider.md)
-- [爬虫相关库]
+- [爬虫相关库](http://chuann.cc/Intermediate_Python/module/Advanced_Module.html#2)
 - [Scrapy框架]
 - [爬虫高性能相关]

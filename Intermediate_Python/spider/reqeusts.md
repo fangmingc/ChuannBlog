@@ -2,6 +2,32 @@
 ```python
 pip install requests
 ```
+### 简单使用：百度关键字搜索
+```python
+import requests
+
+# 百度搜索：https://www.baidu.com/s?wd=三体
+# 请求方式：GET
+# 请求头：
+#       User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36
+# 请求体:
+#       params={}
+
+search_condition = input("请输入搜索条件：")
+
+response = requests.get(
+    url="https://www.baidu.com/s",
+    headers={
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
+    },
+    params={
+        "wd": search_condition
+    }
+)
+
+with open("ss.html", "w", encoding="UTF-8") as wf:
+    wf.write(response.text)
+```
 
 ### 请求与响应
 #### 基于GET请求
@@ -72,8 +98,90 @@ pip install requests
 	- json
 		- 直接获取json格式数据
 
-### 高级用法
-####
+### 综合练习1：自动登录GitHub
+```python
+import re
+import requests
+
+# 1. 第一步，获取登录页面
+# 请求URL：http://github.com/login
+# 请求方式：GET
+# 请求头：
+#       User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36
+# 请求体：
+#       无
+
+url1 = "http://github.com/login"
+first_response = requests.get(
+    url1,
+    headers={
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
+    })
+cookies_for_auth = first_response.cookies.get_dict()
+authenticity_token = re.findall('name="authenticity_token".*?value="(.*?)"', first_response.text, re.S)[0]
+
+# print(cookies_for_auth)
+# print(authenticity_token)
+
+# 2. 第二步，提交登陆数据
+# 请求URL: https://github.com/session
+# 请求方式：POST
+# 请求头：
+#   headers: {
+#       "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"
+#       "cookies": {....}
+#       "Referer": "https://github.com/"
+# }
+#
+# 请求体：
+#   FormData: {
+#       "commit":"Sign in"
+#       "utf8":"✓"
+#       "authenticity_token":"C5K8hW8DEwM5R9mFcXiN1ZZYhtFQMeKsq5pv0zdKPaxBC3H3SRIEBUiDrgYZ9bIOd9Gn7K2IpJCTOjGR/G+UUA=="
+#       "login":"dsfdfasa"
+#       "password":"adsfadsf"
+#   }
+url2 = "https://github.com/session"
+username = "fangming99@outlook.com"
+
+password = "无密码"                            # 未填密码
+
+second_response = requests.post(
+    url2,
+    headers={
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36",
+        "Referer": "https://github.com/"
+    },
+    cookies=cookies_for_auth,
+    data={
+        "commit": "Sign in",
+        "utf8": "✓",
+        "authenticity_token": authenticity_token,
+        "login": username,
+        "password": password,
+    },
+    # allow_redirects=False
+)
+auth_cookie = second_response.cookies.get_dict()
+print(second_response.status_code)
 
 
+# https://github.com/settings/emails
+url3 = "https://github.com/settings/emails"
+third_response = requests.get(
+    url3,
+    headers={
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36",
+        "Referer": "https://github.com/"
+    },
+    cookies=auth_cookie,
+)
+# 检测是否登录成功
+print("fangming99@outlook.com" in third_response.text)
+for history in third_response.history:
+    print(history, type(history))
+```
+
+### 综合练习2：自动登录拉勾网投递简历
+- 已失效
 
