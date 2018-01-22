@@ -12,6 +12,7 @@
 		- [删](#532)
 		- [改](#533)
 		- [查](#534)
+- [可视化工具：robomongo](#6)
 
 ### <span id="1">介绍</span>
 - 易用性
@@ -391,15 +392,320 @@
 		```
 	2. 删除国家为China的全部
 
-		```
+		```sql
 		db.user.deleteMany( {'addr.country': 'China'} ) 
 		```
 	3. 删除全部
 		
-		```
+		```sql
 		db.user.deleteMany({}) 
 		```
 - <span id="533">改</span>
+	1. 语法：db.table,update(条件,修改字段,其他参数)
+
+		```sql
+		db.collection.update(
+		   <query>,
+		   <update>,
+		   {
+		     upsert: <boolean>,
+		     multi: <boolean>,
+		     writeConcern: <document>
+		   }
+		)
+		```
+		- query : 相当于where条件。
+		- update : update的对象和一些更新的操作符（如$,$inc...等)
+		- upsert : 可选，默认为false，代表如果不存在update的记录不更新也不插入，设置为true代表插入。
+		- multi : 可选，默认为false，代表只更新找到的第一条记录，设为true,代表更新找到的全部记录。
+		- writeConcern :可选，抛出异常的级别。
+	2. 覆盖式修改，会把更新数据直接替换掉原来的数据
+
+		```sql
+		# 方式一
+		db.user.update({"name": "alex"}, {"age":11}, {"mmulti":true,"upsert":true})
+		
+		# 方式二
+		var obj=db.user.findOne({"_id":2})
+		obj.username=obj.name+'SB'
+		obj.hobbies_count++
+		delete obj.age
+		
+		db.user.update({"_id":2},obj)
+		```
+	3. $set/$unset
+		- 通常文档只会有一部分需要更新。可以使用原子性的更新修改器，指定对文档中的某些字段进行更新。
+		- 更新修改器是种特殊的键，用来指定复杂的更新操作，比如修改、增加或者删除
+
+		```sql
+		#1、update db1.user set  name="WXX" where id = 2
+		db.user.update({'_id':2},{"$set":{"name":"WXX",}})
+		
+		#2、没有匹配成功则新增一条{"upsert":true}
+		db.user.update({'_id':6},{"$set":{"name":"egon","age":18}},{"upsert":true})
+		
+		#3、默认只改匹配成功的第一条,{"multi":改多条}
+		db.user.update({'_id':{"$gt":4}},{"$set":{"age":28}})
+		db.user.update({'_id':{"$gt":4}},{"$set":{"age":38}},{"multi":true})
+		
+		#4、修改内嵌文档，把名字为alex的人所在的地址国家改成Japan
+		db.user.update({'name':"alex"},{"$set":{"addr.country":"Japan"}})
+		
+		#5、把名字为alex的人的地2个爱好改成piao
+		db.user.update({'name':"alex"},{"$set":{"hobbies.1":"piao"}})
+		
+		#6、删除alex的爱好,$unset
+		db.user.update({'name':"alex"},{"$unset":{"hobbies":""}})
+		```
+	3.  $inc 增加和减少
+
+		```sql
+		#1、所有人年龄增加一岁
+		db.user.update(
+		    {}, 
+		    {
+		        "$inc": {"age": 1}
+		    }, 
+		    {
+		        "multi": true
+		    }
+		)
+		#2、所有人年龄减少5岁
+		db.user.update(
+		    {},
+		    {
+		        "$inc":{"age":-5}
+		    },
+		    {
+		        "multi":true
+		    }
+		)
+		```
+
+	4.  $push,$pop,$pull
+		1.  $push,往数组添加元素
+
+			```sql
+			# 为名字为yuanhao的人添加一个爱好read
+			db.user.update({"name":"yuanhao"},{"$push":{"hobbies":"read"}})
+			
+			# 为名字为yuanhao的人一次添加多个爱好tea，dancing
+			db.user.update({"name":"yuanhao"},{"$push":{
+			    "hobbies":{"$each":["tea","dancing"]}
+			}})
+			```
+
+		2.  $pop,从开头或结尾删除元素
+
+			```sql
+			# {"$pop":{"key":1}} 从数组末尾删除一个元素
+			
+			db.user.update({"name":"yuanhao"},{"$pop":{
+			    "hobbies":1}
+			})
+			
+			# {"$pop":{"key":-1}} 从头部删除
+			db.user.update({"name":"yuanhao"},{"$pop":{
+			    "hobbies":-1}
+			})
+			```
+		3. "$pull",按照条件统统删掉
+
+			```sql
+			db.user.update({'addr.country':"China"},{"$pull":{
+			    "hobbies":"read"}
+			},
+			{
+			    "multi":true
+			}
+			)
+			```
+	5. $addToSet,避免重复添加
+
+		```sql
+		db.urls.insert({"_id":1,"urls":[]})
+		
+		db.urls.update({"_id":1},{"$addToSet":{"urls":'http://www.baidu.com'}})
+		db.urls.update({"_id":1},{"$addToSet":{"urls":'http://www.baidu.com'}})
+		db.urls.update({"_id":1},{"$addToSet":{"urls":'http://www.baidu.com'}})
+		
+		db.urls.update({"_id":1},{
+		    "$addToSet":{
+		        "urls":{
+		        "$each":[
+		            'http://www.baidu.com',
+		            'http://www.baidu.com',
+		            'http://www.xxxx.com'
+		            ]
+		            }
+		        }
+		    }
+		)
+		```
+
 
 
 - <span id="534">查</span>
+	1. 比较运算："$ne","$gt","$lt","gte","lte"
+
+		```sql
+		#1、select * from db1.user where name = "alex";
+		db.user.find({'name':'alex'})
+		
+		#2、select * from db1.user where name != "alex";
+		db.user.find({'name':{"$ne":'alex'}})
+		
+		#3、select * from db1.user where id > 2;
+		db.user.find({'_id':{'$gt':2}})
+		
+		#4、select * from db1.user where id < 3;
+		db.user.find({'_id':{'$lt':3}})
+		
+		#5、select * from db1.user where id >= 2;
+		db.user.find({"_id":{"$gte":2,}})
+		
+		#6、select * from db1.user where id <= 2;
+		db.user.find({"_id":{"$lte":2}})
+		```
+
+	2. 逻辑运算：字典中逗号分隔的多个条件是and关系，"$or"的条件放到[]内,"$not"
+
+		```sql
+		#1、select * from db1.user where id >= 2 and id < 4;
+		db.user.find({'_id':{"$gte":2,"$lt":4}})
+		
+		#2、select * from db1.user where id >= 2 and age < 40;
+		db.user.find({"_id":{"$gte":2},"age":{"$lt":40}})
+		
+		#3、select * from db1.user where id >= 5 or name = "alex";
+		db.user.find({
+		    "$or":[
+		        {'_id':{"$gte":5}},
+		        {"name":"alex"}
+		        ]
+		})
+		
+		#4、select * from db1.user where id % 2=1;
+		db.user.find({'_id':{"$mod":[2,1]}})
+		
+		#5、上题，取反
+		db.user.find({'_id':{"$not":{"$mod":[2,1]}}})
+		```
+
+	3. 成员运算，"$in","$nin"
+
+		```sql
+		#1、select * from db1.user where age in (20,30,31);
+		db.user.find({"age":{"$in":[20,30,31]}})
+		
+		#2、select * from db1.user where name not in ('alex','yuanhao');
+		db.user.find({"name":{"$nin":['alex','yuanhao']}})
+		```
+	4. 正则匹配
+
+		```sql
+		# select * from db1.user where name regexp '^j.*?(g|n)$';
+		db.user.find({'name':/^j.*?(g|n)$/i})
+		```
+	5. 取指定的字段
+
+		```sql
+		# select name,age from db1.user where id=3;
+		db.user.find({'_id':3},{'_id':0,'name':1,'age':1})
+		```
+	6. 查询数组
+
+		```sql
+		#1、查看有dancing爱好的人
+		db.user.find({'hobbies':'dancing'})
+		
+		#2、查看既有dancing爱好又有tea爱好的人
+		db.user.find({
+		    'hobbies':{
+		        "$all":['dancing','tea']
+		        }
+		})
+		
+		#3、查看第4个爱好为tea的人
+		db.user.find({"hobbies.3":'tea'})
+		
+		#4、查看所有人最后两个爱好
+		db.user.find({},{'hobbies':{"$slice":-2},"age":0,"_id":0,"name":0,"addr":0})
+		
+		#5、查看所有人的第2个到第3个爱好
+		db.user.find({},{'hobbies':{"$slice":[1,2]},"age":0,"_id":0,"name":0,"addr":0})
+		
+		> db.blog.find().pretty()
+		{
+		        "_id" : 1,
+		        "name" : "alex意外死亡的真相",
+		        "comments" : [
+		                {
+		                        "name" : "egon",
+		                        "content" : "alex是谁？？？",
+		                        "thumb" : 200
+		                },
+		                {
+		                        "name" : "wxx",
+		                        "content" : "我去，真的假的",
+		                        "thumb" : 300
+		                },
+		                {
+		                        "name" : "yxx",
+		                        "content" : "吃喝嫖赌抽，欠下两个亿",
+		                        "thumb" : 40
+		                },
+		                {
+		                        "name" : "egon",
+		                        "content" : "xxx",
+		                        "thumb" : 0
+		                }
+		        ]
+		}
+		db.blog.find({},{'comments':{"$slice":-2}}).pretty() #查询最后两个
+		db.blog.find({},{'comments':{"$slice":[1,2]}}).pretty() #查询1到2
+		```
+	7. 排序
+
+		```sql
+		# 排序:--1代表升序，-1代表降序
+		db.user.find().sort({"name":1,})
+		db.user.find().sort({"age":-1,'_id':1})
+		```
+	8. 分页
+	
+		```sql
+		# 分页:--limit代表取多少个document，skip代表跳过前多少个document。 
+		db.user.find().sort({'age':1}).limit(1).skip(2)
+		```
+	9. 获取数量
+		
+		```sql
+		# 获取数量
+		db.user.count({'age':{"$gt":30}}) 
+		
+		--或者
+		db.user.find({'age':{"$gt":30}}).count()
+		```
+	10. 其他
+		
+		```sql
+		#1、{'key':null} 匹配key的值为null或者没有这个key
+		db.t2.insert({'a':10,'b':111})
+		db.t2.insert({'a':20})
+		db.t2.insert({'b':null})
+		
+		> db.t2.find({"b":null})
+		{ "_id" : ObjectId("5a5cc2a7c1b4645aad959e5a"), "a" : 20 }
+		{ "_id" : ObjectId("5a5cc2a8c1b4645aad959e5b"), "b" : null }
+		
+		#2、查找所有
+		db.user.find() #等同于db.user.find({})
+		db.user.find().pretty()
+		
+		#3、查找一个，与find用法一致，只是只取匹配成功的第一个
+		db.user.findOne({"_id":{"$gt":3}})
+		```
+### <span id="">可视化工具：robomongo</span>
+- [官网](https://robomongo.org/)
+
