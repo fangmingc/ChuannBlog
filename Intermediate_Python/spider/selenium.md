@@ -1,4 +1,11 @@
 ## selenium
+- [介绍](#1)
+- [安装](#2)
+- [基本使用](#3)
+- [自动登陆博客园-破解极验滑动验证码](#4)
+- [自动登录163邮箱发邮件](#5)
+
+### <span id="1">介绍</span>
 - 测试工具，模拟浏览器的正常访问。
 	- 人工测试过于浪费人力和时间
 	- 爬虫中使用它主要是为了解决requests无法直接执行JavaScript代码的问题
@@ -12,7 +19,7 @@
 	browser=webdriver.Safari()
 	browser=webdriver.Edge() 
 	```
-### 安装	
+### <span id="2">安装</span>
 - `pip3 install selenium`
 - selenium驱动浏览器需要特殊的组件，这里以chrome为例，需要下载chromedriver
 	- 注意：版本需要和已安装的chrome版本相匹配，否则易出错
@@ -54,7 +61,7 @@
 	>>> driver.page_source
 	```
 
-### 基本使用
+### <span id="3">基本使用</span>
 ```python
 from selenium import webdriver
 from selenium.webdriver.common.by import By  # 按照什么方式查找，By.ID,By.CSS_SELECTOR
@@ -150,8 +157,49 @@ finally:
 	- //，双斜杠表示从下属层级寻找，找到为止，不限层级
 	- 其余见代码
 
+#### 元素交互操作
+- 点击
+	- tag.click()
+- 清空
+	- tag.clear()
+- 动作链
+	- from selenium.webdriver import ActionChains
+	- ActionChains(driver).click_and_hold(tag).perform()
+	- ActionChains(driver).move_by_offset(xoffset=2,yoffset=0).perform()
+	- ActionChains(driver).release().perform()
+- 执行JS
+	- browser.execute_script('alert("hello world")') #打印警告
+- frame的切换
+	- frame相当于一个单独的网页，在父frame里是无法直接查看到子frame的元素的，必须switch_to_frame切到该frame下，才能进一步查找
+	- browser.switch_to.frame(frame对象)
+	- tag_frame=browser.find_element_by_id('tag_frame1')
+	- browser.switch_to.parent_frame()
+		- 切回主页面
 
-### 自动登陆博客园-破解极验滑动验证码
+#### 其他
+- browser.back()
+	- 浏览器后退
+- browser.forward()
+	- 浏览器前进
+- browser.close()
+	- 浏览器关闭
+- browser.quit()
+	- 退出driver，并关闭浏览器
+- browser.get_cookies()
+	- 获取cookies
+- browser.add_cookie({'k1':'xxx','k2':'yyy'})
+	- 增加cookie
+- 选项卡管理
+	- browser.execute_script('window.open()')
+		- 新建选项卡
+	- browser.window_handles
+		- 获取所有选项卡
+	- browser.switch_to_window(browser.window_handles[1])
+		- 切换选项卡
+- 异常
+	- from selenium.common.exceptions import TimeoutException,NoSuchElementException,NoSuchFrameException
+
+### <span id="5">自动登陆博客园-破解极验滑动验证码</span>
 ```python
 import time
 import random
@@ -352,6 +400,73 @@ try:
 finally:
     browser.quit()
 ```
+
+### <span id="5">自动登录163邮箱发邮件</span>
+```python
+import time
+import random
+from selenium import webdriver
+
+browser = webdriver.Chrome()
+browser.implicitly_wait(10)
+
+
+def simulate_human():
+    time.sleep(random.uniform(0.5, 2))
+
+
+try:
+    # 1. 获取登录页面
+    browser.get("https://mail.163.com/")
+    iframe = browser.find_element_by_id("x-URS-iframe")
+    browser.switch_to.frame(iframe)
+
+    # 2. 输入用户名和密码
+    simulate_human()
+    uname_input_tag = browser.find_element_by_name("email")
+    pwd_input_tag = browser.find_element_by_name("password")
+    uname_input_tag.send_keys(input("请输入邮箱用户名(不用写@163.com):"))
+    pwd_input_tag.send_keys(input("请输入密码:"))
+
+    # 3. 点击登陆
+    simulate_human()
+    submit_btn = browser.find_element_by_id("dologin")
+    submit_btn.click()
+
+    # 4. 点击写信按钮
+    simulate_human()
+    write_btn = browser.find_element_by_xpath("//div[@id='dvNavTop']//li[2]")
+    write_btn.click()
+
+    # 5. 填写收件人
+    simulate_human()
+    write_recv_input = browser.find_element_by_class_name("nui-editableAddr-ipt")
+    write_recv_input.send_keys(input("请输入收件人邮箱(完整邮箱):"))
+
+    # 6. 填写主题
+    simulate_human()
+    write_title_input = browser.find_elements_by_class_name("nui-ipt-input")[2]
+    write_title_input.send_keys(input("请输入主题:"))
+
+    # 7. 填写正文
+    simulate_human()
+    iframe2 = browser.find_element_by_class_name("APP-editor-iframe")
+    browser.switch_to.frame(iframe2)
+    write_article_input = browser.find_element_by_class_name("nui-scroll")
+    write_article_input.send_keys(input("请输入内容"))
+    browser.switch_to.parent_frame()
+
+    # 8. 点击发送
+    simulate_human()
+    send_btn = browser.find_elements_by_class_name("nui-toolbar-item")[0]
+    # print(send_btn.tag_name, send_btn.get_attribute("class"))
+    send_btn.click()
+
+    time.sleep(100)
+finally:
+    browser.quit()
+```
+
 
 
 

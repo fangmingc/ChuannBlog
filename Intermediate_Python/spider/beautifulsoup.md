@@ -2,6 +2,7 @@
 ```python
 pip3 install beautifulsoup4
 ```
+- [官方文档](https://www.crummy.com/software/BeautifulSoup/bs4/doc/index.zh.html)
 
 ### 语法
 - soup = BeautifulSoup(markup="", features=None, builder=None, parse_only=None, from_encoding=None, exclude_encodings=None, **kwargs)
@@ -48,4 +49,14 @@ pip3 install beautifulsoup4
 		    return tag.name == "a" and tag.has_attr('class') and not tag.has_attr("id")
 		soup.find_all(name=has_class_not_id)
 		```
+#### CSS选择器
+- soup=BeautifulSoup(html_doc,'lxml')
+- soup.select("CSS选择器语法")
+	- 层叠使用，soup.select(".c1").select(".c2")
+	- 获取属性，attrs
+	- 获取文本内容，get_text()
+
+
+
+
 

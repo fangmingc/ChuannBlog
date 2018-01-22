@@ -11,11 +11,26 @@
 	- 互联网中最有价值的便是数据，比如天猫商城的商品信息，链家网的租房信息，雪球网的证券投资信息等等，这些数据都代表了各个行业的真金白银，可以说，谁掌握了行业内的第一手数据，谁就成了整个行业的主宰，如果把整个互联网的数据比喻为一座宝藏，那我们的爬虫课程就是来教大家如何来高效地挖掘这些宝藏，掌握了爬虫技能，你就成了所有互联网信息公司幕后的老板，换言之，它们都在免费为你提供有价值的数据。
 
 ### 爬虫的基本流程
-1. 发送请求
-	- 
-2. 获取响应内容
-3. 解析内容
-4. 保存数据
+1. 分析
+	- 分析是最重要的步骤
+	- 首先分析目标数据或目标动作具体的位置
+		- 如：分析访问拉钩网的职位信息
+		- 请求URL:https://www.lagou.com/jobs/list_python
+			- 可知通过更改url最后一个路径可以实现关键字搜索职位
+		- 请求方式：GET
+		- 请求头：
+			- 清空浏览器所有缓存和cookie，访问url，众多请求中只有User-Agent是重要的，其余的不重要（通过不停测试得知）
+			- User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36
+		- 请求体：
+			- GET请求无请求体
+2. 发送请求
+	- response = request.get("https://www.lagou.com/jobs/list_python", headers={"User-Agent":"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36"})
+3. 获取响应内容
+	- 参考[requests模块](http://chuann.cc/Intermediate_Python/spider/requests.html)的响应部分内容
+4. 解析内容
+	- 利用re,beautifulsoup等模块解析内容
+5. 保存数据
+	- 利用mongodb、redis、mysql等存储数据
 
 ### 请求和响应
 #### 请求request
@@ -38,6 +53,7 @@
 		- 连接状态
 		- 请求的域名
 - 请求体
+	- 构造form表单的数据
 
 #### 响应
 以访问http://www.baidu.com为例
@@ -46,8 +62,13 @@
 	- 302重定向
 - 响应体
 	- html
+		- 最常见的类型，通过解析库分析
 	- json
+		- API接口常用，直接就是大字典
 	- 二进制
+		- 图片
+		- 视频
+		- 其他格式
 
 
 ### 爬虫小结
