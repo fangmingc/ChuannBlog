@@ -706,6 +706,7 @@
 		#3、查找一个，与find用法一致，只是只取匹配成功的第一个
 		db.user.findOne({"_id":{"$gt":3}})
 		```
-### <span id="">可视化工具：robomongo</span>
+
+### <span id="6">可视化工具：robomongo</span>
 - [官网](https://robomongo.org/)
 

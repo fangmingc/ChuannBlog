@@ -53,40 +53,41 @@
 ![](https://baike.baidu.com/pic/socket/281150/0/d000baa1cd11728b45647b06cafcc3cec3fd2c4c?fr=lemma&ct=single)
 
 ### <span id='2.2'>2.2socket模块</span>
-```python  
-import socket
-socket.socket(socket_family, socket_type,protocal=0)
-# socket_family 可以是 AF_UNIX 或 AF_INET。
-# socket_type 可以是 SOCK_STREAM 或 SOCK_DGRAM
-# protocol一般不填,默认值为 0。
+	```python  
+	import socket
+	socket.socket(socket_family, socket_type,protocal=0)
+	# socket_family 可以是 AF_UNIX 或 AF_INET。
+	# socket_type 可以是 SOCK_STREAM 或 SOCK_DGRAM
+	# protocol一般不填,默认值为 0。
+	
+	# 获取tcp/ip套接字
+	tcpSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	
+	# 获取udp/ip套接字
+	udpSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	
+	# 由于 socket 模块中有太多的属性。我们在这里破例使用了'from module import *'语句。
+	# 使用'from socket import *',我们就把 socket 模块里的所有属性都带到我们的命名空间里了,这样能 大幅减短我们的代码。
+	# 例如:
+	from socket import *
+	tcpSock = socket(AF_INET, SOCK_STREAM)
+	```
 
-# 获取tcp/ip套接字
-tcpSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# 获取udp/ip套接字
-udpSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-# 由于 socket 模块中有太多的属性。我们在这里破例使用了'from module import *'语句。
-# 使用'from socket import *',我们就把 socket 模块里的所有属性都带到我们的命名空间里了,这样能 大幅减短我们的代码。
-# 例如:
-from socket import *
-tcpSock = socket(AF_INET, SOCK_STREAM)
-```
 ### <span id='2.3'>2.3 套接字(socket)函数</span>
 #### 服务端 
 - s.bind()       
-绑定(主机，端口号)到套接字 
+	- 绑定(主机，端口号)到套接字 
 - s.listen()    
 	- 开始TCP监听
 	- 必须制定最大连接数（操作系统同时能够链接的最大数目）
 - s.accept()      
-被动接受TCP客户的连接，(阻塞式)等待连接到来(阻塞：无响应直到接受到连接请求)
+	- 被动接受TCP客户的连接，(阻塞式)等待连接到来(阻塞：无响应直到接受到连接请求)
 
 #### 客户端
 - s.connect()     
-主动初始化TCP服务器连接
+	- 主动初始化TCP服务器连接
 - s.connec_ex()    
-connect()函数的扩展版本，出错时返回出错码，不抛出异常
+	- connect()函数的扩展版本，出错时返回出错码，不抛出异常
 
 #### 公共用途
 - s.recv()    
@@ -100,162 +101,164 @@ connect()函数的扩展版本，出错时返回出错码，不抛出异常
 	- 通常给数据加上报头将数据打包更安全可靠，不常用sendall
 
 - s.recvfrom()        
-接收UDP数据  
+	- 接收UDP数据  
 - s.sendto()          
-发送UDP数据  
+	- 发送UDP数据  
 - s.getpeername()     
-连接到当前套接字的远端的地址  
+	- 连接到当前套接字的远端的地址  
 - s.getsockname()     
-当前套接字的地址  
+	- 当前套接字的地址  
 - s.getsockopt()      
-返回指定套接字的参数  
+	- 返回指定套接字的参数  
 - s.setsockopt()      
-设置指定套接字的参数  
+	- 设置指定套接字的参数  
 - s.close() 
-关闭套接字
+	- 关闭套接字
 
 #### 面向锁的套接字方法
 - s.setblocking()     
-设置套接字的阻塞与非阻塞模式  
+	- 设置套接字的阻塞与非阻塞模式  
 - s.settimeout()      
-设置阻塞套接字操作的超时时间  
+	- 设置阻塞套接字操作的超时时间  
 - s.gettimeout()      
-得到阻塞套接字操作的超时时间  
+	- 得到阻塞套接字操作的超时时间  
 
 #### 面向文件的套接字的函数
 - s.fileno()          
-套接字的文件描述符  
+	- 套接字的文件描述符  
 - s.makefile()        
-创建一个与该套接字相关的文件  
+	- 创建一个与该套接字相关的文件  
 
 ### <span id='2.4'>2.4 基于TCP的套接字</span>
 #### 基础实例
 - server端   
 
-```python  
-import socket
-
-# 1.create server socket
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# 2.Bind ip address and port to symbol the only server
-# 127.*.*.* symbol local address
-# in cmd, use:
-#   netstat /an
-#   to check the port in local machine
-server.bind(('127.0.0.1', 20000))
-
-# 3.set the limit of connect to server
-server.listen(5)
-
-# 4.start the server to begin listening the request from client
-# when accept the request, the request contain information of client socket and client ip address
-print('Server is listening request...')
-client_connect, client_address = server.accept()
-print('The information of client:\n%s\nThe client ip address:\n%s' % (client_connect, client_address))
-
-# 5.stop the connect to client
-client_connect.close()
-# 6.stop the server
-server.close()
-```
+	```python  
+	import socket
+	
+	# 1.create server socket
+	server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	
+	# 2.Bind ip address and port to symbol the only server
+	# 127.*.*.* symbol local address
+	# in cmd, use:
+	#   netstat /an
+	#   to check the port in local machine
+	server.bind(('127.0.0.1', 20000))
+	
+	# 3.set the limit of connect to server
+	server.listen(5)
+	
+	# 4.start the server to begin listening the request from client
+	# when accept the request, the request contain information of client socket and client ip address
+	print('Server is listening request...')
+	client_connect, client_address = server.accept()
+	print('The information of client:\n%s\nThe client ip address:\n%s' % (client_connect, client_address))
+	
+	# 5.stop the connect to client
+	client_connect.close()
+	# 6.stop the server
+	server.close()
+	```
 
 - client端   
+	
+	```python  
+	import socket
+	
+	# 1.create client socket
+	client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	
+	# 2.connect to server with server's ip and port
+	connect = client.connect(('127.0.0.1', 20000))
+	
+	# 3.stop the client
+	client.close()
+	```
 
-```python  
-import socket
-
-# 1.create client socket
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# 2.connect to server with server's ip and port
-connect = client.connect(('127.0.0.1', 20000))
-
-# 3.stop the client
-client.close()
-```
 #### 连接循环和通信循环
 - server端  
-
-```python   
-import socket
-
-# 1.create server socket
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# 2.Bind ip address and port to symbol the only server
-server.bind(('127.0.0.1', 20000))
-
-# 3.set the limit of connect to server
-server.listen(5)
-
-
-# Link loop: server can tun long time
-while True:
-    # 4.start the server to begin listening the request from client
-    print('Server is listening request...')
-    client_connect, client_address = server.accept()
-    print('The information of client:\n%s\nThe client ip address:\n%s' % (client_connect, client_address))
-
-    # Message loop: server and client can communicate long time
-    while True:
-        try:
-            # 5.set the limit of information received from client
-            info = client_connect.recv(1024).decode('utf-8')   # bytes
-
-            # when info is quit, just disconnect
-            if info == 'quit':
-                break
-
-            # 6.send the data after operating
-            client_connect.send(info[::-1].encode('utf-8'))
-        # when any exception occur, just disconnect
-        except Exception:
-            break
-
-    # 7.stop the connect to client
-    client_connect.close()
-
-
-# 8.stop the server
-server.close()
-```
+	
+	```python   
+	import socket
+	
+	# 1.create server socket
+	server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	
+	# 2.Bind ip address and port to symbol the only server
+	server.bind(('127.0.0.1', 20000))
+	
+	# 3.set the limit of connect to server
+	server.listen(5)
+	
+	
+	# Link loop: server can tun long time
+	while True:
+	    # 4.start the server to begin listening the request from client
+	    print('Server is listening request...')
+	    client_connect, client_address = server.accept()
+	    print('The information of client:\n%s\nThe client ip address:\n%s' % (client_connect, client_address))
+	
+	    # Message loop: server and client can communicate long time
+	    while True:
+	        try:
+	            # 5.set the limit of information received from client
+	            info = client_connect.recv(1024).decode('utf-8')   # bytes
+	
+	            # when info is quit, just disconnect
+	            if info == 'quit':
+	                break
+	
+	            # 6.send the data after operating
+	            client_connect.send(info[::-1].encode('utf-8'))
+	        # when any exception occur, just disconnect
+	        except Exception:
+	            break
+	
+	    # 7.stop the connect to client
+	    client_connect.close()
+	
+	
+	# 8.stop the server
+	server.close()
+	```
 
 - client端  
- 
-```python   
-import socket
+	 
+	```python   
+	import socket
+	
+	# 1.create client socket
+	client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	
+	# 2.connect to server with server's ip and port
+	client.connect(('127.0.0.1', 20000))
+	
+	
+	# Message loop: server and client can communicate long time
+	while True:
+	    info = input('>>>')
+	
+	    # when info is empty, stop sending
+	    if not info:
+	        continue
+	
+	    # 3.must send bytes
+	    client.send(info.encode('utf-8'))
+	
+	    # when info is quit, just disconnect
+	    if info == 'quit':
+	        break
+	
+	    # 4.receive the data from server
+	    data = client.recv(1024)
+	    print(data.decode('utf-8'))
+	
+	
+	# 5.stop the client
+	client.close()
+	```
 
-# 1.create client socket
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# 2.connect to server with server's ip and port
-client.connect(('127.0.0.1', 20000))
-
-
-# Message loop: server and client can communicate long time
-while True:
-    info = input('>>>')
-
-    # when info is empty, stop sending
-    if not info:
-        continue
-
-    # 3.must send bytes
-    client.send(info.encode('utf-8'))
-
-    # when info is quit, just disconnect
-    if info == 'quit':
-        break
-
-    # 4.receive the data from server
-    data = client.recv(1024)
-    print(data.decode('utf-8'))
-
-
-# 5.stop the client
-client.close()
-```
 #### 出现OSError: [WinError 10048]
 做测试的时候有可能会出现如下错误信息：
 
@@ -271,88 +274,88 @@ client.close()
 解决办法：
 - 加入一条socket配置，在任务结束后重用ip和端口，需要在可以正常运行服务端的时候就使用           
 
-```python
-phone=socket(AF_INET,SOCK_STREAM)
-phone.setsockopt(SOL_SOCKET,SO_REUSEADDR,1) #就是它，在bind前加
-phone.bind(('127.0.0.1',8080))
-```
+	```python
+	phone=socket(AF_INET,SOCK_STREAM)
+	phone.setsockopt(SOL_SOCKET,SO_REUSEADDR,1) #就是它，在bind前加
+	phone.bind(('127.0.0.1',8080))
+	```
 
 - 发现系统存在大量TIME_WAIT状态的连接，通过调整linux内核参数解决    
 
-```python
-vi /etc/sysctl.conf
-
-# 编辑文件，加入以下内容：
-net.ipv4.tcp_syncookies = 1
-net.ipv4.tcp_tw_reuse = 1
-net.ipv4.tcp_tw_recycle = 1
-net.ipv4.tcp_fin_timeout = 30
- 
-# 然后执行 /sbin/sysctl -p 让参数生效。
- 
-net.ipv4.tcp_syncookies = 1 
-# 表示开启SYN Cookies。当出现SYN等待队列溢出时，启用cookies来处理，可防范少量SYN攻击，默认为0，表示关闭；
-
-net.ipv4.tcp_tw_reuse = 1 
-# 表示开启重用。允许将TIME-WAIT sockets重新用于新的TCP连接，默认为0，表示关闭；
-
-net.ipv4.tcp_tw_recycle = 1 
-# 表示开启TCP连接中TIME-WAIT sockets的快速回收，默认为0，表示关闭。
-
-net.ipv4.tcp_fin_timeout 
-# 修改系統默认的 TIMEOUT 时间
-```
+	```python
+	vi /etc/sysctl.conf
+	
+	# 编辑文件，加入以下内容：
+	net.ipv4.tcp_syncookies = 1
+	net.ipv4.tcp_tw_reuse = 1
+	net.ipv4.tcp_tw_recycle = 1
+	net.ipv4.tcp_fin_timeout = 30
+	 
+	# 然后执行 /sbin/sysctl -p 让参数生效。
+	 
+	net.ipv4.tcp_syncookies = 1 
+	# 表示开启SYN Cookies。当出现SYN等待队列溢出时，启用cookies来处理，可防范少量SYN攻击，默认为0，表示关闭；
+	
+	net.ipv4.tcp_tw_reuse = 1 
+	# 表示开启重用。允许将TIME-WAIT sockets重新用于新的TCP连接，默认为0，表示关闭；
+	
+	net.ipv4.tcp_tw_recycle = 1 
+	# 表示开启TCP连接中TIME-WAIT sockets的快速回收，默认为0，表示关闭。
+	
+	net.ipv4.tcp_fin_timeout 
+	# 修改系統默认的 TIMEOUT 时间
+	```
 
 ### <span id='2.5'>2.5 粘包</span>
 - 服务端    
 
-```python
-from socket import *
-import subprocess
-
-ip_port=('127.0.0.1',8080)
-
-server=socket(AF_INET,SOCK_STREAM)
-server.bind(ip_port)
-server.listen(5)
-
-while True:
-    conn,addr=tcp_socket_server.accept()
-    print('客户端',addr)
-
-    while True:
-        cmd=conn.recv(1024)
-        if not cmd:break
-        res=subprocess.Popen(cmd.decode('utf-8'),shell=True,
-                         stdout=subprocess.PIPE,
-                         stdin=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
-
-        stderr=act_res.stderr.read()
-        stdout=act_res.stdout.read()
-        conn.send(stderr)
-        conn.send(stdout)
-```
+	```python
+	from socket import *
+	import subprocess
+	
+	ip_port=('127.0.0.1',8080)
+	
+	server=socket(AF_INET,SOCK_STREAM)
+	server.bind(ip_port)
+	server.listen(5)
+	
+	while True:
+	    conn,addr=tcp_socket_server.accept()
+	    print('客户端',addr)
+	
+	    while True:
+	        cmd=conn.recv(1024)
+	        if not cmd:break
+	        res=subprocess.Popen(cmd.decode('utf-8'),shell=True,
+	                         stdout=subprocess.PIPE,
+	                         stdin=subprocess.PIPE,
+	                         stderr=subprocess.PIPE)
+	
+	        stderr=act_res.stderr.read()
+	        stdout=act_res.stdout.read()
+	        conn.send(stderr)
+	        conn.send(stdout)
+	```
 
 - 客户端    
 
-```python
-import socket
-ip_port=('127.0.0.1',8080)
-
-s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-res=s.connect_ex(ip_port)
-
-while True:
-    msg=input('>>: ').strip()
-    if not msg:continue
-    if msg == 'quit':break
-
-    s.send(msg.encode('utf-8'))
-    data=s.recv(1024)
-
-    print(data.decode('utf-8'))
-```
+	```python
+	import socket
+	ip_port=('127.0.0.1',8080)
+	
+	s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+	res=s.connect_ex(ip_port)
+	
+	while True:
+	    msg=input('>>: ').strip()
+	    if not msg:continue
+	    if msg == 'quit':break
+	
+	    s.send(msg.encode('utf-8'))
+	    data=s.recv(1024)
+	
+	    print(data.decode('utf-8'))
+	```
 
 - 上面简单实现了一个远程cmd命令行，运行时如果使用返回较多信息的命令（如ipconfig -all）时会发生粘包：
 	- 上一条命令返回的结果不完整，下一条命令返回了上一条命令未完内容
@@ -404,110 +407,111 @@ while True:
 		3. 接收数据
 		从上一步中的报头中的信息取出数据长度，按照相应长度接收
 - 实例   
-服务端     
+	- 服务端     
+	
+		```python
+		from socket import *
+		import subprocess
+		import hashlib
+		import json
+		import struct
+		
+		servers = socket(AF_INET, SOCK_STREAM)
+		servers.bind(('127.0.0.1', 20000))
+		servers.listen(5)
+		print('The server is started...')
+		
+		# Link loop
+		while True:
+		    print('Waiting for client links...')
+		    connection, client_address = servers.accept()
+		    print('Has been linked %s' % client_address[0])
+		
+		    # Communication cycle
+		    while True:
+		        try:
+		            cmd = connection.recv(1024)
+		            if not cmd:
+		                break
+		
+		            # Execute the client's command
+		            result = subprocess.Popen(cmd.decode('utf-8'), shell=True,
+		                                      stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		            stdout = result.stdout.read()
+		            stderr = result.stderr.read()
+		
+		            md5_obj = hashlib.md5()
+		            md5_obj.update(stdout + stderr)
+		
+		            #  Make the header
+		            header_dic = {
+		                'total_size': len(stdout) + len(stderr),
+		                'md5': md5_obj.hexdigest()}
+		            header_bytes = json.dumps(header_dic).encode('utf-8')
+		
+		            # Make the fixed length of header
+		            header_length = struct.pack('i', len(header_bytes))
+		
+		            # Send the fixed length of header
+		            connection.send(header_length)
+		
+		            # Send the header
+		            connection.send(header_bytes)
+		
+		            # Send the result
+		            connection.send(stdout)
+		            connection.send(stderr)
+		
+		        except Exception as error_info:
+		            print(error_info)
+		            break
+		
+		    connection.close()
+		
+		# servers.close()
+		```
+	
+	- 客户端   
 
-```python
-from socket import *
-import subprocess
-import hashlib
-import json
-import struct
-
-servers = socket(AF_INET, SOCK_STREAM)
-servers.bind(('127.0.0.1', 20000))
-servers.listen(5)
-print('The server is started...')
-
-# Link loop
-while True:
-    print('Waiting for client links...')
-    connection, client_address = servers.accept()
-    print('Has been linked %s' % client_address[0])
-
-    # Communication cycle
-    while True:
-        try:
-            cmd = connection.recv(1024)
-            if not cmd:
-                break
-
-            # Execute the client's command
-            result = subprocess.Popen(cmd.decode('utf-8'), shell=True,
-                                      stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            stdout = result.stdout.read()
-            stderr = result.stderr.read()
-
-            md5_obj = hashlib.md5()
-            md5_obj.update(stdout + stderr)
-
-            #  Make the header
-            header_dic = {
-                'total_size': len(stdout) + len(stderr),
-                'md5': md5_obj.hexdigest()}
-            header_bytes = json.dumps(header_dic).encode('utf-8')
-
-            # Make the fixed length of header
-            header_length = struct.pack('i', len(header_bytes))
-
-            # Send the fixed length of header
-            connection.send(header_length)
-
-            # Send the header
-            connection.send(header_bytes)
-
-            # Send the result
-            connection.send(stdout)
-            connection.send(stderr)
-
-        except Exception as error_info:
-            print(error_info)
-            break
-
-    connection.close()
-
-# servers.close()
-```
-客户端   
-
-```python
-from socket import *
-import struct
-import json
-import hashlib
-
-client = socket(AF_INET, SOCK_STREAM)
-client.connect(('127.0.0.1', 20000))
-
-while True:
-    cmd = input('[+_+] ').strip()
-    if not cmd:
-        continue
-
-    client.send(cmd.encode('utf-8'))
-
-    # Receive the fixed length of header
-    header_length = struct.unpack('i', client.recv(4))
-
-    # Receive the header
-    header_bytes = client.recv(header_length[0])
-    header_dic = json.loads(header_bytes.decode('utf-8'))
-
-    # Receive the message
-    total_size = header_dic['total_size']
-    receive_size = 0
-    total_data = b''
-    while receive_size < total_size:
-        receive_data = client.recv(1024)
-        receive_size += len(receive_data)
-        total_data += receive_data
-
-    md5_obj = hashlib.md5()
-    md5_obj.update(total_data)
-    if md5_obj.hexdigest() == header_dic['md5']:
-        print(total_data.decode('gbk'))
-    else:
-        print('Data is not complete.')
-```
+		```python
+		from socket import *
+		import struct
+		import json
+		import hashlib
+		
+		client = socket(AF_INET, SOCK_STREAM)
+		client.connect(('127.0.0.1', 20000))
+		
+		while True:
+		    cmd = input('[+_+] ').strip()
+		    if not cmd:
+		        continue
+		
+		    client.send(cmd.encode('utf-8'))
+		
+		    # Receive the fixed length of header
+		    header_length = struct.unpack('i', client.recv(4))
+		
+		    # Receive the header
+		    header_bytes = client.recv(header_length[0])
+		    header_dic = json.loads(header_bytes.decode('utf-8'))
+		
+		    # Receive the message
+		    total_size = header_dic['total_size']
+		    receive_size = 0
+		    total_data = b''
+		    while receive_size < total_size:
+		        receive_data = client.recv(1024)
+		        receive_size += len(receive_data)
+		        total_data += receive_data
+		
+		    md5_obj = hashlib.md5()
+		    md5_obj.update(total_data)
+		    if md5_obj.hexdigest() == header_dic['md5']:
+		        print(total_data.decode('gbk'))
+		    else:
+		        print('Data is not complete.')
+		```
 
 ### <span id='2.6'>2.6 基于UDP的套接字</span>
 
@@ -523,48 +527,48 @@ while True:
 [基于线程](https://chuann.cc/Intermediate_Python/forking.png)
 
 - 服务端
-
-```python
-import socketserver
-
-
-class MyServer(socketserver.BaseRequestHandler):
-
-    def handle(self):
-        print(self.request)
-        while True:
-            try:
-                cmd = self.request.recv(1024)
-                if not cmd:
-                    break
-                self.request.send(cmd.upper())
-            except Exception as error_info:
-                print(error_info)
-                break
-        self.request.close()
-
-if __name__ == '__main__':
-    server = socketserver.ThreadingTCPServer(('192.168.20.76', 8000), MyServer)
-    server.allow_reuse_address = True
-    server.serve_forever()
-```
+	
+	```python
+	import socketserver
+	
+	
+	class MyServer(socketserver.BaseRequestHandler):
+	
+	    def handle(self):
+	        print(self.request)
+	        while True:
+	            try:
+	                cmd = self.request.recv(1024)
+	                if not cmd:
+	                    break
+	                self.request.send(cmd.upper())
+	            except Exception as error_info:
+	                print(error_info)
+	                break
+	        self.request.close()
+	
+	if __name__ == '__main__':
+	    server = socketserver.ThreadingTCPServer(('192.168.20.76', 8000), MyServer)
+	    server.allow_reuse_address = True
+	    server.serve_forever()
+	```
 
 - 客户端
-
-```python
-import socket
-
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(('192.168.20.76', 8000))
-
-while True:
-    msg = input('[+_+] ').strip()
-    if not msg:
-        continue
-    client.send(msg.encode('utf-8'))
-    result = client.recv(1024)
-    print(result.decode('utf-8'))
-```
+	
+	```python
+	import socket
+	
+	client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	client.connect(('192.168.20.76', 8000))
+	
+	while True:
+	    msg = input('[+_+] ').strip()
+	    if not msg:
+	        continue
+	    client.send(msg.encode('utf-8'))
+	    result = client.recv(1024)
+	    print(result.decode('utf-8'))
+	```
 
 
 ## <span id='3.0'>3 练习：ftp文件上传下载</span>

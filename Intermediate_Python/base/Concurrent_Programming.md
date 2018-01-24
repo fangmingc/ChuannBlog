@@ -3,17 +3,21 @@
 - [进程](#2.0)
 - [线程](#3.0)
 - [协程](#4.0)
-- [相关模块](#5.0)
-	- [multiprocessing](#5.1)
-	- [threading](#5.2)
-	- [concorrent.futures](#5.3)
-	- [gevent](#5.4)
-	- [queue](#5.5)
 - [相关扩展](#6.0)
 	- [互斥锁](#6.1)
 	- [生产者消费者模型](#6.2)
 	- [回调函数](#6.3)
 	- [I/O模型](#6.4)
+- 相关模块
+	- 进程、线程
+		- [multiprocessing](multiprocessing.md)
+		- [threading](threading.md)
+		- [concorrent.futures](concorrent.futures.md)
+	- 协程
+		- [gevent](gevent.md)
+		- [asyncio](asyncio.md)
+		- [aiohttp](aiohttp.md)
+	- [queue](queue.md)
 
 ## <span id="1.0">并发</span>
 并发实现的核心原理:
@@ -60,7 +64,8 @@
 	- 进程由程序、数据和进程控制块三部分组成
 
 ### 状态
-![](https://github.com/fangmingc/ChuannBlog/blob/master/Intermediate_Python/base/%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81.png)
+<img src="https://github.com/fangmingc/ChuannBlog/blob/master/Intermediate_Python/base/%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81.png">
+
 - 运行   
 	1. 程序等待I/O，进入阻塞   
 	2. 进程运行时间过长，调度程序选择另一个进程，该进程进入就绪  
@@ -96,205 +101,16 @@
 5. 父进程不影响子进程的运行
 
 ## <span id="4.0">协程</span>
-- 协程是一种用户态的轻量级线程，即协程是由用户程序自己控制调度的
+- 协程是一种用户态的轻量级线程，并不真实存在，是仿造进程和线程在应用程序层面的实现，即协程是由用户程序自己控制调度的
 - 可以在一个线程下实现并发效果
 
 ### 协程特点
 - 必须在只有一个单线程里实现并发
 - 修改共享数据不需加锁
 - 用户程序里自己保存多个控制流的上下文栈
-- 附加：一个协程遇到IO操作自动切换到其它协程（如何实现检测IO，yield、greenlet都无法实现，就用到了gevent模块（select机制））
-
-## <span id="5.0">相关模块</span>
-### <span id="5.1">multiprocessing模块</span>
-基本与threading相同
-
-#### Process类
-##### 实例化定义传入参数
-- target   
-	- 指定进程的任务函数地址
-- args   
-	- 指定任务函数的参数，元组格式传入
-- kwargs   
-	- 指定任务函数的参数，字典格式传入
-- callback   
-	- 指定回调函数地址
-
-##### 方法
-- start   
-	- 向操作系统发送进程开启请求(开进程必须有的方法)
-- join   
-	- 主进程等待子进程结束
-- terminate   
-	- 终止进程(该操作不会终止该进程的子进程)
-
-##### 属性
-- daemon  
-	- True时设置子进程为主进程守护进程
-	- 当主进程代码执行完毕，守护进程被回收
-	- 必须在start方法启用前设定
-- ident   
-	- 获取进程的id
-- pid   
-	- 获取进程的id
-
-##### 方法
-- cpu_count   
-	- 查看计算机cpu数
-- current_process   
-	- 获取当前进程对象，返回结果同Process类实例化对象
-
-#### Pool类
-- numprocess
-	- 设置的最大进程数
-- initializer
-- initargs
-
-### <span id="5.2">threading模块</span>
-#### Thread类
-##### 实例化定义传入参数
-- target   
-	- 指定进程的任务函数地址
-- args   
-	- 指定任务函数的参数，元组格式传入
-- kwargs   
-	- 指定任务函数的参数，字典格式传入
-- callback   
-	- 指定回调函数地址
-
-##### 方法   
-- start
-	- 向操作系统发送线程开启请求(开线程必须有的方法)
-- join
-	- 主线程等待线程结束
-	- 参数timeout，设定等待时间
-- getName
-	- 获取当前线程名
-- isDaemon   
-	- 判断当前线程是否是守护线程
-- isAlive   
-	- 判断当前线程是否未结束
-
-##### 属性
-- daemon
-	- True时设置线程为主线程的守护线程
-	- 当主线程等待所有非守护线程结束后，守护线程被回收
-	- 必须在startfan方法启用前使用
-- name
-	- 当前线程名
-- ident
-	- 当前线程id
-
-#### Queue类
-- 参数maxsize
-	- 队列允许的最大项数，省略则无限制
-- put
-	- 插入数据到队列中
-	- 参数blocked 
-		- False时，当Queue已满则抛出异常
-	- 参数timeout
-		- blocked为True时，当Queue已满时，阻塞指定时长，超时则抛出异常
-- get
-	- 从队列读取并且删除一个元素
-	- 参数blocked
-		- False时，当Queue为空立即抛出异常
-	- 参数timeout 
-		- blocked为True时，Queue为空时,阻塞指定时长，超时抛出异常
-- close
-	- 关闭队列，防止队列加入更多数据
-	- 后台线程会继续写入已经加入队列但尚未写入的数据
-- JoinableQueue子类
-	- 生产者消费者模型适用
-	- task_down
-		- 消费者使用此方法表示q.get()的返回项目已经被处理
-	- join
-		- 生产者调用此方法进行阻塞，知道队列之中所有项目均被处理，阻塞会持续到队列每个项目均调用q.task_done()
-
-#### Lock类
-- acquire
-	- 当前进程/线程独享下文资源，直到l.release()
-- release
-	- 解除当前进程/线程独享上文资源的状态
-- RLock递归锁
-	- 为了解决加锁造成的死锁现象
-- Semaphore信号量
-	- 可以设置使用资源的进程/线程数目上限，类似进程池
-
-#### Manager类
-#### Event类
-- isset
-	- 返回Event状态量
-- wait
-	- 如果状态量为False，则阻塞；状态量为True，停止阻塞
-	- 参数timeout，设置最大等待时间
-- set
-	- 设置状态量为True
-- clear
-	- 设置状态量为False
-
-#### Timer类
-#### 方法
-- currentThread
-- get_ident
-- activeCount
-- enumerate
-- main_thread
-
-### <span id="5.3">concurrent.futures模块</span>
-#### Executor类
-- submit
-	- fn 提交的任务
-	- \*args,\*\*kwargs 任务所需的参数
-- shutdown
-	- 集合了进程/线程池的close和join方法
-	- 参数wait，设置最大等待时长
-- map
-	- 和内置函数map类似
-- 单个进程/线程的方法
-	- result
-
-#### ProcessPoolExecutor类
-- 实例化参数
-	- 不指定则为CPU核数
-- 其余方法继承Executor抽象类
-
-#### ThreadPoolExecutor类
-- 实例化参数
-	- 不指定则为CPU核数乘以5
-- 其余方法继承Executor抽象类
-
-### <span id="5.4">gevent模块</span>
-- monkey
-- spawn
-- join
-- joinall
-
-
-### <span id="5.5">queue模块</span>
-#### Queue类
-- 就是普通队列
-- put
-	- 在队列末端放入数据
-- get
-	- 在队列最前端取走数据
-
-#### LifoQueue类
-- 模拟堆栈，先进后出/后进先出
-- put
-	- 在堆栈最上面放入
-- get
-	- 从堆栈最上面取数据
-
-#### PriorityQueue类
-- 优先级队列
-- put
-	- 参数priority
-		- 数据的优先级，数字越小越高
-	- 参数data
-		- 存放的数据
-- get
-	- 按照优先级取数据
-
+- 注意：
+	- 在一个线程下不同任务的切换可由yield，greenlet等实现，但这并不属于协程
+	- 必须做到能在遇到IO操作才切换到其它协程，才算真的协程
 
 ## <span id="6.0">相关扩展</span>
 ### <span id="6.1">互斥锁</span>
@@ -371,3 +187,4 @@
 #### I/O多路复用
 #### 异步I/O
 #### 信号驱动I/O（不常用）
+
