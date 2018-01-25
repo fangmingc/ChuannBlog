@@ -5,14 +5,13 @@
 - [html](html.md)
 - [CSS](CSS.md)
 - [JavaScript](JavaScript.md)
-
+	- [JQuery\*](jQuery.md)
 - [ajax](Ajax.md)
 
 - 框架
-	- [JQuery\*](jQuery.md)
 	- [Bootstrap](Bootstrap.md)
 	- React
-	- Vue
+	- [Vue](Vue.md)
 
 - 插件
 	- CSS图标库：Font Awesome

@@ -21,3 +21,24 @@
 - 实例化参数
 	- 不指定则为CPU核数乘以5
 - 其余方法继承Executor抽象类
+
+- 实例
+
+	```python
+	from threading import get_ident
+	from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+	import time
+	
+	
+	def task(num):
+	    print(get_ident(), "开始运行", num)
+	    time.sleep(1)
+	    print(get_ident(), "结束运行")
+	
+	
+	pool = ThreadPoolExecutor(3)
+	for i in range(5):
+	    pool.submit(task, i)
+	    pool.shutdown()
+	```
+

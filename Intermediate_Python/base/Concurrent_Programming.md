@@ -1,13 +1,12 @@
-# 并发编程
-- [并发](#1.0)
+# 高性能基础
+- [基本概念](#1.0)
 - [进程](#2.0)
 - [线程](#3.0)
 - [协程](#4.0)
 - [相关扩展](#6.0)
 	- [互斥锁](#6.1)
 	- [生产者消费者模型](#6.2)
-	- [回调函数](#6.3)
-	- [I/O模型](#6.4)
+	- [I/O模型](#6.3)
 - 相关模块
 	- 进程、线程
 		- [multiprocessing](multiprocessing.md)
@@ -19,16 +18,48 @@
 		- [aiohttp](aiohttp.md)
 	- [queue](queue.md)
 
-## <span id="1.0">并发</span>
-并发实现的核心原理:
-- 任务之间的切换
-- 保存任务切换前的状态
+## <span id="1.0">基本概念</span>
+### 同步、异步、回调
+- 同步、异步指的是提交任务的方式
+- 同步指的是提交一个任务，等待任务结束，再提交下一个任务，再等待。。。
+- 异步指的是同时提交多个任务，不用等任务结束了才提交下一个任务
+- 回调是在异步提交任务的时候才有的概念
+	- 同步提交任务，任务结束就能获取到结果，对结果进一步处理
+	- 异步提交任务，不会等到任务结束，那么结果去哪里找?
+	- 针对这个问题，才有了回调机制的概念，在提交任务的时候指定任务结束后指定处理结果的新任务，便称之为回调
 
-### 多道技术
-- 多道技术中的多道指的是多道任务，多道技术的实现是为了解决多个任务竞争或者说共享同一个资源（比如cpu）的有序调度问题，实现多个任务**伪并行**的效果，称之为并发
-- 简单化理解就是竞争cpu资源的就是进程，竞争进程资源的就是线程，竞争线程资源的就是协程
+### 串行、并行、并发
+- 串行
+	- 一个任务启动，运行，结束，第二个任务启动，运行，结束，。。。
+	- 多个任务挨个执行，不中途执行其他任务的的执行方式称之为串行
+		- 如一台ATM，人们只能排着队一个个的去取钱
+- 并行
+	- 多个任务同时运行，互不干扰的各自执行称之为并行
+		- 如多台ATM，人可以去不同ATM取钱
+- 并发
+	- 多个任务看起来像是在并行，称之为伪并行，本质上是串行
+		- 例子：共有A、B、C三个任务
+			- A首先开始，运行一会儿，然后保存A此时的状态，
+			- B开始运行，运行一会儿后，保存B此时的状态，
+			- C开始运行，运行一会儿，保存C此时的状态，
+			- 然后切换到A，读取之前A的状态，继续运行A，
+			- 如此循环
+		- 从上面的例子可以看出，同一时间只有一个任务在执行，三个任务并没有像并行那样，同时运行
+		- 需要注意的是，在计算机中，CPU负责执行任务，CPU执行任务的速度远远超过人类的反应速度，因此，在CPU并发执行三个任务的时候，人类就会感觉出三个任务好像同时在执行
+	- 并发实现的核心原理:
+		- 任务之间的切换
+		- 保存任务切换前的状态
+- 参考阅读：[操作系统](http://chuann.cc/Beginning_of_Python/1Computer_Basics/1.2Operating_System.html)
 
-详细参阅[操作系统](http://chuann.cc/Beginning_of_Python/1Computer_Basics/1.2Operating_System.html)
+### 效率问题
+- 在实际生产中
+	- 并行的代价是相对较高昂的(需求多核CPU)，
+	- 串行的代价是运行时间相对较长，
+	- 而并发只是特殊的串行，本质上还是串行，不过并发吸取了并行的一些观念，部分时候会比串行效率高
+- 评价执行任务的效率问题，首先要考虑任务的性质：计算密集型、IO密集型
+- 通常提升效率的做法就是让CPU闲不下来，利用率100%
+	- 对于计算密集型任务，只有多核CPU并行才能提升效率，并发并不能提高计算密集型任务的执行效率
+	- 对于IO密集型任务，当出现IO阻塞，CPU就会空闲等待任务的IO结束，最好的做法就是CPU继续执行下一个任务，因此并发可以很好的解决问题
 
 ## <span id="2.0">进程</span>
 进程的概念起源于操作系统，是操作系统最核心的概念。  
@@ -47,9 +78,9 @@
 	- 在当代面向线程设计的计算机结构中，进程是线程的容器
 - 主要特点
 	1. 进程是一个实体   
-	每一个进程都有它自己的地址空间，包括文本区域（text region）、数据区域（data region）、堆栈（stack region）
+		- 每一个进程都有它自己的地址空间，包括文本区域（text region）、数据区域（data region）、堆栈（stack region）
 	2. 进程是一个执行中的程序   
-	程序是一个没有生命的实体，只有处理器赋予程序生命时（操作系统执行之），它才能成为一个活动的实体
+		- 程序是一个没有生命的实体，只有处理器赋予程序生命时（操作系统执行之），它才能成为一个活动的实体
 
 ### 特征
 1. 动态性   
@@ -73,6 +104,39 @@
 	3. 调度程序选择进程，进入运行  
 - 阻塞  
 	4. I/O操作出现结果，进入就绪  
+
+### python使用多进程实现爬虫
+```python
+from os import getpid
+from multiprocessing import Process
+import requests
+
+
+def parse_page(res):
+    print(getpid(), "正在解析", res.url, len(res.text))
+
+
+def get_page(_url, callback=parse_page):
+    print(getpid(), "GET", _url)
+    response = requests.get(_url)
+    if response.status_code == 200:
+        callback(response)
+
+
+urls = [
+    "https://www.baidu.com",
+    "https://www.cnblogs.com",
+    "https://www.python.org",
+    "https://www.github.com"
+]
+
+
+if __name__ == '__main__':
+    for url in urls:
+        p = Process(target=get_page, args=(url, ))
+        p.start()
+```
+
 
 ## <span id="3.0">线程</span>
 ### 概念
@@ -100,6 +164,37 @@
 4. 进程只能控制自己的子进程
 5. 父进程不影响子进程的运行
 
+### python使用多线程实现爬虫
+```python
+from threading import Thread, get_ident
+import requests
+
+
+def parse_page(res):
+    print(get_ident(), "正在解析", res.url, len(res.text))
+
+
+def get_page(_url, callback=parse_page):
+    print(get_ident(), "GET", _url)
+    response = requests.get(_url)
+    if response.status_code == 200:
+        callback(response)
+
+
+urls = [
+    "https://www.baidu.com",
+    "https://www.cnblogs.com",
+    "https://www.python.org",
+    "https://www.github.com"
+]
+
+
+for url in urls:
+    t = Thread(target=get_page, args=(url,))
+    t.start()
+```
+
+
 ## <span id="4.0">协程</span>
 - 协程是一种用户态的轻量级线程，并不真实存在，是仿造进程和线程在应用程序层面的实现，即协程是由用户程序自己控制调度的
 - 可以在一个线程下实现并发效果
@@ -111,6 +206,41 @@
 - 注意：
 	- 在一个线程下不同任务的切换可由yield，greenlet等实现，但这并不属于协程
 	- 必须做到能在遇到IO操作才切换到其它协程，才算真的协程
+
+### python使用协程实现爬虫
+```python
+from gevent import monkey;monkey.patch_all()
+from gevent.threading import get_ident
+import gevent
+
+import requests
+
+
+def parse_page(res):
+    print(get_ident(), "正在解析", res.url, len(res.text))
+
+
+def get_page(_url, callback=parse_page):
+    print(get_ident(), "GET", _url)
+    response = requests.get(_url)
+    if response.status_code == 200:
+        callback(response)
+
+
+urls = [
+    "https://www.baidu.com",
+    "https://www.cnblogs.com",
+    "https://www.python.org",
+    "https://www.github.com"
+]
+
+g_list = []
+for url in urls:
+    g = gevent.spawn(get_page, url)
+    g_list.append(g)
+gevent.joinall(g_list)
+```
+
 
 ## <span id="6.0">相关扩展</span>
 ### <span id="6.1">互斥锁</span>
@@ -139,6 +269,31 @@
 	- ‘锁’可以保证共享资源的数据安全，在共享资源被锁住的期间，其他进程/线程不可以对共享数据操作
 	- 同一时间只有一个进程/线程处理数据，牺牲了并发效果，变成了串行，保证了数据安全
 
+- 互斥锁简单实现
+
+	```python
+	from threading import Thread, Lock, get_ident
+	import time
+	
+	
+	lock = Lock()
+	
+	
+	def task():
+	    lock.acquire()
+	    
+	    print(get_ident(), "开始执行任务")
+	    time.sleep(2)
+	    print(get_ident(), "结束任务")
+	    
+	    lock.release()
+	
+	
+	for _ in range(5):
+	    t = Thread(target=task)
+	    t.start()
+	```
+
 #### 全局解释器锁（GIL）(Global Interpreter Lock)
 - CPython特性
 	- CPython的内存管理不是线程安全的。GIL已经存在，其他功能已经发展到依赖于它的实施。
@@ -156,10 +311,89 @@
 - 互斥锁引起的死锁
 	- 当加锁资源超过两个且进程/线程超过两个
 	- 一个进程/线程占有了A资源，进入等待B资源的阻塞状态，另一个进程/线程占有了B资源，进入等待A资源的阻塞状态，两个进程/线程互相处于阻塞对方所占有的资源的状态，且无法释放自己的资源，进入死锁状态
-	- 解决办法 递归锁：RLock类
-- 更广泛的死锁解决办法
+- 死锁解决办法
+	- 递归锁：RLock类
+		- 只能解决对同一把锁的死锁
 	- 增加资源
 	- 银行家算法
+- 死锁实例1
+	- 该实例中仅有一个线程就会造成死锁
+	- 可以使用RLock解决
+
+	```python
+	from threading import Thread, Lock, get_ident
+	import time
+	
+	A = Lock()
+	
+	
+	def task():
+	
+	    print(get_ident(), "正在等待A资源")
+	    A.acquire()
+	    print(get_ident(), "拿到A资源")
+	
+	    print(get_ident(), "第二次等待A资源")
+	    A.acquire()
+	    print(get_ident(), "第二次拿到A资源")
+	
+	    time.sleep(1)
+	
+	    A.release()
+	    print(get_ident(), "A资源使用完毕")
+	    A.release()
+	    print(get_ident(), "第二次A资源使用完毕")
+	
+	
+	for _ in range(1):
+	    t = Thread(target=task)
+	    t.start()
+	```
+
+- 死锁实例2
+	- 该实例中，如果只有一个线程，则不存在问题
+	- 但是当存在两个以上线程时就会出现某两个线程互相等待对方持有的资源，产生死锁
+
+	```python
+	from threading import Thread, Lock, get_ident
+	import time
+	
+	A = Lock()
+	B = Lock()
+	
+	
+	def task():
+	
+	    print(get_ident(), "正在等待A资源")
+	    A.acquire()
+	    print(get_ident(), "拿到A资源")
+	
+	    print(get_ident(), "正在等待B资源")
+	    B.acquire()
+	    print(get_ident(), "拿到B资源")
+	
+	    time.sleep(1)
+	
+	    A.release()
+	    print(get_ident(), "A资源使用完毕")
+	
+	    time.sleep(1)
+	
+	    print(get_ident(), "第二次等待A资源")
+	    A.acquire()
+	    print(get_ident(), "第二次拿到A资源")
+	    time.sleep(1)
+	    A.release()
+	    print(get_ident(), "A资源使用完毕")
+	
+	    B.release()
+	    print(get_ident(), "B资源使用完毕")
+	
+	
+	for _ in range(3):
+	    t = Thread(target=task)
+	    t.start()
+	```
 
 ### <span id="6.2">生产者消费者模型</span>
 - 共享资源
@@ -173,9 +407,7 @@
 - 生产者和消费者不直接交流，通过缓冲区交流，这是异步且并发的
 - 缓冲区在Python中通常用消息队列实现
 
-### <span id="6.3">回调函数</span>
-
-### <span id="6.4">I/O模型</span>
+### <span id="6.3">I/O模型</span>
 #### 同步/异步/阻塞/非阻塞
 - 同步/异步
 	- 描述提交任务的规则

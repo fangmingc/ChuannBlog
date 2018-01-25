@@ -8,6 +8,23 @@
 	- 指定任务函数的参数，元组格式传入
 - kwargs   
 	- 指定任务函数的参数，字典格式传入
+- 示例
+
+	```python
+	from threading import Thread, get_ident
+	import time
+	
+	
+	def task(num):
+	    print(get_ident(), "开始运行", num)
+	    time.sleep(1)
+	    print(get_ident(), "结束运行")
+	
+	
+	for i in range(5):
+	    t = Thread(target=task, args=(i,))
+	    t.start()
+	```
 
 #### 方法   
 - start
@@ -63,11 +80,10 @@
 - release
 	- 解除当前进程/线程独享上文资源的状态
 - RLock递归锁
-	- 为了解决加锁造成的死锁现象
+	- 可以解决单线程加锁造成的死锁现象
 - Semaphore信号量
-	- 可以设置使用资源的进程/线程数目上限，类似进程池
-
-### Manager类
+	- 可以设置使用资源的进程/线程数目上限
+	- 即同一把锁可以被使用的次数，默认锁只能用一次，递归锁除外
 
 ### Event类
 - isset

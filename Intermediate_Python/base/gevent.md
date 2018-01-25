@@ -5,7 +5,6 @@
 	- patch_all()
 		- 给python中的有IO阻塞的模块打补丁，让阻塞可以被gevent识别
 		- eg:time.sleep()就不能被gevent识别，打上补丁后就可以
-
 - pool
 	- 协程池
 
@@ -15,11 +14,9 @@
 	```python
 	# 创建一个协程对象g1，spawn括号内第一个参数是函数名，如eat，后面可以有多个参数，可以是位置实参或关键字实参，都是传给函数eat的
 	g1 = gevent.spawn(func, 1, 2, 3, x=4, y=5)
-	
 	g2 = gevent.spawn(func2)
 	
 	g1.join() # 等待g1结束
-	
 	g2.join() # 等待g2结束
 	
 	# 或者上述两步合作一步：gevent.joinall([g1,g2])
