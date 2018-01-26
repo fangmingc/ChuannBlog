@@ -7,6 +7,7 @@
 - [Spiders](#4)
 - [Items&Pipeline](#5)
 - [Middeware](#6)
+- [selectors](#7)
 
 ### <span id="1">安装</span>
 - 先装twisted
@@ -220,6 +221,78 @@
 	```
 
 #### 去重
+- 去重规则应该多个爬虫共享，但凡一个爬虫爬取了，其他都不应该再爬
+- 方法一：
+	1. 新增类属性
+		- visited=set() #类属性
+	2. 回调函数parse方法内：
+
+		```python
+		def parse(self, response):
+		    if response.url in self.visited:
+		        return None
+		    .......
+		
+		    self.visited.add(response.url) 
+		```
+	- 方法一改进：
+		- 针对url可能过长，所以我们存放url的hash值
+			
+			```python
+			def parse(self, response):
+			        url=md5(response.request.url)
+			    if url in self.visited:
+			        return None
+			    .......
+			
+			    self.visited.add(url) 
+			```
+- 方法二：启用Scrapy自带去重功能
+	- 配置文件：
+
+		```python
+		DUPEFILTER_CLASS = 'scrapy.dupefilter.RFPDupeFilter' #默认的去重规则帮我们去重，去重规则在内存中
+		DUPEFILTER_DEBUG = False
+		JOBDIR = "保存范文记录的日志路径，如：/root/"  # 最终路径为 /root/requests.seen，去重规则放文件中
+		```
+	- scrapy自带去重规则默认为RFPDupeFilter，只需要我们指定
+	- Request(...,dont_filter=False) ，如果dont_filter=True则告诉Scrapy这个URL不参与去重。
+
+- 方法三：
+	- 我们也可以仿照RFPDupeFilter自定义去重规则，
+	- 看源码，仿照BaseDupeFilter
+		- `from scrapy.dupefilter import RFPDupeFilter`
+	- 步骤一：在项目目录下自定义去重文件dup.py
+
+		```python
+		class UrlFilter(object):
+		    def __init__(self):
+		        self.visited = set() #或者放到数据库
+		
+		    @classmethod
+		    def from_settings(cls, settings):
+		        return cls()
+		
+		    def request_seen(self, request):
+		        if request.url in self.visited:
+		            return True
+		        self.visited.add(request.url)
+		
+		    def open(self):  # can return deferred
+		        pass
+		
+		    def close(self, reason):  # can return a deferred
+		        pass
+		
+		    def log(self, request, spider):  # log that a request has been filtered
+		        pass
+		```
+
+	- 步骤二：配置文件settings.py：
+
+		```python
+		DUPEFILTER_CLASS = '项目名.dup.UrlFilter'
+		```
 
 ###  <span id="5">Items，pipeline</span>
 - 配置文件
@@ -281,54 +354,113 @@
 	```
 
 ###  <span id="6">Middeware</span>
+- scrapy的中间件相当于django1.6左右版本以及之前的中间件
+- eg:有三层中间件
+	- A进，A出
+	- B进，B出
+	- C进，C出
+	- 执行顺序A进->B进->C进----C出->B出->A出
+	- 当在A进终止(异常或退出中间件)，从C出开始执行
+
 #### 爬虫中间件
 - 基本使用
+	- from_crawler
+		- 类方法，用于实例化中间件
+	- process_spider_input(self,response, spider)
+		- 路过此处表示已经获取到下载内容
+		- 必须返回None或抛出一个异常
+			- 返回None，继续执行response(下一个中间件的process_input)，抵达spider，然后逆序中间件执行process_output
+			- 抛出异常，不再执行其他中间件，抵达Request的errback参数指定的异常处理函数，然后逆序中间件执行process_exception
+				- 在start_reqeust中定义的Request(url,callback=right_parse,errback=error_handle_func)
+	- process_spider_output(self,response, result, spider)
+		- 已经经过spider的解析，准备传送到pipline
+		- result为来自异常处理机制的数据，为生成器
+		- 返回值必须是可迭代对象
+	- process_spider_exception(self,response, exception, spider)
+		- 爬虫中间件执行过程中出现异常，首先由sipder中生成Request时指定的异常处理函数处理
+		- 若spider没有处理，则由本函数处理
+		- 返回值为None表示本函数不处理，交由下一个中间件执行，若所有中间件都没有处理，由engine抛出异常
+		- 返回值应该是Response对象、字典、items对象，结果会被送到管道，然后开始中间件的output流程
+	- process_start_requests(self,start_requests, spider)
+		- 处理第一个request的函数，可用来添加请求头
+	- spider_opened
+		- 中间件启用后，到爬虫打开时调用
 
 	```python
-	class SpiderMiddleware(object):
+	class AmazonSpiderMiddleware(object):
+	    # Not all methods need to be defined. If a method is not defined,
+	    # scrapy acts as if the spider middleware does not modify the
+	    # passed objects.
 	
-	    def process_spider_input(self,response, spider):
-	        """
-	        下载完成，执行，然后交给parse处理
-	        :param response: 
-	        :param spider: 
-	        :return: 
-	        """
-	        pass
+	    @classmethod
+	    def from_crawler(cls, crawler):
+	        # This method is used by Scrapy to create your spiders.
+	        s = cls()
+	        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
+	        return s
 	
-	    def process_spider_output(self,response, result, spider):
-	        """
-	        spider处理完成，返回时调用
-	        :param response:
-	        :param result:
-	        :param spider:
-	        :return: 必须返回包含 Request 或 Item 对象的可迭代对象(iterable)
-	        """
-	        return result
+	    def process_spider_input(self, response, spider):
+	        # Called for each response that goes through the spider
+	        # middleware and into the spider.
 	
-	    def process_spider_exception(self,response, exception, spider):
-	        """
-	        异常调用
-	        :param response:
-	        :param exception:
-	        :param spider:
-	        :return: None,继续交给后续中间件处理异常；含 Response 或 Item 的可迭代对象(iterable)，交给调度器或pipeline
-	        """
+	        # Should return None or raise an exception.
 	        return None
 	
+	    def process_spider_output(self, response, result, spider):
+	        # Called with the results returned from the Spider, after
+	        # it has processed the response.
 	
-	    def process_start_requests(self,start_requests, spider):
-	        """
-	        爬虫启动时调用
-	        :param start_requests:
-	        :param spider:
-	        :return: 包含 Request 对象的可迭代对象
-	        """
-	        return start_requests
+	        # Must return an iterable of Request, dict or Item objects.
+	        for i in result:
+	            yield i
+	
+	    def process_spider_exception(self, response, exception, spider):
+	        # Called when a spider or process_spider_input() method
+	        # (from other spider middleware) raises an exception.
+	
+	        # Should return either None or an iterable of Response, dict
+	        # or Item objects.
+	        pass
+	
+	    def process_start_requests(self, start_requests, spider):
+	        # Called with the start requests of the spider, and works
+	        # similarly to the process_spider_output() method, except
+	        # that it doesn’t have a response associated.
+	
+	        # Must return only requests (not items).
+	        for r in start_requests:
+	            yield r
+	
+	    def spider_opened(self, spider):
+	        spider.logger.info('Spider opened: %s' % spider.name)
 	```
 
 #### 下载中间件
+- 基本使用
+	- from_crawler
+		- 类方法，用于实例化中间件
+	- process_request(self, request, spider)
+		- 请求即将被doenloader执行之前
+		- 常用来添加请求头、更换代理IP、设置超时时间等
+		- 返回None表示正常
+		- 返回Response对象，停止process_request的执行，开始执行process_response
+		- 返回Request对象，停止中间件的执行，将Request重新调度器
+		- 抛出异常，执行中间件的异常流程，然后交给sipder生成Request时errback指定的异常处理函数
+	- process_response(self, request, response, spider)
+		- downloader已经得到请求的响应之后
+		- 常用来检测响应的状态、是否成功等
+		- 返回Response对象,转交给其他中间件process_response,最后交给engine
+		- 返回Request 对象，停止中间件，request会被重新调度下载
+		- 抛出异常，执行中间件的异常流程，然后交给sipder生成Request时errback指定的异常处理函数
+	- process_exception(self, request, exception, spider)
+		- 处理下载中间件出现的异常
+		- 返回None表示不处理异常，交由后续函数处理
+		- 返回response对象表示已处理异常，执行output流程
+		- 返回request对象表示已处理异常，执行input流程
+	- spider_opened
+		- 中间件启用后，到爬虫打开时调用
 - 使用代理
+	- TODO
 
 	```python
 	#1、与middlewares.py同级目录下新建proxy_handle.py
@@ -339,7 +471,6 @@
 	
 	def delete_proxy(proxy):
 	    requests.get("http://127.0.0.1:5010/delete/?proxy={}".format(proxy))
-	    
 	    
 	
 	#2、middlewares.py
@@ -398,3 +529,98 @@
 	        return request
 	```
 
+### <span id="7">Selectors</span>
+- scrapy提供的方便的对文档元素的查询
+	- xpath,按照文档树结构的查询
+	- css，按照css选择器的方式查询
+	- re,按照正则表达式查询
+		- 查询结构通用方法
+			- from scrapy.selector.unified import Selector
+			- extract,查询结果都是列表，列表元素都是seletors对象，此方法取对象保存的文档数据
+			- extract_first,只取列表第一个元素
+			- 嵌套查找,查询结果还可以继续使用xpath、css、re
+- xpath
+	- "//"与"/"
+	- text
+	- 属性加前缀"@"
+	- 相对路径
+		- 在"/"或"//"前加"."，表示从查询结果中搜索
+- css
+- re
+
+- 测试
+	- `scrapy shell https://doc.scrapy.org/en/latest/_static/selectors-sample1.html`
+
+	```python
+	#1 //与/
+	>>> response.xpath('//body/a') #开头的//代表从整篇文档中寻找,body之后的/代表body的儿子
+	[]
+	>>> response.xpath('//body//a') #开头的//代表从整篇文档中寻找,body之后的//代表body的子子孙孙
+	[<Selector xpath='//body//a' data='<a href="image1.html">Name: My image 1 <'>, <Selector xpath='//body//a' data='<a href="image2.html">Name: My image 2 <'>, <Selector xpath='//body//a' data='<a href="
+	image3.html">Name: My image 3 <'>, <Selector xpath='//body//a' data='<a href="image4.html">Name: My image 4 <'>, <Selector xpath='//body//a' data='<a href="image5.html">Name: My image 5 <'>]
+	
+	#2 text
+	>>> response.xpath('//body//a/text()')
+	>>> response.css('body a::text')
+	
+	#3、extract与extract_first:从selector对象中解出内容
+	>>> response.xpath('//div/a/text()').extract()
+	['Name: My image 1 ', 'Name: My image 2 ', 'Name: My image 3 ', 'Name: My image 4 ', 'Name: My image 5 ']
+	>>> response.css('div a::text').extract()
+	['Name: My image 1 ', 'Name: My image 2 ', 'Name: My image 3 ', 'Name: My image 4 ', 'Name: My image 5 ']
+	
+	>>> response.xpath('//div/a/text()').extract_first()
+	'Name: My image 1 '
+	>>> response.css('div a::text').extract_first()
+	'Name: My image 1 '
+	
+	#4、属性：xpath的属性加前缀@
+	>>> response.xpath('//div/a/@href').extract_first()
+	'image1.html'
+	>>> response.css('div a::attr(href)').extract_first()
+	'image1.html'
+	
+	#4、嵌套查找
+	>>> response.xpath('//div').css('a').xpath('@href').extract_first()
+	'image1.html'
+	
+	#5、设置默认值
+	>>> response.xpath('//div[@id="xxx"]').extract_first(default="not found")
+	'not found'
+	
+	#4、按照属性查找
+	response.xpath('//div[@id="images"]/a[@href="image3.html"]/text()').extract()
+	response.css('#images a[@href="image3.html"]/text()').extract()
+	
+	#5、按照属性模糊查找
+	response.xpath('//a[contains(@href,"image")]/@href').extract()
+	response.css('a[href*="image"]::attr(href)').extract()
+	
+	response.xpath('//a[contains(@href,"image")]/img/@src').extract()
+	response.css('a[href*="imag"] img::attr(src)').extract()
+	
+	response.xpath('//*[@href="image1.html"]')
+	response.css('*[href="image1.html"]')
+	
+	#6、正则表达式
+	response.xpath('//a/text()').re(r'Name: (.*)')
+	response.xpath('//a/text()').re_first(r'Name: (.*)')
+	
+	#7、xpath相对路径
+	>>> res=response.xpath('//a[contains(@href,"3")]')[0]
+	>>> res.xpath('img')
+	[<Selector xpath='img' data='<img src="image3_thumb.jpg">'>]
+	>>> res.xpath('./img')
+	[<Selector xpath='./img' data='<img src="image3_thumb.jpg">'>]
+	>>> res.xpath('.//img')
+	[<Selector xpath='.//img' data='<img src="image3_thumb.jpg">'>]
+	>>> res.xpath('//img') #这就是从头开始扫描
+	[<Selector xpath='//img' data='<img src="image1_thumb.jpg">'>, <Selector xpath='//img' data='<img src="image2_thumb.jpg">'>, <Selector xpath='//img' data='<img src="image3_thumb.jpg">'>, <Selector xpa
+	th='//img' data='<img src="image4_thumb.jpg">'>, <Selector xpath='//img' data='<img src="image5_thumb.jpg">'>]
+	
+	#8、带变量的xpath
+	>>> response.xpath('//div[@id=$xxx]/a/text()',xxx='images').extract_first()
+	'Name: My image 1 '
+	>>> response.xpath('//div[count(a)=$yyy]/@id',yyy=5).extract_first() #求有5个a标签的div的id
+	'images'
+	```
