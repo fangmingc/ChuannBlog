@@ -1,20 +1,18 @@
 ## Vue.js
-- 构建用户界面的javascrapt框架，用于自动生成html
-- 轻量、灵活
+构建用户界面的javascrapt框架，用于自动生成html       
+轻量、灵活
 
-- [安装](#1)
-- [基本使用](#2)
-- [ES6](#3)
-- [node.js](#4)
-- [webpack](#5)
-- [axios](#6)
-- [vue-router](#7)
+- [基本使用](#1)
+- [ES6](#2)
+- [node.js](#3)
+- [webpack](#4)
+- [axios](#5)
+- [vue-router](#6)
 
-### 安装
-- CDN:
+- 下载使用
 	- http://www.bootcdn.cn/vue/
 
-### 基本使用
+### <span id="1">基本使用</span>
 - 引入vue
 
 	```html
@@ -32,7 +30,7 @@
 
 - 建立vue对象
 
-	```html
+	```js
 	new Vue({
 	        el:"#app",	# 表示在当前这个元素内开始使用Vue
 	        data:{
@@ -72,16 +70,16 @@
 - 自定义指令
 	- 
 
-### ES6
+### <span id="2">ES6</span>
 
 
-### node.js
+### <span id="3">node.js</span>
 
 
-### webpack
+### <span id="4">webpack</span>
 
 
-### axios
+### <span id="5">axios</span>
 
 
 ### vue-router
