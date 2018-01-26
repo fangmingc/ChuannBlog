@@ -6,16 +6,16 @@
 - [CSS](CSS.md)
 - [JavaScript](JavaScript.md)
 	- [JQuery\*](jQuery.md)
-- [ajax](Ajax.md)
-
+	- [ajax](Ajax.md)
+	- [ES6(ES2015)标准](ES6.md)
 - 框架
 	- [Bootstrap](Bootstrap.md)
-	- React
 	- [Vue](Vue.md)
-
+		- [Vue项目](Project_Vue.md)
+	- React
 - 插件
 	- CSS图标库：Font Awesome
 	- 自定义alert：SweetAlert
 	- 图片延迟加载：jQuery lazyload
-	- 消息提示：[Toastr](Toastr)
+	- 消息提示：[Toastr](Toastr.md)
 

@@ -36,7 +36,7 @@
 	```
 - 缺陷：无法支持多线程
 
-	```
+	```python
 	import threading
 	class Bar:
 	

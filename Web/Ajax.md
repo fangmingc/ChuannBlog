@@ -18,30 +18,28 @@
 	- $.get()----指定type为get
 	- $.post()----指定type为post
 
-```
-$.ajax({
-	url:"",		# 请求的路径
-	type:"",	# 请求的方式GET/POST
-	data:{},	# 请求的数据
-	contentType:"", 		# 客户端告诉服务器此次发送的数据格式，默认为application/x-www-form-urlencoded
-	success: function(){}	# ajax请求正常时的回调函数
-	error:{}	# 请求错误时的回调函数
-})
-```
+	```
+	$.ajax({
+		url:"",		# 请求的路径
+		type:"",	# 请求的方式GET/POST
+		data:{},	# 请求的数据
+		contentType:"", 		# 客户端告诉服务器此次发送的数据格式，默认为application/x-www-form-urlencoded
+		success: function(){}	# ajax请求正常时的回调函数
+		error:{}	# 请求错误时的回调函数
+	})
+	```
 
 #### contentType
 - 在django框架中，服务器接收的http请求会将请求数据通过wsgi协议，所有数据都会放在request.body
 	- wsgi协议自带urlencoded解析，会将符合的数据解析到request.GET，request.POST，其他类型的数据wsgi不会自动解析
 	- url尾部的数据会被解析到request.GET
 	- 请求体的数据如已指定POST则解析到request.POST
-
-
-##### 常见类型
-- application/x-www-form-urlencoded
-	- 127.0.0.1:8080/getajax/?name=egon&age=12
-- application/json
-- text/html
-- text/xml
+- 常见类型
+	- application/x-www-form-urlencoded
+		- 127.0.0.1:8080/getajax/?name=egon&age=12
+	- application/json
+	- text/html
+	- text/xml
 
 
 
@@ -154,35 +152,35 @@ $.ajax({
 	- success
 		- 这是jQuery封装的回调函数，本质上是定义一个jsonpCallback指定名称的函数，然后等跨域请求返回后，执行该函数
 
-```js
-$(".second").click(function () {
-    $.ajax({
-        url: "http://www.jxntv.cn/data/jmd-jxtv2.html?callback=list&_=1454376870403",
-        dataType: "jsonp",
-        jsonp: "callback",
-        jsonpCallback: "list",
-        success: function (data) {
-            console.log(data.data);
-            $.each(data.data, function (i, weeklist) {
-                var content_str =
-                    '<div id="' + i +
-                    '"><h3>' + weeklist.week +
-                    '</h3>'+
-                    '</div>';
-                $(".content").append(content_str);
-
-                $.each(weeklist.list, function (j, item) {
-                    var list_str =
-                        '<p style="margin-left: 20px">' + item.time.slice(0, 2) + ':' + item.time.slice(2, 4) + '----<a href="' + item.link +
-                        '">' + item.name +
-                        '<p>';
-                    $("#"+i).append(list_str)
-                });
-            })
-        }
-    })
-})
-```
+	```js
+	$(".second").click(function () {
+	    $.ajax({
+	        url: "http://www.jxntv.cn/data/jmd-jxtv2.html?callback=list&_=1454376870403",
+	        dataType: "jsonp",
+	        jsonp: "callback",
+	        jsonpCallback: "list",
+	        success: function (data) {
+	            console.log(data.data);
+	            $.each(data.data, function (i, weeklist) {
+	                var content_str =
+	                    '<div id="' + i +
+	                    '"><h3>' + weeklist.week +
+	                    '</h3>'+
+	                    '</div>';
+	                $(".content").append(content_str);
+	
+	                $.each(weeklist.list, function (j, item) {
+	                    var list_str =
+	                        '<p style="margin-left: 20px">' + item.time.slice(0, 2) + ':' + item.time.slice(2, 4) + '----<a href="' + item.link +
+	                        '">' + item.name +
+	                        '<p>';
+	                    $("#"+i).append(list_str)
+	                });
+	            })
+	        }
+	    })
+	})
+	```
 
 
 
