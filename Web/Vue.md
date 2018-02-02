@@ -3,9 +3,7 @@
 轻量、灵活、数据驱动视图
 
 - [基本使用](#1)
-- [ES6](#2)
-- [node.js](#3)
-- [webpack](#4)
+- [安装VUE项目](#2)
 - [axios](#5)
 - [vue-router](#6)
 
@@ -70,19 +68,55 @@
 - 自定义指令
 	- 
 
-### <span id="2">ES6</span>
+### <span id="2">VUE项目</span>
+- 安装VUE
+	`npm install vue-cli -g`
+- 创建项目
+	- `vue-init webpack 项目名`
+	- 会出现对项目的一些设置，可以全部默认使用默认设置（全部回车）
+
+- 开启项目
+
+	```cmd
+	cd 项目名
+	npm run dev
+	```
+	- 在项目的config/index.js里面，会有一个参数autoOpenBrowser,可以设置启动项目时是否自动打开浏览器
+- 项目介绍
+	- 项目目录结构
+		- bulid
+		- config
+		- node_modules
+		- src
+			- 存放程序代码
+		- static
+	- 项目文件
+		- .vue结尾的都是组件，编写程序都在这里
+- VUE特性
+	- 热重载
+		- 修改VUE的代码，在浏览器无需刷新即可实现自动局部刷新
 
 
-### <span id="3">node.js</span>
-
-
-### <span id="4">webpack</span>
-
-
-### <span id="5">axios</span>
+### <span id="3">axios</span>
 
 
 ### vue-router
+- 设置文件路由流程
+	1. 建立组件，.vue文件
+	2. 配置路由,index.js文件中配置
+	3. <router-link></router-link>
+	4. <router-viem></router-viem>
+	5. import 包名 from "组件路径"
+	6. components进行注册
 
+
+### Vue组件生命周期
+1. 定义Vue对象并实例化
+2. created函数
+3. 编译模板
+4. 把HTML元素渲染到页面当中
+5. mounted函数
+6. 如果有元素的更新就执行updated函数
+7. 销毁实力
 
 

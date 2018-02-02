@@ -3,7 +3,8 @@
 - [技能清单](Interview/Skills_Inventory.md) 
 
 ### RESTful
-- [RESTful](whats_REST.md)
+- [RESTful理论基础](whats_REST.md)
+	- [RESTful API设计原则](restful_API_design.md)
 - [django rest framework]
 
 ### 规范
