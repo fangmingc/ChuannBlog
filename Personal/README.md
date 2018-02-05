@@ -5,7 +5,7 @@
 ### RESTful
 - [RESTful理论基础](whats_REST.md)
 	- [RESTful API设计原则](restful_API_design.md)
-- [django rest framework]
+	- [Django-Rest-Framework](http://chuann.cc/Personal/django_rest_framework.md)
 
 ### 规范
 - [代码要求](代码整洁之道.md)
