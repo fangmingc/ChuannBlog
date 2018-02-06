@@ -240,3 +240,14 @@
 		- `self.check_permissions(request)`
 		- `self.check_throttles(request)`
 
+#### 认证
+
+
+#### 权限
+
+
+#### 限流
+
+
+
+

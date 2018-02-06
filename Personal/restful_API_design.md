@@ -1,5 +1,10 @@
 ## restful API设计原则
 - [原文](http://www.ruanyifeng.com/blog/2014/05/restful_api.html)
+- 特性
+	- 基本是按照请求方式的不同表示不同的操作类型
+	- 因为是面向资源编程，URL一般都要是名词
+	- 过滤返回结果一般用URL传参
+	- 通过状态码返回结果
 
 1. 尽量将API放置在专用域名之下
 	- https://api.example.com
