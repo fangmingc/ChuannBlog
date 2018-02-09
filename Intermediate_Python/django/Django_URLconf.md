@@ -2,14 +2,12 @@
 
 - 路由系统
 	- 主要解析URl的路径，并将请求送往相应的视图函数
-
-结构：
-```
-urlpatterns = {
-	url("^blog/", views.bolg)
-}
-```
-
+	- 结构：
+	```
+	urlpatterns = {
+		url("^blog/", views.bolg)
+	}
+	```
 - url(regex, view, kwargs=None, name=None)
 	- 建立起URL与视图函数的映射关系
 	- 正则表达式：匹配url中的路径
@@ -35,8 +33,17 @@ urlpatterns = {
 			- reverse("别名")
 			- reverse("别名",args=(11,))
 			- reverse("别名",kwargs={'nid':11})
+	- [练习文件](https://github.com/fangmingc/Python/tree/master/Frame/Django/URLconf)
+- 特殊路由
+	- media配置
 
-[练习文件](https://github.com/fangmingc/Python/tree/master/Frame/Django/URLconf)
+		```python
+		from django.views.static import serve
+		from django.conf import settings
+		urlpatterns = [
+		    url(r'^media/(?P<path>.*)$', serve, {"document_root": settings.MEDIA_ROOT}),
+		]
+		```
 
 ### django2.0特性
 - django.urls下的re_path代替了url

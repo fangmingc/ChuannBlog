@@ -5,8 +5,6 @@
 ### 主要功能
 - 具备DataFrame、Series
 
-
-
 ### Series
 - 类似一维数组，由一组数据和一组与之对应的标签数组
 	- 普通创建
@@ -52,12 +50,25 @@
 
 ### DataFrame
 - 表格型数据结构，含有一组有序的列
-- 看作由Series组成的二维结构
-- index
-- columns
+	- 看作由Series组成的二维结构
+	- index
+	- columns
+- 创建
+	- DaraFrame(data=None, index=None, columns=None, dtype=None, copy=False)
+		- data，可以是字典、二维数组、列表、迭代器等
+		- index，指定行索引
 
 - 索引切片
 	- df\[列标签\]\[行标签或下标\]
 	- df.loc[行标签,列标签]
 	- df.iloc[行下标,列下标]
 
+- 方法
+	- df.T/df.transpose()
+		- 矩阵的逆置
+		- 将行列以及相应数据互换
+	- df.to_excel(excel_writer, sheet_name='Sheet1', na_rep='', float_format=None, columns=None, header=True, index=True, index_label=None, startrow=0, startcol=0, engine=None, merge_cells=True, encoding=None, inf_rep='inf', verbose=True, freeze_panes=None)
+		- excel_writer是写模式的文件句柄
+		- 将df写入excel_writer，
+	- df.to_dict()
+		- 将df转为字典

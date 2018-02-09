@@ -18,7 +18,7 @@
 ### 框架-
 - [初识Web框架](start_frame.md)
 - 主流框架
-	- [Django](django/Django.md)
+	- [Django](django/README.md)
 	- [Flask](flask/README.md)
 - 高性能
 	- [twisted]
