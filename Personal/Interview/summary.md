@@ -2,7 +2,7 @@
 - 每天10道笔试题并梳理知识点
 
 - [函数相关](1.function.md)
-- 面向对象和模块
+- [面向对象和模块](2.OOP.md)
 - 网络编程和并发编程
 - 数据库（MySQL，mongodb，redis）
 - django
