@@ -2,15 +2,16 @@
 构建用户界面的javascrapt框架，用于自动生成html       
 轻量、灵活、数据驱动视图
 
-- [基本使用](#1)
-- [安装VUE项目](#2)
-- [axios](#5)
-- [vue-router](#6)
+- [基本使用](#01)
+- [安装VUE项目](#02)
+- [vue-router](#03)
+- [组件：axios](#04)
+- [组件：vuex](#05)
 
 - 下载使用
 	- http://www.bootcdn.cn/vue/
 
-### <span id="1">基本使用</span>
+### <span id="01">基本使用</span>
 - 引入vue
 
 	```html
@@ -68,12 +69,30 @@
 - 自定义指令
 	- 
 
-### <span id="2">VUE项目</span>
+### <span id="02">VUE项目</span>
 - 安装VUE
 	`npm install vue-cli -g`
 - 创建项目
 	- `vue-init webpack 项目名`
-	- 会出现对项目的一些设置，可以全部默认使用默认设置（全部回车）
+	- 会出现对项目的一些设置，默认(回车)选择第一选项
+		- ? Project name 
+			- 设置项目名，默认当前文件夹名
+		- ? Project description 
+			- 项目描述，默认为`A Vue.js project`
+		- ? Author 
+			- 项目作者，默认为当前系统用户，eg：Chuck <fangming99@outlook.com>
+		- ? Vue build 
+			- 项目构建
+		- ? Install vue-router?
+			- 是否安装vue-router，Yes or No
+		- ? Use ESLint to lint your code?
+			- 是否使用ESLint，是非常严格的语法检查，Yes or No
+		- ? Set up unit tests 
+			- 是否启用单元测试，Yes or No
+		- ? Setup e2e tests with Nightwatch?
+			- 暂不明
+		- ? Should we run `npm install` for you after the project has been created? (recommended)
+			- 是否在创建项目后使用npm install
 
 - 开启项目
 
@@ -96,27 +115,89 @@
 	- 热重载
 		- 修改VUE的代码，在浏览器无需刷新即可实现自动局部刷新
 
+-  Vue组件生命周期
+	1. 定义Vue对象并实例化
+	2. created函数
+	3. 编译模板
+	4. 把HTML元素渲染到页面当中
+	5. mounted函数
+	6. 如果有元素的更新就执行updated函数
+	7. 销毁实例
 
-### <span id="3">axios</span>
 
-
-### vue-router
+### <span id="03">vue-router</span>
 - 设置文件路由流程
 	1. 建立组件，.vue文件
 	2. 配置路由,index.js文件中配置
-	3. <router-link></router-link>
-	4. <router-viem></router-viem>
+
+		```js
+		import Vue from 'vue'
+		import Router from 'vue-router'
+		import Index from '../components/index.vue'
+		import News from '../components/news.vue'
+		import Login from '../components/login.vue'
+		
+		Vue.use(Router)
+		
+		export default new Router({
+		  routes: [
+		    {
+		      path: '/',
+		      name: 'Index',
+		      component: Index
+		    },
+		    {
+		      path: '/index',
+		      name: 'Index',
+		      component: Index
+		    },
+		    {
+		      path: '/news',
+		      name: 'News',
+		      component: News
+		    },
+		    {
+		      path: '/login',
+		      name: 'Login',
+		      component: Login
+		    },
+		  ]
+		})
+		```	
+
+	3. <router-link to="vue文件路径">描述</router-link>
+	4. <router-viem/>
+		- 上方的视图展示的内容在此显示
 	5. import 包名 from "组件路径"
 	6. components进行注册
 
 
-### Vue组件生命周期
-1. 定义Vue对象并实例化
-2. created函数
-3. 编译模板
-4. 把HTML元素渲染到页面当中
-5. mounted函数
-6. 如果有元素的更新就执行updated函数
-7. 销毁实例
+### <span id="04">组件：axios</span>
+- ajax组件，用于发送ajax请求并处理返回数据
+- 安装
+	1. 利用npm安装，npm install axios --save
+	2. 利用bower安装，bower install axios --save
+	3. 直接利用cdn引入，<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+- 准备工作
+	1. 在main.js导入axios
+		- `import axios from 'axios'`
+	2. 在main.js设置axios到Vue的属性
+		- `Vue.prototype.$axios = axios`
+- 使用
+	- 在vue组件中的script标签中的methods的函数中使用
 
+		```vue.js
+		test(){
+		 let that = this
+		 that.$axios.request({
+		   url: '目标api地址',
+		   method: 'GET',
+		 }).then(function (response) {
+		   console.log(response)
+		 })
+		}
+		```
 
+### <span id="04">组件：Vuex</span>
+- 全局变量容器
+- 安装
