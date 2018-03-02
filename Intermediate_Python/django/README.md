@@ -16,6 +16,11 @@
 - [Django命令合集](Django_command.md)
 
 
+- [rest-framework](Django_rest_framework.md)
+	- [RESTful理论基础](http://chuann.cc/Personal/whats_REST.md)
+	- [RESTful API设计原则](http://chuann.cc/Personal/restful_API_design.md)
+
+
 
 
 

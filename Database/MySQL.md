@@ -299,6 +299,24 @@ mysqldump -h 源IP -uroot -p --databases db1 | mysql -h -目标IP -u用户名 -p
 #### 导出其他格式文件
 - select [列名称] from tablename [where] into outfile '目标文件路径' [option]
 
+### <span id='2.5'>为其他人创建mysql用户</span>
+- 创建账号
+	- create user 'username'@'允许ip来源' identified by 'password'
+		- 允许ip来源为%表示任意来源
+		- 允许ip来源为localhost或127.0.0.1表示只允许本机访问
+		- 允许ip来源为192.168.20.%表示只允许局域网192.168.20网段访问
+			- 192.168.所在局域网子网段.%
+- 授权
+	- 参考[授权](#3.4)
+	- 对所有数据库所有表的所有权限
+		- grant all privileges on *.* to 'username'@'允许ip来源';
+	- 对某个数据库某个表的所有权限
+		- grant all privileges on 数据库名.表名 to 'username'@'允许ip来源';
+	- 对某个数据所有表的增、查[改、删]权限
+		- grant insert,select[,update,delete] on 数据库名.* to 'username'@'允许ip来源';
+- 记得flush privileges更新权限
+
+
 
 <p align=right>[回到顶部](#0)</p>
 ## <span id='3.0'>SQL语句（Structured Query Language）</span>
