@@ -309,7 +309,7 @@ mysqldump -h 源IP -uroot -p --databases db1 | mysql -h -目标IP -u用户名 -p
 - 授权
 	- 参考[授权](#3.4)
 	- 对所有数据库所有表的所有权限
-		- grant all privileges on \*.* to 'username'@'允许ip来源';
+		- grant all privileges on \*.\* to 'username'@'允许ip来源';
 	- 对某个数据库某个表的所有权限
 		- grant all privileges on 数据库名.表名 to 'username'@'允许ip来源';
 	- 对某个数据所有表的增、查[改、删]权限
