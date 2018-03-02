@@ -84,7 +84,63 @@
 - 管理后台
 
 #### 表结构
-- 表结构以课程为核心，首先是课程的归类，有大类(CourseCategory)和小类(CourseSubCategory)之分；课程总体分为两种，学位课(DegreeCourse)和普通课程(Course)；学位课独有奖学金政策(Scholarship)；课程都有价格策略(PricePolicy)和优惠卷策略(Coupon)；课程都有课程详细(CourseDetail)，常见问题(OftenAskedQuestion)，课程大纲(CourseOutline)，课程章节(CourseChapter)；学位课、普通课程都有讲师，学位课还有导师，使用同一张表(Teacher)；12张表
+- 课程相关业务
+	- 负责开发的
+		- 有大类(CourseCategory)和小类(CourseSubCategory)之分；
+		- 课程总体分为两种，学位课(DegreeCourse)和普通课程(Course)；
+		- 学位课独有奖学金政策(Scholarship)；
+		- 课程都有价格策略(PricePolicy)和优惠卷策略(Coupon)；
+		- 课程都有课程详细(CourseDetail)，常见问题(OftenAskedQuestion)，课程大纲(CourseOutline)，课程章节(CourseChapter)，课时目录(CourseSection)；
+		- 学位课、普通课程都有讲师，学位课还有导师，使用同一张表(Teacher)；
+	- 其他人负责的
+		- 学位课
+			- 每个模块生成记录(StudyRecord)，买完课程之后自动创建
+			- 开通模块(后台)(CourseSchedule)
+			- 导师跟进(导师)(StuFollowUpRecord)
+			- 交作业(主站)(HomeworkRecord)
+- 深科技相关业务
+	- 文章来源(ArticleSource)
+	- 文章(Article)
+	- 收藏(Collection)
+	- 评论(Comment)
+- 账户相关业务
+	- 账户(Account)
+	- Token(UserAuthToken)
+- 支付业务
+	- 
+
+#### 业务详细
+1. 学位课，
+	1. 学的快，最高返回学费的65%
+	2. 作业写得好，最高返回35%
+2. 支付业务
+	1. 在课程详细页面，选择价格策略，点击加入购物车（将视频和价格策略存到redis）
+	2. 在购物车页面，对redis中保存的视频和价格数据（增删改查）
+		- 购物车如何实现？
+			- vue将用户token、课程id和价格策略id传到后台
+			- 由认证处理token，通过则继续执行，否则请求登录
+			- 将课程id和价格策略id存放到redis，redis买的是阿里云云数据库Redis 版，16G
+				- 为什么？
+				- 购物车是一个临时的状态，过时会删除
+				- 购物车状态会经常变化，避免对数据库造成频繁操作
+			- 增加
+				- 使用post请求，创建商品
+			- 查看
+				- 使用get请求获取redis所有的商品
+			- 修改
+				- 使用patch请求修改一条商品数据
+			- 删除
+				- 使用delete请求删除一条商品
+	3. 结算页面
+		1. 优惠卷
+			1. 绑定课程优惠卷
+			2. 全站优惠卷
+		2. 贝里
+		3. 支付宝
+		4. 点击立即支付
+			- 在数据库中生成一个订单
+			- 优惠卷被使用
+			- 贝里更新
 
 
 
