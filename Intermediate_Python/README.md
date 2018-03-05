@@ -29,5 +29,5 @@
 - [爬虫相关库](http://chuann.cc/Intermediate_Python/module/Advanced_Module.html#2)
 - [Scrapy框架](spider/scrapy.md)
 
-
+- [RabbitMQ](base/RabbitMQ.md)
 

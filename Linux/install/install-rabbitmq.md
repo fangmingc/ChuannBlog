@@ -3,7 +3,7 @@
 - [安装RabbitMQ](#2)
 
 
-### </span id="1">安装Erlang</span>
+### <span id="1">安装Erlang</span>
 - 安装erlang的依赖环境
 	- `yum -y install make gcc gcc-c++ kernel-devel m4 ncurses-devel openssl-devel unixODBC-devel`
 - 下载最新 Erlang 19.0
@@ -34,7 +34,7 @@
 	- 指定编辑文件目录对文件进行修改回原来的代码，并重启虚拟机
 		- `/bin/vim /etc/profile`
 
-### </span id="2">安装RabbitMQ</span>
+### <span id="2">安装RabbitMQ</span>
 - 下载
 	- `wget http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.3/rabbitmq-server-generic-unix-3.6.3.tar.xz`
 - 解压
@@ -55,7 +55,7 @@
 - 关闭&启动rabbitmq
 	- `./rabbitmqctl stop_app`
 	- `./rabbitmqctl start_app`
-- 浏览器访问
+- 浏览器访问web管理页面
 	- 服务器ip:15672
 
 
