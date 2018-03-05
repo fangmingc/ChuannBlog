@@ -12,10 +12,11 @@
 	- [Bootstrap](Bootstrap.md)
 	- [Vue](Vue.md)
 		- [Vue项目](Project_Vue.md)
-	- React
+- [跨域](cross-domain.md)
 - 插件
 	- CSS图标库：Font Awesome
 	- 自定义alert：SweetAlert
 	- 图片延迟加载：jQuery lazyload
 	- 消息提示：[Toastr](Toastr.md)
+
 

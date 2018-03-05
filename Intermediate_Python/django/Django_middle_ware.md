@@ -6,12 +6,16 @@
 
 <img src="http://chuann.cc/Intermediate_Python/middleware.png" width="500px">
 
-### 能做什么
-- 日志记录
-- session
-- csrf
-- 用户登录
+### 应用场景
+- 用户认证
 - 权限管理
+- CORS跨域
+	- 在process_response方法拦截
+- csrf
+	- 在process_view方法拦截
+- 缓存
+- session
+- 日志记录
 
 
 ### 使用
@@ -39,14 +43,14 @@
 	        return response
 	```
 
-- 中间件方法
-	- process_request(self, request)
-		- 接收来自wsgi的请求需要执行的方法
-		- 返回None表示允许通过
-	- process_response(self, request, response)
-		- 接收来自视图函数的响应需要执行的方法
-		- 必须返回response
-	- 这两个必须有其中一个
+#### 中间件方法
+1. process_request(self, request)
+	- 接收来自wsgi的请求需要执行的方法
+	- 返回None表示允许通过
+2. process_view(self)
+3. process_response(self, request, response)
+	- 接收来自视图函数的响应需要执行的方法
+	- 必须返回response
 
 	```python
 	class M1(MiddlewareMixin):
@@ -69,6 +73,8 @@
 	
 	        return response
 	```
+4. process_exception
+5. process_template_response
 
 
 #### 配置

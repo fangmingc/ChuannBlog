@@ -5,6 +5,7 @@
 	- [Windows环境](#2.2)
 	- [MySQL软件基本管理](#2.3)
 	- [MySQL数据库导入导出](#2.4)
+	- [为其他人创建mysql用户](#2.5)
 - [SQL语句(Structured Query Language)](#3.0)
 	- [库操作](#3.1)
 	- [表操作](#3.2)

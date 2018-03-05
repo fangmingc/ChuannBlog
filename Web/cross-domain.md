@@ -1,8 +1,22 @@
-## 解决跨域
--为了解决同源策略
+## 跨域
+- [同源策略](#1)
+- [jsonP](#2)
+- [CORS](#3)
+- [简单请求和复杂请求](#4)
+
+### <span id="1">同源策略</span>
+- 为了解决同源策略
 	- 同源策略是浏览器的特性，使用如requests模块就没有同源策略
 		- 对ajax请求进行阻拦
 		- 对href/src属性不阻拦
+	- 同源策略的触发，发生在响应返回到浏览器时，浏览器会检测以下响应头
+		- `Access-Control-Allow-Origin`
+			- 来自于向服务器发送请求加上的域名
+		- `Access-Control-Allow-Credentials`
+			- 是否允许发送cookies
+		- `Access-Control-Expose-Headers`
+			- 允许的请求头
+	- [参考阮一峰的博客](http://www.ruanyifeng.com/blog/2016/04/cors.html)
 
 - 同源策略
 	- 同源策略（Same origin policy）是一种约定，它是浏览器最核心也最基本的安全功能，如果缺少了同源策略，则浏览器的正常功能可能都会受到影响。可以说Web是构建在同源策略基础之上的，浏览器只是针对同源策略的一种实现。
@@ -18,21 +32,31 @@
 		2. DOM 无法获得。
 		3. AJAX 请求不能发送。
 
-### jsonP的解决方案
+### <span id="2">jsonP的解决方案</span>
 - 利用的原理
-	- script标签可以跨域
+	- script标签的src属性可以跨域
 		- `<script src="http://127.0.0.1:8022/api/"></script>`可以正常访问`http://127.0.0.1:8022/api/`，并取得返回值
 	- 在开启`http://127.0.0.1:8022/api/`的服务器的该视图处返回一个js函数名的字符串，比如：`func(data)`
 	- 在当前页面定义一个func的js函数，接收一个参数，则就可以实现跨域访问`http://127.0.0.1:8022/api/`，并获取返回值data用于处理
+
+	```html
+	<script src="http://127.0.0.1:8022/api/?callback=func"></script>
+	<script>
+		fucntion func(data){
+			alert(data)
+		}
+	</script>
+	```
+
 - jQuery已经将这一连串的操作封装，利用ajax的几个属性即可定制
-	- url中
-		- 这里的callback=list表明返回的函数名应当是list
-		- _=1454376870403为特定的标识，无标识则无法通过验证
-	- dataType: "jsonp"指定当前ajax为跨域请求，jQuery在处理ajax时会自动生成script标签，然后删除，即可完成跨域请求
-	- jsonp: "callback"这是由服务端定制好的
-	- jsonpCallback: "list"这是指定返回的函数名为list，应与url中一致，
+	- `url`中
+		- 这里的`callback=list`表明返回的函数名应当是list
+		- `_=1454376870403`为特定的标识，无标识则无法通过验证
+	- `dataType: "jsonp"`指定当前ajax为跨域请求，jQuery在处理ajax时会自动生成script标签，然后删除，即可完成跨域请求
+	- `jsonp: "callback"`这是由服务端定制好的
+	- `jsonpCallback: "list"`这是指定返回的函数名为list，应与url中一致，
 		- 可以省略，表示函数名不重要，可以随机生成，但是url和服务器都需要与之对应
-	- success
+	- `success:function(){}`
 		- 这是jQuery封装的回调函数，本质上是定义一个jsonpCallback指定名称的函数，然后等跨域请求返回后，执行该函数
 
 	```js
@@ -66,10 +90,46 @@
 	```
 
 
-### CORS
-- 跨域的一种解决方式
-	- 不同于JSONP只能发GET请求
-	- 可以发送各种请求
-		- 运维可以通过nginx给请求加上响应头(CORS)
+### <span id="3">CORS</span>
+- 不同于jsonP只能发送GET请求，使用此方法可以发送任意请求，不过请求会被划分为简单请求和复杂请求
+- 原理是利用给返回的响应加上浏览器可以识别的响应头，让浏览器对响应不进行同源策略的拦截
+- 响应头有以下几种
+	- `Access-Control-Allow-Origin`（必选）
+		- 意思是允许来自哪些域名的请求跨域
+		- 不可省略，否则请求按失败处理
+		- eg:服务器域名https://api.example.com/
+			- 只允许来自https://www.example.com/和https://www.example2.com/的请求跨域
+			- 需要设置该请求头值为：`www.example.com www.example2.com`
+			- 多个域名中间用空格分隔
+		- 如果希望对来自任何域名的请求都允许跨域，可以填写"*"
+	- `Access-Control-Expose-Headers` （可选）
+		- 当发送请求的请求头中超过以下几个,需要填上额外的请求头，空格分隔
+			- `Cache-Control`
+			- `Content-Language`
+			- `Content-Type`
+			- `Expires`
+			- `Last-Modified`
+			- `Pragma`
+	- `Access-Control-Allow-Credentials`（可选）
+		- 是否允许请求包含cookies,设置为true 或者false
+	- `Access-Control-Allow-Methods` （options请求可选）
+		- 返回允许的请求方法，空格分隔
 
+### <span id="4">简单请求和复杂请求</span>
+- 简单请求
+	- 请求方式只能是GET,POST,HEAD
+	- 请求头不能超出以下几种
 
+	```
+	Accept
+	Accept-Language
+	Content-Language
+	Last-Event-ID
+	Content-Type，但仅能是下列之一
+		application/x-www-form-urlencoded
+		multipart/form-data
+		text/plain
+	```
+- 复杂请求
+	- 复杂请求必须用options请求进行预检
+	- 预检返回成功才可以发送复杂请求

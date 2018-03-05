@@ -1,6 +1,9 @@
 ## 4 模块和包
+- pip安装使用豆瓣源
+	- pip install pika -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
 - [4.1 模块](4.1Module.md)  
 - [4.2 包](4.2Package.md)
+
 ### 常用内置模块
 - [4.3 collections](4.3Collections.md)
 - [4.4 time](4.4Time.md)
