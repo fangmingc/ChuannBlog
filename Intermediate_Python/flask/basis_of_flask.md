@@ -13,7 +13,7 @@
 
 
 ### <span id='1'>创建FLask对象</span>
-- mport_name，通常使用当前flask项目启动文件名，不固定
+- import_name，通常使用当前flask项目启动文件名，不固定
 - static_url_path=None，静态文件目录的别名，用于模板中反向指定静态文件，格式'/xxx'
 - static_folder='static'，静态文件目录
 - template_folder='templates'，模板文件目录
@@ -254,7 +254,7 @@ app.config.from_object("settings2.DevConfig")
 ### <span id='6'>blueprint 蓝图</span>
 - 对项目目录结构规则化
 
-	```python
+	```
 	manage.py
 	fcrm
 	│  __init__.py
@@ -268,7 +268,7 @@ app.config.from_object("settings2.DevConfig")
 - manage.py
 
 	```python
-	import fcrm
+	import fcrm		# 项目文件包
 	
 	if __name__ == '__main__':
 	    fcrm.app.run(port=8001)

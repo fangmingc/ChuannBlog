@@ -23,7 +23,7 @@ if __name__ == '__main__':
 ```
 - flask的使用基于Flask这个类
 	- 可配置参数有很多，下面是实例化时的几个参数
-		- mport_name，通常使用当前flask项目启动文件名，不固定
+		- import_name，通常使用当前flask项目启动文件名，不固定
 		- static_url_path=None，静态文件目录的别名，用于模板中反向指定静态文件，格式'/xxx'
 		- static_folder='static'，静态文件目录
 		- template_folder='templates'，模板文件目录

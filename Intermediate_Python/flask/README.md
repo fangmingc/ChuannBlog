@@ -25,8 +25,8 @@
 - [flask-script](flask-script.md)
 
 - flask原理剖析
-	- [请求到达flask之前]()
-	- [处理请求的准备工作]()
+	- 请求如何达到flask？[源码理解：从app.run到app.\_\_call__](analyze_principle_of_flask.md)
+	- 处理请求的准备工作
 		- [上下文管理](context_management.md)
 			- 本地线程
 		- [flask信号](singal_of_flask.md)
