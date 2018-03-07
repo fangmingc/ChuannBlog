@@ -1242,6 +1242,7 @@ flush privileges;
 - 可用关键字IN、NOT IN、ANY、ALL、EXISTS 和 NOT EXISTS
 - 还可以包含比较运算符：= 、 !=、> 、<等
 - select \* from t1 where field=(select field2 from t2 where id>5);
+	- keyi
 
 查询练习：
 

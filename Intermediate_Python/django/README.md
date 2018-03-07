@@ -12,9 +12,7 @@
 - [settings配置](Django_settings.md)
 - [form表单](Django_form.md)
 - [中间件](Django_middle_ware.md)
-
-- [Django命令合集](Django_command.md)
-
+- [cache](Django-cache.md)
 
 - [rest-framework](Django_rest_framework.md)
 	- [RESTful理论基础](http://chuann.cc/Personal/whats_REST.md)

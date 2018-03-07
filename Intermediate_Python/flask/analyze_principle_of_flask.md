@@ -13,7 +13,7 @@
 			1. 给handler绑定WSGIRequestHandler处理类，用于处理客户端请求到来
 			2. 将flask指定的ip和端口、handler传递给python的http.HTTPSerer，生成一个socket，即flask所使用的套接字
 			3. 给这个scoket服务的RequestHandlerClass属性，绑定上了WSGIRequestHandler处理类
-			4. 给这个socket服务的app水星，绑定了Flask的实例app
+			4. 给这个socket服务的app属性，绑定了Flask的实例app
 4. 在inner函数中，socket启动，开始监听请求
 	- `socket.serve_forever()`，这便是flask框架建立的服务器的根本，通过这段代码可以监听请求，然后处理请求
 	
