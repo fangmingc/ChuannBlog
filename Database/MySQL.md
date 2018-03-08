@@ -50,7 +50,7 @@
 - oracle主要用于银行、铁路、飞机场等。该数据库功能强大，软件费用高。也是甲骨文公司的产品。
 - sql server是微软公司的产品，主要应用于大中型企业，如联想、方正等。
 
-<span style="text-align:right">[回到顶部](#0)</span>
+<p style="text-align:right">[回到顶部](#0)</p>
 <span style="right">[回到顶部](#0)</span>
 
 ## <span id='2.0'>MySQL准备使用</span>
