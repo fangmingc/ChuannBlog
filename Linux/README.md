@@ -7,6 +7,7 @@
 
 - 软件安装
 	- [linux安装](install/install-linux.md)
+	- [Redis](install/install-redis.md)
 	- [RabbitMQ](install/install-rabbitmq.md)
 
 
