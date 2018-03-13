@@ -213,7 +213,7 @@ if __name__ == '__main__':
 			def __init__(cls, name, bases, attrs):
 			    type.__init__(cls, name, bases, attrs)
 			    cls._unbound_fields = None
-			    cls. = None
+			    cls._wtforms_meta = None
 			```
 		- 此处为Form类定义了_unbound_fields和_wtforms_meta两个静态字段
 	- 类的字段

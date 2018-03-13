@@ -51,10 +51,9 @@
 - sql server是微软公司的产品，主要应用于大中型企业，如联想、方正等。
 
 <p style="text-align:right"><a href="#0">回到顶部</a></p>
-<span style="right">[回到顶部](#0)</span>
-
 ## <span id='2.0'>MySQL准备使用</span>
 ### <span id='2.1'>Liunx环境</span>
+
 ### <span id='2.2'>Windows环境</span>
 #### 下载
 在官网下载相应版本。  
@@ -145,7 +144,7 @@
 	- /F 强制删除进程
 	- /PID 以PID形式删除进程
 
-<p align=right>[回到顶部](#0)</p>
+<p style="text-align:right"><a href="#0">回到顶部</a></p>
 ### <span id='2.3'>MySQL软件基本管理</span>
 #### 第一次登录后设置密码
 - 初始状态下，管理员root，密码为空，默认只允许从本机登录localhost
@@ -270,7 +269,7 @@ password=4573
 	step 3: flush privileges;
 	```
 
-<p align=right>[回到顶部](#0)</p>
+<p style="text-align:right"><a href="#0">回到顶部</a></p>
 ### <span id='2.4'>MySQL数据库导入导出</span>
 #### 导出
 - 导出数据和结构
@@ -318,8 +317,7 @@ mysqldump -h 源IP -uroot -p --databases db1 | mysql -h -目标IP -u用户名 -p
 - 记得flush privileges更新权限
 
 
-
-<p align=right>[回到顶部](#0)</p>
+<p style="text-align:right"><a href="#0">回到顶部</a></p>
 ## <span id='3.0'>SQL语句（Structured Query Language）</span>
 - 查看当前用户信息   
 	
@@ -336,7 +334,7 @@ mysqldump -h 源IP -uroot -p --databases db1 | mysql -h -目标IP -u用户名 -p
 	- mysql：	授权库，主要存储系统用户的权限信息
 	- test：	MySQL 数据库系统自动创建的测试数据库
 
-<p align=right>[回到顶部](#0)</p>
+<p style="text-align:right"><a href="#0">回到顶部</a></p>
 ### <span id='3.1'>库（文件夹）操作</span>
 #### 增
 - **CREATE** **{DATABASE \| SCHEMA}** [IF NOT EXISTS] **db_name** [create_specification] ... 
@@ -371,7 +369,7 @@ mysqldump -h 源IP -uroot -p --databases db1 | mysql -h -目标IP -u用户名 -p
 	drop database db1;
 	```
 
-<p align=right>[回到顶部](#0)</p>
+<p style="text-align:right"><a href="#0">回到顶部</a></p>
 ### <span id='3.2'>表（文件）操作</span>
 切换到文件夹下：   
 
@@ -617,7 +615,7 @@ alter table t1 modify name char(12);
 	drop table t2;
 	```
 
-<p align=right>[回到顶部](#0)</p>
+<p style="text-align:right"><a href="#0">回到顶部</a></p>
 ### <span id='3.3'>记录（文件内容）操作</span>
 #### 增   
 ```sql
@@ -712,7 +710,7 @@ create table t1(id int not null, name char(10));
 	create table t8 like t5;
 	```
 
-<p align=right>[回到顶部](#0)</p>
+<p style="text-align:right"><a href="#0">回到顶部</a></p>
 ### <span id='3.4'>授权</span>
 ```sql
 # 创建用户
@@ -746,7 +744,7 @@ flush privileges;
 	- **tls_option**: { SSL \| X509 \| CIPHER 'cipher' \| ISSUER 'issuer' \| SUBJECT 'subject' }
 	- **resource_option**: { \| MAX_QUERIES_PER_HOUR count \| MAX_UPDATES_PER_HOUR count \| MAX_CONNECTIONS_PER_HOUR count \| MAX_USER_CONNECTIONS count }
 
-<p align=right>[回到顶部](#0)</p>
+<p style="text-align:right"><a href="#0">回到顶部</a></p>
 ### <span id='3.5'>数据类型</span>
 #### 数值类型
 ##### 整数
@@ -887,7 +885,7 @@ flush privileges;
 	+----+-------+------+-------------------+
 	```
 
-<p align=right>[回到顶部](#0)</p>
+<p style="text-align:right"><a href="#0">回到顶部</a></p>
 ### <span id='3.6'>完整性约束</span>
 #### 其他约束条件
 - UNSIGNED 无符号
@@ -1146,7 +1144,7 @@ flush privileges;
 	);
 	```
 
-<p align=right>[回到顶部](#0)</p>
+<p style="text-align:right"><a href="#0">回到顶部</a></p>
 ## <span id='4.0'>查询语句</span>
 ### <span id='4.1'>单表查询</span>
 - **SELECT** 
@@ -1247,7 +1245,7 @@ flush privileges;
 查询练习：
 
 
-<p align=right>[回到顶部](#0)</p>
+<p style="text-align:right"><a href="#0">回到顶部</a></p>
 ## <span id='5.0'>索引</span>
 - 索引的目的在于提高查询效率
 - 通过不断地缩小想要获取数据的范围来筛选出最终想要的结果，同时把随机的事件变成顺序的事件，也就是说，有了这种索引机制，我们可以总是用同一种查找方式来锁定数据。
@@ -1263,7 +1261,7 @@ flush privileges;
 - 命中索引，创建索引也未命中，需要了解如何命中索引
 
 
-<p align=right>[回到顶部](#0)</p>
+<p style="text-align:right"><a href="#0">回到顶部</a></p>
 ## <span id='6.0'>Pymysql</span>
 ### 用法示例
 #### 查询
@@ -1449,7 +1447,7 @@ cursor.execute(sql)
 	conn.close()
 	```
 
-<p align=right>[回到顶部](#0)</p>
+<p style="text-align:right"><a href="#0">回到顶部</a></p>
 ## other
 在MySQL内查看所有配置信息          
 

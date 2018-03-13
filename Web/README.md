@@ -8,6 +8,7 @@
 	- [JQuery\*](jQuery.md)
 	- [ajax](Ajax.md)
 	- [ES6(ES2015)标准](ES6.md)
+- [WebSocket](WebSocket.md)
 - 框架
 	- [Bootstrap](Bootstrap.md)
 	- [Vue](Vue.md)
