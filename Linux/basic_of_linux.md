@@ -19,6 +19,8 @@
 	- tab键 自动补全命令或目录
 	- ctrl+L 清屏   clear命令
 	- ctrl+c 终止当前操作
+	- ctrl+d 退出当前用户
+	- esc+. 使用上一个命令的最后一个参数
 
 - 相对路径、绝对路径
 	- 绝对路径，从根开始的路径，如/data
@@ -56,7 +58,7 @@
 	- 剪切，dd
 	- 撤销，u
 	- 恢复，ctrl+r
-	- 显示行号，`set nu`
+	- 显示行号，`:set nu`
 8. 查看文件内容，cat
 	- 显示文件内容的行号
 		- `cat -n 文件名`
@@ -122,11 +124,152 @@
 			- `tar xf etc.tar.gz`
 17. 安装软件
 	- yum 替人解决依赖关系
+		- `yum install  tree  telnet -y`
 	- rpm包 需要自己解决依赖关系
+		- 检查命令是否安装，只能查询yum、rpm包安装的
+			- `rpm -qa tree`
+			- `rpm -qa tree telnet lrzsz`
+		- 检查软件包的内容
+			- `rpm -ql 命令名`
+		- 安装
+			- `rpm -ivh rpm包路径`
 	- 编译安装 
 		- `./congigure`，可以在这里配置各种参数
 		- `make`
 		- `make install`
- 
+18. 挂载光盘
+	- 把光盘放入光驱
+		- 通过VMWare管理虚拟机，在光驱选项选中linux-iso文件
+	- 挂载光盘
+		- linux下光盘位置，`ls -l /dev/cdrom`
+		- 挂载：给光盘腾个位置
+			- `mount /dev/cdrom /mnt/`
+		- `cd /mnt/`
+		- `rpm -ivh /mnt/Packages/telnet-0.17-48.el6.x86_64.rpm`
+19. 显示相关
+	- 查看磁盘使用情况，`df -h`
+	- 查看文件前10行
+		- `head /etc/passwd`
+		- `head -5 /etc/passwd`，前五行
+	- 查看文件后10行
+		- `tail /etc/passwd`
+		- `tail -5 /etc/passwd`，后五行
+20. yum源
+	- 安装的命令不在三大基本仓库
+
+		```linux
+		[root@chuan ~]# yum install sl cowsay -y
+		Loaded plugins: fastestmirror, security
+		Setting up Install Process
+		Loading mirror speeds from cached hostfile
+		 * base: mirrors.aliyun.com
+		 * extras: mirrors.163.com
+		 * updates: mirrors.nwsuaf.edu.cn
+		No package sl available.
+		No package cowsay available.
+		Error: Nothing to do
+		```
+	- 增加epel源，extra package for enterprise linux，Fedora制作的
+		- `yum install epel-release -y`
+	- 再次安装
+		- `yum install sl cowsay -y`
+	- 使用
+		- `sl`
+		- `cowsay "hello world"`
+21. 关闭iptables和selinux
+	- 临时关闭防火墙
+		- 执行两次，`/etc/init.d/iptables stop`
+	- 永久关闭防火墙
+		- 关闭开机自启动
+			- 查看开机自启动服务，`chkconfig`
+			- 检查防火墙自启动服务，`chkconfig |grep iptables`
+			- 关闭，`chkconfig iptables off`
+22. 运行级别
+	- 0，关机状态
+	- 1，单用户模式，可以用来重新重置root用户密码
+	- 2，多用户模式，但是没有NFS软件(做存储)
+	- 3，完全的多用户模式，命令行、文本模式
+	- 4，尚未被使用的
+	- 5，X11，桌面、图形界面模式
+	- 6，重启状态
+	- 查询当前系统运行级别
+		- `runlevel`
+	- 临时+永久修改运行模式
+		- 修改`/etc/inittab`文件最后
+		- `tail -1 /etc/inittab`
+23. 用户操作
+	- 查看版本
+		- 系统版本，`cat /etc/redhat-release `
+		- 内核版本，`uname -r`
+	- 增加用户
+		- `useradd oldboy`
+	- 查看用户信息
+		- `id oldboy`
+		- root用户uid为0
+	- 设置密码
+		- `passwd oldboy`
+	- 切换用户
+		- `su - oldboy`
+	- 我是谁？
+		- `whoami`
+24. 如何进入单用户模式
+	- 重启
+		- 推荐使用shutdown
+			- 10分钟后重启，会给所有用户通知10分钟后重启`shutdown -r 10`
+	- 在加载系统时，快速摁任意键终止启动系统，按a或e
+		- 按a
+			- 添加空格和数字1或single然后回车就可以进入单用户模式
+		- 按e
+			- 上下选择linux内核，按e编辑
+			- 添加空格和数字1然后回车
+			- 回到选择框，按b进入单用户模式
+25. 如何进入救援模式
+	- 插入光盘
+	- `resuce installed system`
+26. selinux
+	- NSA弄出来限制root用户的，工作中通常关闭
+	- `ll /etc/selinux/config`
+		- 永久修改，将配置文件的第7行修改为disabled
+			- 使用替换修改
+				- `sed 's#SELINUX=enforcing#SELINUX=disabled#g' /etc/selinux/config`
+				- 确认无误后正式修改`sed -i 's#SELINUX=enforcing#SELINUX=disabled#g' /etc/selinux/config`
+			- 编辑修改，`vim /etc/selinux/config`
+		- 临时修改
+			- 查看你当前selinux状态，`getenforce`
+			- 修改状态selinux状态，`setenforce 0`
+27. 定时任务，crontab [-l(list)] [-e(edit)]
+	- 定时任务格式
+		- `分钟 小时 日期 月份 周几 执行命令`
+		- 特殊符号
+			- `*`表示每次，`* * * * *`表示每天每时每分执行一次
+			- `*/n`，表示每隔n(分钟/小时/天)执行
+	- 例子
+		- 每分钟向/tmp/oldboy.txt追加名字
+			- 编辑定时任务，`crontab -e`
+			- 写入定时任务，`* * * * * echo chuck >> /tmp/oldboy.txt`
+			- 实时更新，`tail -f /tmp/oldboy.txt`
+		- 每三分钟同步一次系统时间
+			- 检查命令是否可以正常运行，`/usr/sbin/ntpdate ntp1.aliyun.com`
+			- 修改当前时间，`date -s "20100101"`
+			- 编辑定时任务，`crontab -e`
+			- 写入定时任务，`*/3 * * * * /usr/sbin/ntpdate ntp1.aliyun.com`
+			- 检查是否成功，`date`，`tail /var/log/cron`
+	- 查看定时任务日志
+		- `ls -l /var/log/cron`
+		- 日志格式
+			- `(root) CMD (echo chuck >> /tmp/oldboy.txt)`
+			- (执行用户) 命令格式 (执行命令)
+	- 常见错误
+		- `You have mail in /var/spool/mail/root`
+			- 需要将定时任务的结果定向到空或追加到文件
+			- 定向到空，`*/3 * * * * /usr/sbin/ntpdate ntp1.aliyun.com > /dev/null 2>&1`
+			- 追加到文件，`*/3 * * * * /usr/sbin/ntpdate ntp1.aliyun.com > /dev/cron.log 2>&1`
+28. 时间
+	- 查看时间
+		- `date`
+	- 修改时间
+		- `date -s "20180101"`
+	- 同步时间
+		- `/usr/sbin/btpdate ntp1.aliyun.com`
 
 
