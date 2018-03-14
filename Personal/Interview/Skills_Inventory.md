@@ -2,14 +2,15 @@
 - 编程语言
 	- [x] python
 	- [ ] go
-	- [ ] linux/shell
+	- [x] linux
+	- [ ] shell
 	- [ ] c
 - python框架：
 	- [x] django
 	- [x] scrapy
 	- [x] flask
 	- [ ] twisted
-	- [ ] tornoda
+	- [x] tornoda
 - 数据库
 	- [x] mysql/mariadb
 	- [x] mongodb
@@ -17,8 +18,8 @@
 	- [ ] nosql
 	- [x] SQLAlchemy
 - 缓存
-	- [ ] memcache
-	- [ ] redis
+	- [x] memcache
+	- [x] redis
 - 项目部署
 	- [ ] nginx
 	- [ ] apache
@@ -40,7 +41,7 @@
 	- [x] git/github
 	- [ ] gitlab
 - 软件设计风格
-	- [ ] RESTful
+	- [x] RESTful
 - 单元测试
 
 ### 阅读清单
