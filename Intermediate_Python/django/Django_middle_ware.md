@@ -4,7 +4,7 @@
 - 中间件是一个钩子框架，介于wsgi协议和Django路由系统之间。它是一个轻量级、底层的“插件”系统，用于在全局批量处理django的请求和响应。
 - 每个中间件组件负责完成某个特定的功能。比如django.contrib.sessions.middleware.SessionMiddleware负责给每个请求加上session属性，方便后续的操作
 
-<img src="http://chuann.cc/Intermediate_Python/middleware.png" width="500px">
+<img src="http://chuann.cc/Intermediate_Python/django/middleware.png" width="500px">
 
 ### 应用场景
 - 用户认证
