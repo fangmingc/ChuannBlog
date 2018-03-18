@@ -283,6 +283,20 @@
 - exists()
 	- 如果QuerySet包含数据，就返回True，否则返回False
 
+##### 扩展
+- only
+- defer
+- select_related
+- prefetch_related
+
+- 原生
+	- raw
+	- connection
+	- extra
+- 指定表引擎
+	- models.User.objects.all().using('default')
+
+
 ##### QuerySet数据类型的特性
 - 可切片，可迭代，具有部分列表的性质————[obj,...]
 - 惰性查询:
