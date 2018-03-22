@@ -95,7 +95,7 @@
 	- 进程由程序、数据和进程控制块三部分组成
 
 ### 状态
-<img src="https://github.com/fangmingc/ChuannBlog/blob/master/Intermediate_Python/base/%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81.png">
+<img src="state_of_process.png">
 
 - 运行   
 	1. 程序等待I/O，进入阻塞   

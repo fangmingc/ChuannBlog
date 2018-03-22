@@ -360,7 +360,7 @@
 - 上面简单实现了一个远程cmd命令行，运行时如果使用返回较多信息的命令（如ipconfig -all）时会发生粘包：
 	- 上一条命令返回的结果不完整，下一条命令返回了上一条命令未完内容
 
-![](https://github.com/fangmingc/ChuannBlog/blob/master/Intermediate_Python/base/%E7%B2%98%E5%8C%85%E5%8E%9F%E7%90%86.png)
+<img src="sticking_principle.png">
 
 #### 粘包现象解释
 - 粘包问题主要是因为接收方不知道消息之间的界限，不知道一次性提取多少字节的数据所造成的。

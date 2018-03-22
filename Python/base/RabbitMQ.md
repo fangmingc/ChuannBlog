@@ -74,7 +74,7 @@
 - 工作模型指的是生产者和消费者之间使用不同规则通信使用的RabbitMQ的模式
 
 #### 简单模式
-<img src="http//chuann.cc/Intermediate_Python/base/rabbitmq-simple-mode.png">
+<img src="rabbitmq-simple-mode.png">
 
 - 示例
 	- 生产者
@@ -154,7 +154,7 @@
 ##### fanout
 - 分发模式，报纸订阅模式，生产者生产一份数据，交换机为每个消费者绑定的队列发送一样的数据
 
-<img src="http//chuann.cc/Intermediate_Python/base/rabbitmq-fanout-mode.png">
+<img src="rabbitmq-fanout-mode.png">
 
 - 生产者
 
@@ -208,7 +208,7 @@
 ##### direct
 - 关键字指定发送，
 
-<img src="http//chuann.cc/Intermediate_Python/base/rabbitmq-direct-mode.png">
+<img src="rabbitmq-direct-mode.png">
 - 生产者
 
 	```python
@@ -273,7 +273,7 @@
 ##### topic
 
 
-<img src="http//chuann.cc/Intermediate_Python/base/rabbitmq-topic-mode.png">
+<img src="rabbitmq-topic-mode.png">
 
 - 生产者
 
@@ -348,7 +348,7 @@
 	- 服务端处理完数据，将数据通过回调队列返回给客户端
 - 客户端可能回同时发起多个任务，在服务端回调后应当根据唯一标识为每一个任务返回值的指定数据
 
-<img src="http//chuann.cc/Intermediate_Python/base/rabbitmq-RPC.png">
+<img src="rabbitmq-RPC.png">
 
 - 服务端
 

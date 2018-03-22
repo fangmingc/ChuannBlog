@@ -16,7 +16,7 @@
 ### MTV模型
 Django使用的框架模型是MTV模型加控制，其中控制主要是URl的分发和映射。
 
-<img src="http://chuann.cc/Intermediate_Python/django/MTV.png" width="500px">
+<img src="MTV.png">
 
 - Django框架下的请求响应流程：
 	1. 浏览器向服务器发出请求信息；
@@ -46,7 +46,7 @@ Django使用的框架模型是MTV模型加控制，其中控制主要是URl的�
 	- 渲染工作在django中执行完成后，生成字符串返回给浏览器
 	- 生成的html中需要的静态文件需要浏览器额外发一次请求才可获取文件
 
-<img src="http://chuann.cc/Intermediate_Python/django/reqeust_life_circle.png" width="500px">
+<img src="reqeust_life_circle.png" width="500px">
 
 ### Django基础知识
 - 请求数据
