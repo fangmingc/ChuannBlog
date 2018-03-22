@@ -21,6 +21,7 @@
 	- ctrl+c 终止当前操作
 	- ctrl+d 退出当前用户
 	- esc+. 使用上一个命令的最后一个参数
+	- ctrl+r 搜索以前的命令
 
 - 相对路径、绝对路径
 	- 绝对路径，从根开始的路径，如/data
@@ -64,8 +65,8 @@
 		- `cat -n 文件名`
 9. 输出字符串，echo
 	- 输出到屏幕，`echo "字符串"`
-	- 追加输出重定向--追加内容到文件，`echo "oldboy.edu.com" >> /data/oldboy.txt`
-	- 重定向，清空文件内容，写入字符串内容，`echo "oldboy.com" > /data/oldboy.txt`
+	- 追加输出重定向--追加内容到文件，`echo "chuan.edu.com" >> /data/chuan.txt`
+	- 重定向，清空文件内容，写入字符串内容，`echo "chuan.com" > /data/chuan.txt`
 10. 拷贝/复制文件，cp
 	- 复制文件到指定目录，`cp 原文件 目的目录`
 	- 备份，`cp 原文件 原文件.bak`
@@ -79,7 +80,7 @@
 		- f，强制删除，不需确认
 13. 查找文件，find
 	- 寻找文件，`find 寻找目录范围 -type f -name "文件名"`
-		- `find / -type f -name "oldboy.txt"`
+		- `find / -type f -name "chuan.txt"`
 		- 通配符，`find /data -type f -name "*.txt"`
 		- 参数
 			- 计算文件大小，size，`+1M`表示大于1Mb，`-1K`表示小于1Kb
@@ -97,20 +98,20 @@
 	- 准备数据
 
 		```linux
-		mkdir -p /oldboy/test
-		cd /oldboy
-		echo "oldboy">test/del.sh
-		echo "oldboy">test.sh
-		echo "oldboy">t.sh
-		touch oldboy.txt
+		mkdir -p /chuan/test
+		cd /chuan
+		echo "chuan">test/del.sh
+		echo "chuan">test.sh
+		echo "chuan">t.sh
+		touch chuan.txt
 		touch alex.txt
 		```
 	- 将每一个字母替换为'SO'，`sed 's#[a-zA-A]#SO#g' t.sh`
 	- 将每一个字母替换为'oldgirl'，且备份文件存于'原文件名.bak'，`sed -i.bak 's#[a-zA-A]#oldgirl#g' t.sh`
 	- 替换多个文件中的内容
-		- 检测是否有错，`find /oldboy/ -type f -name "*.sh" |xargs sed 's#oldboy#newgirl#g'`
-		- 正式执行，`find /oldboy/ -type f -name "*.sh" |xargs sed -i 's#oldboy#newgirl#g'`
-		- 检查结果，`find /oldboy/ -type f -name "*.sh" |xargs cat`
+		- 检测是否有错，`find /chuan/ -type f -name "*.sh" |xargs sed 's#chuan#newgirl#g'`
+		- 正式执行，`find /chuan/ -type f -name "*.sh" |xargs sed -i 's#chuan#newgirl#g'`
+		- 检查结果，`find /chuan/ -type f -name "*.sh" |xargs cat`
 16. 备份多个文件，打包压缩备份
 	- tar，打包压缩
 		- 打包压缩，`tar zcf /tmp/etc.tar.gz /etc/`
@@ -202,14 +203,14 @@
 		- 系统版本，`cat /etc/redhat-release `
 		- 内核版本，`uname -r`
 	- 增加用户
-		- `useradd oldboy`
+		- `useradd chuan`
 	- 查看用户信息
-		- `id oldboy`
+		- `id chuan`
 		- root用户uid为0
 	- 设置密码
-		- `passwd oldboy`
+		- `passwd chuan`
 	- 切换用户
-		- `su - oldboy`
+		- `su - chuan`
 	- 我是谁？
 		- `whoami`
 24. 如何进入单用户模式
@@ -244,10 +245,10 @@
 			- `*`表示每次，`* * * * *`表示每天每时每分执行一次
 			- `*/n`，表示每隔n(分钟/小时/天)执行
 	- 例子
-		- 每分钟向/tmp/oldboy.txt追加名字
+		- 每分钟向/tmp/chuan.txt追加名字
 			- 编辑定时任务，`crontab -e`
-			- 写入定时任务，`* * * * * echo chuck >> /tmp/oldboy.txt`
-			- 实时更新，`tail -f /tmp/oldboy.txt`
+			- 写入定时任务，`* * * * * echo chuck >> /tmp/chuan.txt`
+			- 实时更新，`tail -f /tmp/chuan.txt`
 		- 每三分钟同步一次系统时间
 			- 检查命令是否可以正常运行，`/usr/sbin/ntpdate ntp1.aliyun.com`
 			- 修改当前时间，`date -s "20100101"`
@@ -257,7 +258,7 @@
 	- 查看定时任务日志
 		- `ls -l /var/log/cron`
 		- 日志格式
-			- `(root) CMD (echo chuck >> /tmp/oldboy.txt)`
+			- `(root) CMD (echo chuck >> /tmp/chuan.txt)`
 			- (执行用户) 命令格式 (执行命令)
 	- 常见错误
 		- `You have mail in /var/spool/mail/root`

@@ -1,6 +1,6 @@
 ## Linux相关
 - [linux入门](linux-basis)
-
+- [linux基本命令](basic_linux.md)
 
 - 常见问题与解决
 	- [centos7 联网问题](solve/solve-network.md)
