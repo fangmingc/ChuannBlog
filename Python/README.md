@@ -1,7 +1,7 @@
 ## Python
 本部分为Python相关。
 
-- [python基础]()
+- [python基础](Beginning_of_Python/README.md)
 - [模块汇总](module/Advanced_Module.md)
 - [网络编程-socket](base/Network_Programming.md)
 - [高性能基础-并发](base/Concurrent_Programming.md)

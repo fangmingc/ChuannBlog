@@ -10,7 +10,7 @@
 	- [linux安装](install/install-linux.md)
 	- [Redis](install/install-redis.md)
 	- [RabbitMQ](install/install-rabbitmq.md)
-	- [linux安装python3](install-python3.md)
+	- [linux安装python3](install/install-python3.md)
 
 
  
