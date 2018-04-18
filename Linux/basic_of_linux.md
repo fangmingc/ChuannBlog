@@ -84,11 +84,13 @@
 		- 通配符，`find /data -type f -name "*.txt"`
 		- 参数
 			- 计算文件大小，size，`+1M`表示大于1Mb，`-1K`表示小于1Kb
-	- 寻找目录，`find 寻找目录范围 -type f -name "目录名"`
+	- 寻找目录，`find 寻找目录范围 -type d -name "目录名"`
 		- `find / -type d -name "data"`
 	- 管道使用
 		- find与xargs配合
 		- `find /root/ -type d -name "*.log" |xargs ls -l`
+	- 过滤普通用户查找受到权限限制的日志
+		- `find / -name "rabbitmq" -type d 2>/dev/null`
 14. 显示指定行号的内容，
 	- 创建文件`seq 40 > ett.txt`
 	- `awk 'NR==20' test.txt`

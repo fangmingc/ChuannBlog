@@ -13,7 +13,7 @@
 - [原生SQL](http://chuann.cc/Database/MySQL.html)
 	- [链接数据库]
 - ORM
-	- Django自带ORM[Django模型层](http://chuann.cc/Intermediate_Python/django/Django_model.html)
+	- Django自带ORM[Django模型层](django/Django_model.html)
 	- [SQLAlchemy](SQLAlchemy.md)
 
 ### 框架
@@ -30,7 +30,7 @@
 
 ### 爬虫
 - [爬虫基础](spider/start_spider.md)
-- [爬虫相关库](http://chuann.cc/Intermediate_Python/module/Advanced_Module.html#2)
+- [爬虫相关库](module/Advanced_Module.html#2)
 - [Scrapy框架](spider/scrapy.md)
 
 ### 消息队列

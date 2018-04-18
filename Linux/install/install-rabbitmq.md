@@ -1,6 +1,7 @@
 ## rabbitmq 安装使用
 - [安装Erlang](#1)
 - [安装RabbitMQ](#2)
+- [ubuntu快速安装](#ubuntu快速安装)
 
 
 ### <span id="1">安装Erlang</span>
@@ -58,4 +59,39 @@
 - 浏览器访问web管理页面
 	- 服务器ip:15672
 
+
+### ubuntu快速安装
+- `sudo apt install rabbitmq-server`即可
+- 相关配置、软件位置
+	- `find / -name "rabbitmq" -type d 2>/dev/null |xargs ls`
+
+		```
+		/etc/rabbitmq:
+		rabbitmq-env.conf
+		
+		/usr/lib/ocf/resource.d/rabbitmq:
+		rabbitmq-server
+		
+		/usr/lib/rabbitmq:
+		bin  lib
+		
+		/usr/share/rabbitmq:
+		rabbitmq-env.conf
+		
+		/var/lib/rabbitmq:
+		mnesia
+		
+		/var/log/rabbitmq:
+		rabbit@bluesky.log  rabbit@bluesky-sasl.log  startup_err  startup_log
+		```
+- 相关命令
+	- `service rabbitmq-server status`
+	- `service rabbitmq-server restart`
+	- 在`/usr/lib/rabbitmq/bin`目录下
+		- 新增用户
+			- `rabbitmqctl add_user admin 123456`
+		- 设置权限
+			- `rabbitmqctl set_user_tags admin administrator`
+		- 设置远程连接权限
+			- `rabbitmqctl set_permissions -p "/" admin ".*" ".*" ".*"`
 

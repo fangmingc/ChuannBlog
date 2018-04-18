@@ -1,4 +1,8 @@
-## linux安装redis
+## redis安装使用
+- [编译安装](#编译安装)
+- [ubuntu 快速安装](#ubuntu 快速安装)
+
+### 编译安装
 
 - 通过wget方式直接在linux上下载Redis
 	- `wget http://download.redis.io/releases/redis-4.0.2.tar.gz`
@@ -9,7 +13,7 @@
 - 编译安装
 	- `make`
 
-### 启用与配置
+#### 启用与配置
 - 启动服务
 	- `src/redis-server [指定配置文件]`
 		- redis默认监听6379端口，通过配置可以更改监听端口
@@ -24,7 +28,7 @@
 	```conf
 	daemonize yes
 	pidfile /var/run/redis6380.pid
-	port 6380	# 端口
+	port 6380	# 端口	
 	timeout 0
 	tcp-keepalive 0
 	loglevel notice
@@ -104,5 +108,20 @@
 		```
 	- 解决办法是用yum安装tcl8.5（或去tcl的官方网站http://www.tcl.tk/下载8.5版本，并参考官网介绍进行安装）
 		- yum install tcl
+
+### ubuntu 快速安装
+- 安装
+	- `sudo apt install redis-server`
+- 启动
+	- `sudo /etc/init.d/redis-server start`
+- 检查是否运行
+	- `redis-cli`
+	- 连接成功
+		- `127.0.0.1:6379> `
+	- 查看所有配置
+		- `CONFIG GET *`
+		- 将*换成配置项可查看单项配置
+	- 编辑配置
+		- `CONFIG SET CONFIG_SETTING_NAME NEW_CONFIG_VALUE`
 
 
