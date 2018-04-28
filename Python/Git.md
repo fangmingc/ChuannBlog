@@ -2,7 +2,15 @@
 
 ## git 配置
 - git log 展示的信息时中文乱码
-	- git config --global i18n.logoutputencoding utf-8
+	- `git config --global i18n.logoutputencoding utf-8`
+- 配置用户名和邮箱
+	- `git config user.name "username"`
+	- `git config user.email 'usermail@163.com'`
+- 配置ssh-key
+	- 生成ssh-key：`ssh-keygen -t rsa -C "username@mail.cn" -b 4096`
+		- 在之后的对话中输入密码
+	- 查看ssh-key:`cat ~/.ssh/id_rsa.pub`
+		- 复制key并保存在git设置中
 
 ## 操作命令
 可以通过git 命令 --help调出官方文档查看相应命令文档
