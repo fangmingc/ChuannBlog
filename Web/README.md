@@ -2,6 +2,7 @@
 
 - [Web基础](Basic_of_Web.md)
 	- [http协议](http_protocol.md)
+	- [http状态码](http_status_code.md)
 - [html](html.md)
 - [CSS](CSS.md)
 - [JavaScript](JavaScript.md)
