@@ -1,7 +1,7 @@
 ## Flask原理剖析
 
 ### 图解源码
-<img src="http://chuann.cc/Intermediate_Python/flask/from_app.runtoapp.__call__.png">
+<img src="http://chuann.cc/Python/flask/from_app.runtoapp.__call__.png">
 
 ### 详细
 1. Flask的实例app.run()
