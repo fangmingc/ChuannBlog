@@ -1,6 +1,7 @@
 ## Linux相关
 - [linux入门](linux-basis)
 - [linux基本命令](basic_of_linux.md)
+	- [shell脚本编写]
 - [vim使用](vim.md)
 
 - 常见问题与解决
