@@ -1,14 +1,12 @@
 ## Windows用ubuntu子系统开发
 1. 打开开发者模式
 	- 设置->更新和安全->针对开发人员->开发人员调试
-
-<img src="http://chuann.cc/Personal/Tools/img/settings.png">
+	- <img src="http://chuann.cc/Personal/Tools/img/settings.png">
 
 
 2. 启用linux子系统组件
 	- 控制面板->程序->程序和功能->启用或关闭windos功能->适用于Linux的windows子系统
-
-<img src="http://chuann.cc/Personal/Tools/img/binsubsystem.png">
+	- <img src="http://chuann.cc/Personal/Tools/img/binsubsystem.png">
 
 3. 下载安装
 	- 应用商店->搜索Ubuntu->选择喜欢的版本->获取
