@@ -19,7 +19,8 @@
 		- Dialect,选择DB API种类
 - SQLAlchemy自身无法操作数据库，需要借助DB API，如pymysql，mysqldb，cx_oracle等
 
-<img src="http://chuann.cc/Intermediate_Python/sqlalchemy.png">
+<img src="http://chuann.cc/Python/sqlalchemy.png">
+
 - 使用不同DB API连接数据库
 
 	```python

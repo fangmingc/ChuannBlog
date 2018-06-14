@@ -51,8 +51,11 @@
 		- `./rabbitmqctl add_user admin 123456`
 	- 设置权限
 		- `./rabbitmqctl set_user_tags admin administrator`
+	- 设置vhost
+		- `./rabbitmqctl add_vhost test`	
 	- 设置远程连接权限
 		- `./rabbitmqctl set_permissions -p "/" admin ".*" ".*" ".*"`
+		- `./rabbitmqctl set_permissions -p "test" admin ".*" ".*" ".*"`
 - 关闭&启动rabbitmq
 	- `./rabbitmqctl stop_app`
 	- `./rabbitmqctl start_app`
