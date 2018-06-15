@@ -43,7 +43,36 @@
 		- 对于有着图形界面的桌面应用程序来说，PHP 或许不是一种最好的语言，但是如果用户非常精通 PHP，并且希望在客户端应用程序中使用 PHP 的一些高级特性，可以利用 PHP-GTK 来编写这些程序。
 		- 用这种方法，还可以编写跨平台的应用程序。PHP-GTK 是 PHP 的一个扩展，在通常发布的 PHP 包中并不包含它。如果对 PHP-GTK 感兴趣，请访问其[网站](http://gtk.php.net/)以获取更多信息。 
 
-### 
+### php环境搭建
+- 安装apache2
+	- `apt install apache2`
+- 安装mysql
+	- `apt install mysql-server mysql-client`
+- 安装php
+	- `apt install php7.0`
 
-
+- 测试apache
+	- 访问`http://127.0.0.1/`，展示apache相关信息则正常
+- 测试php
+	- 执行如下命令
+		
+		```linux
+		cd /var/www/html
+		vim hello.php
+		```
+	- 编写以下php脚本
+	
+		```php
+		<?php
+		  phpinfo()
+		?>
+		```
+	- 访问`http://127.0.0.1/hello.php`，展示PHP版本及相关信息则正常
+	- 可能遇到的问题：
+		- 不解析php代码：
+			- 原因：apache2未配置php解析
+			- 解决方案：`apt install libapache2-mod-php`
+			- 检查是否成功：`ls /usr/lib/apache2/modules | grep libphp`
+		- 检查MySQL扩展：`php -m`查看是否有mysql或者mysqlli
+			- 若无执行命令安装：`apt install php-mysql`
 
