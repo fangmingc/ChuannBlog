@@ -106,6 +106,24 @@
 ### 扩展组件 
 
 ### 常用内置函数
+1. phpinfo ($what = null)
+	- 展示php解释器相关信息
+2. error_log ($message, $message_type = null, $destination = null, $extra_headers = null)
+	- 将message写入php.ini中指定的日志文件
+3. var_export ($expression, $return = null)
+	- 查看php对象信息
+	- return为空直接echo，return为true返回字符串
+4. var_dump ($expression, $_ = null)
+	- 打印php对象信息 
+5. print_r ($expression, $return = null)
+	- 打印php对象信息
+6. func_num_args()
+	- 返回函数接收的参数总数
+7. func_get_arg ($arg_num)
+	- 从函数接收的参数数组中取位于$arg_num的参数的值
+8. str_replace ($search, $replace, $subject, &$count = null)
+	- 
+9. 
 
 
 
