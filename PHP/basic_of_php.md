@@ -1,9 +1,22 @@
 ## php基础
-
 - PHP原始为Personal Home Page的缩写，已经正式更名为 "PHP: Hypertext Preprocessor"
 	- 是一种被广泛应用的开源通用脚本语言，尤其适用于 Web 开发并可嵌入 HTML 中去。
 	- 它的语法利用了 C、Java 和 Perl，易于学习。
 	- 该语言的主要目标是允许 web 开发人员快速编写动态生成的 web 页面，但 PHP 的用途远不只于此。
+- 目录
+	- [简介](#简介)
+	- [php环境搭建](#php环境搭建)
+	- [语法](#语法)
+		- [变量、关键字、超全局变量](#变量、关键字、超全局变量)
+		- [运算符](#运算符)
+		- [流程控制](#流程控制)
+		- [数据类型](#数据类型)
+		- [函数](#函数)
+		- [文件操作](#文件操作)
+		- [错误与异常](#错误与异常)
+		- [类和对象](#类和对象)
+		- [扩展组件](#扩展组件)
+		- [常用内置函数](#常用内置函数)
 
 
 ### 简介
@@ -87,13 +100,160 @@
 		- `chown -R test:test test/`更改test文件夹及其子文件、文件夹的所属用户为test,所属用户组为test
 
 ## 语法
-### 变量
+### 变量、关键字、超全局变量
+#### 变量
+- 命名规则
+	1. 变量以`$`符号开头，其后是变量的名称
+	2. 变量名称必须以字母或下划线开头
+	3. 变量名称不能以数字开头
+	4. 变量名称只能包含字母数字字符和下划线（`A-z`、`0-9` 以及 `_`）
+	5. 变量名称对大小写敏感（`$y` 与 `$Y` 是两个不同的变量）
+	6. php是弱类型语言，不需要定义时申明类型
+
+		```php
+		<?php
+		$txt="Hello world!";
+		$x=5;
+		$y=10.5;
+		?>
+		```
+
+- 作用域
+	- 全局作用域
+		- 函数外部申明的变量拥有全局作用域，只能在函数外部访问
+		- 在函数内部使用global关键字申明的变量拥有全局作用域
+	- 局部作用域
+		- 函数内部申明的变量拥有局部作用域，只能在函数内部访问
+
+			```php
+			<?php
+			$x=5; // 全局作用域
+			
+			function myTest() {
+			  $y=10; // 局部作用域
+			  echo "<p>测试函数内部的变量：</p>";
+			  echo "变量 x 是：$x";
+			  echo "<br>";
+			  echo "变量 y 是：$y";
+			} 
+			
+			myTest();
+			
+			echo "<p>测试函数之外的变量：</p>";
+			echo "变量 x 是：$x";
+			echo "<br>";
+			echo "变量 y 是：$y";
+			?>
+			```
+	- 静态作用域
+		- 在函数内部使用static关键字申明的变量拥有静态作用域，不会随着函数的结束被回收
+
+			```php
+			<?php
+			$x=5;
+			$y=10;
+			
+			function myTest() {
+			  global $x,$y;
+			  $y=$x+$y;
+			}
+			
+			myTest();
+			echo $y; // 输出 15
+			?>
+			```
+#### 关键字
+1. `echo`
+2. `if`  `elseif`  `else`
+3. `for`
+	1. `foreach`
+4. `function`
+	1. `return`
+	2. `yield`
+5. `class`
+	1. `extension`
+	2. `new`
+	3. `private`
+	4. `public`
+	5. `abstract`
+6. `aquire`
+7. `include`
+8. `include_once`
+9. `isset`
+10. `unset`
+11. `array`
+12. `exit`
+13. `final`
+14. `static`
+15. `const`
+16. `global`
+
+#### 超全局变量
+- 超全局变量是在全部作用域中始终可用的内置变量
+1. `$_GET`
+	- 关联数组，包含URL`?`后面的请求条件
+2. `$_POST`
+	- 关联数组，请求体的内容
+3. `$_FILES`
+	- HTTP 文件上传变量
+4. `$_REQUEST`
+	- HTTP Request 变量
+5. `$_SESSION`
+6. `$_COOKIE`
+7. `$_SERVER`
+	- 关联数组，服务器和执行环境信息
+	- 常见：
+		- URI：`$_SERVER["REQUEST_URI"]`
+		- 请求方式：`$_SERVER['REQUEST_METHOD']`
+8. `$GLOBALS`
+	- 索引数组，包含所有全局变量
+9. `$argv`
+	- 传入php文件的参数
+
+
 
 ### 运算符
+#### 算数运算符
+- `+ - * / %`，加、减、乘、除、取余
+- 需要注意的是
+	- php中数字和字符串可以直接进行算数
+	- 字符串转数字规则：
+		- 如果该字符串没有包含 '.'，'e' 或 'E' 并且其数字值在整型的范围之内（由 PHP_INT_MAX 所定义），该字符串将被当成 integer 来取值。其它所有情况下都被作为 float 来取值。 
+		- 该字符串的开始部分决定了它的值。如果该字符串以合法的数值开始，则使用该数值。否则其值为 0（零）。合法数值由可选的正负号，后面跟着一个或多个数字（可能有小数点），再跟着可选的指数部分。指数部分由 'e' 或 'E' 后面跟着一个或多个数字构成。 
+
+			```php
+			<?php
+			$foo = 1 + "10.5";                // $foo is float (11.5)
+			$foo = 1 + "-1.3e3";              // $foo is float (-1299)
+			$foo = 1 + "bob-1.3e3";           // $foo is integer (1)
+			$foo = 1 + "bob3";                // $foo is integer (1)
+			$foo = 1 + "10 Small Pigs";       // $foo is integer (11)
+			$foo = 4 + "10.2 Little Piggies"; // $foo is float (14.2)
+			$foo = "10.0 pigs " + 1;          // $foo is float (11)
+			$foo = "10.0 pigs " + 1.0;        // $foo is float (11)     
+			?> 
+			```
+#### 赋值运算符 
+- 普通赋值
+	- `$a = 1`
+	- `$b = $a`
+- 组合运算
+	- `$a = 3;`
+	- `$a += 5; // sets $a to 8, as if we had said: $a = $a + 5;`
+	- `$b = "Hello ";`
+	- `$b .= "There!"; // sets $b to "Hello There!", just like $b = $b . "There!";`
+- 引用赋值，表示两个变量指向同一个数据，没有拷贝任何东西
+	- `$c = &$a`
 
 ### 流程控制
 
 ### 数据类型
+1. 布尔值：true&false
+2. 空值：null
+3. 数字
+4. 字符串
+5. 数组
+
 
 ### 函数
 
@@ -106,24 +266,28 @@
 ### 扩展组件 
 
 ### 常用内置函数
-1. phpinfo ($what = null)
+1. `phpinfo ($what = null)`
 	- 展示php解释器相关信息
-2. error_log ($message, $message_type = null, $destination = null, $extra_headers = null)
-	- 将message写入php.ini中指定的日志文件
-3. var_export ($expression, $return = null)
+2. `error_log ($message, $message_type = null, $destination = null, $extra_headers = null)`
+	- 将`$message`写入php.ini中指定的日志文件
+3. `var_export ($expression, $return = null)`
 	- 查看php对象信息
-	- return为空直接echo，return为true返回字符串
-4. var_dump ($expression, $_ = null)
+	- `$return`为空直接echo，`$return`为true返回字符串
+4. `var_dump ($expression, $_ = null)`
 	- 打印php对象信息 
-5. print_r ($expression, $return = null)
+5. `print_r ($expression, $return = null)`
 	- 打印php对象信息
-6. func_num_args()
+6. `func_num_args()`
 	- 返回函数接收的参数总数
-7. func_get_arg ($arg_num)
-	- 从函数接收的参数数组中取位于$arg_num的参数的值
-8. str_replace ($search, $replace, $subject, &$count = null)
-	- 
-9. 
+7. `func_get_arg ($arg_num)`
+	- 从函数接收的参数数组中取位于`$arg_num`的参数的值
+8. `str_replace ($search, $replace, $subject, &$count = null)`
+	- 字符串替换
+9. `explode ($delimiter, $string, $limit = null)`
+	- 将`$string`根据`$delimiter`切割成数组，类似python的字符串函数split
+10. get_class ($object = null)
+	- 获取`$object`所属类的类名
+11. 
 
 
 
