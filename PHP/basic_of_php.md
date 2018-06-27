@@ -66,6 +66,29 @@
 
 - 测试apache
 	- 访问`http://127.0.0.1/`，展示apache相关信息则正常
+		- 如果使用云主机/虚拟机，请访问云主机/虚拟机的ip
+	- 可能遇到的问题：
+		- 无响应：
+			- 可能是80或443端口被占用或拦截
+			- 解决方案：
+				- `vim /etc/apache2/ports.conf`
+				- 修改`listen 80`为`listen 8000`或其他端口，然后再访问`http://127.0.0.1:8000`
+		- 显示的是非apache相关信息
+			- 可能是`/var/www/html`下的index.html文件被修改了，但是不影响使用
+	- 扩展：
+		- 路径`/var/www/html`是apache2默认的项目解析路径
+		- 通过修改`/etc/apache2/apache2.conf`中的
+			
+			```conf
+			<Directory /var/www/>
+			        Options Indexes FollowSymLinks
+			        AllowOverride None
+			        Require all granted
+			</Directory>
+			```
+			- 以及`/etc/apache2/sites-available/000-default.conf`中的`DocumentRoot /var/www/html`
+			- 将上述两处的`/var/www`或`/var/www/html`均修改成自定义的路径，就可以使apache2解析自定义路径下的文件
+
 - 测试php
 	- 执行如下命令
 		
@@ -162,6 +185,7 @@
 			echo $y; // 输出 15
 			?>
 			```
+
 #### 关键字
 1. `echo`
 2. `if`  `elseif`  `else`
@@ -190,7 +214,6 @@
 
 #### 超全局变量
 - 超全局变量是在全部作用域中始终可用的内置变量
-
 
 1. `$_GET`
 	- 关联数组，包含URL`?`后面的请求条件
