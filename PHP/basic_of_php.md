@@ -18,7 +18,6 @@
 		- [扩展组件](#扩展组件)
 		- [常用内置函数](#常用内置函数)
 
-
 ### 简介
 - 介绍性的范例
 
@@ -313,7 +312,9 @@
 	- 将`$string`根据`$delimiter`切割成数组，类似python的字符串函数split
 10. get_class ($object = null)
 	- 获取`$object`所属类的类名
-11. 
+11. `implode ($glue = "", array $pieces)`
+	- 将数组`$pieces`内的元素以`$glue`拼接起来
+12. 
 
 
 
