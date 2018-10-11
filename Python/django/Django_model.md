@@ -423,6 +423,11 @@ with transaction.atomic():
     sql操作
 ```
 
+### 进阶用法
+- 补充查询
+	- select_related
+	- prefetch_related
+
 
 
 

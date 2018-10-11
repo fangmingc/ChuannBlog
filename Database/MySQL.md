@@ -1461,4 +1461,11 @@ LNMP
 Nginx MySQL PHP/Python
 Linux 
 
-MySQL --> MariaDB 
+MySQL --> MariaDB
+
+### sql_mode
+- ONLY_FULL_GROUP_BY
+	- 开启此模式表示select后的列必须是group by中的列
+
+
+ 
