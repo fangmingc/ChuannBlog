@@ -73,9 +73,14 @@
 ### git branch
 - 查看所有分支
 	- git branch --list
+	- git branch -a
 - 查看分支：git branch  
-- 删除分支：git branch -d [分支名]
-- 强制删除分支：git branch -D [分支名]
+- 删除本地分支：git branch -d [分支名]
+- 强制删除本地分支：git branch -D [分支名]
+- 删除远端分支
+	- git push origin [分支名]:
+	- git push origin --delete [分支名]
+- 同步分支信息：git remote prune origin
 
 
 ## 回退远端仓库
